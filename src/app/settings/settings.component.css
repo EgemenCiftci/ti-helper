@@ -1,0 +1,12 @@
+.btn {
+    width: 100%;
+}
+
+.form-field {
+    display: block
+}
+
+.form-container {
+    width: 400px;
+    padding: 10px;
+}

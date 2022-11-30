@@ -1,1 +1,29 @@
-<p>main works!</p>
+<div class="form-container">
+    <form [formGroup]="form" (submit)="submit()">
+        <mat-form-field class="form-field" appearance="fill">
+            <mat-label>Candidate Name</mat-label>
+            <mat-select formControlName="candidateName">
+                <mat-option value="one">First option</mat-option>
+                <mat-option value="two">Second option</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="form-field" appearance="fill">
+            <mat-label>Interviewer Name</mat-label>
+            <input matInput formControlName="interviewerName">
+        </mat-form-field>
+        <mat-form-field class="form-field" appearance="fill">
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="form-field" appearance="fill">
+            <mat-label>Relevant Experience</mat-label>
+            <input matInput formControlName="relevantExperience">
+        </mat-form-field>
+        <button mat-flat-button class="btn" color="primary" type="submit">Create Candidate Folder</button>
+        <button mat-flat-button class="btn" color="primary" type="submit">Update Candidate Folder</button>
+        <button mat-flat-button class="btn" color="primary" (click)="openCandidateFolder()">Open Candidate Folder</button>
+    </form>
+</div>
