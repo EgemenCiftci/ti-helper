@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FileService } from '../file.service';
 
 @Component({
   selector: 'app-main',
@@ -9,8 +10,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class MainComponent implements OnInit {
 
   form!: FormGroup;
+  tiDirectoryName?: string;
+  candidateNames: string[] = [];
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, 
+              private fileService: FileService) { }
 
   ngOnInit() {
     this.form = this.formBuilder.group({
@@ -19,6 +23,12 @@ export class MainComponent implements OnInit {
       date: [Date.now()],
       relevantExperience: [null]
     });
+  }
+
+  async selectTiDirectory() {
+    await this.fileService.getDirectoryHandle();
+    this.tiDirectoryName = this.fileService.tiDirectoryHandle?.name;
+    this.candidateNames = await this.fileService.getCandidateNames();
   }
 
   submit() {

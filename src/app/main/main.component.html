@@ -1,11 +1,15 @@
 <div class="form-container">
     <form [formGroup]="form" (submit)="submit()">
+        <p>{{tiDirectoryName ?? "Please select a TI directory..."}}</p>
+        <button mat-flat-button class="btn" color="primary" (click)="selectTiDirectory()">Select TI Directory</button>
         <mat-form-field class="form-field" appearance="fill">
             <mat-label>Candidate Name</mat-label>
-            <mat-select formControlName="candidateName">
-                <mat-option value="one">First option</mat-option>
-                <mat-option value="two">Second option</mat-option>
-            </mat-select>
+            <input type="text" matInput formControlName="candidateName" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let name of candidateNames" [value]="name">
+                    {{name}}
+                </mat-option>
+            </mat-autocomplete>
         </mat-form-field>
         <mat-form-field class="form-field" appearance="fill">
             <mat-label>Interviewer Name</mat-label>
@@ -24,6 +28,7 @@
         </mat-form-field>
         <button mat-flat-button class="btn" color="primary" type="submit">Create Candidate Folder</button>
         <button mat-flat-button class="btn" color="primary" type="submit">Update Candidate Folder</button>
-        <button mat-flat-button class="btn" color="primary" (click)="openCandidateFolder()">Open Candidate Folder</button>
+        <button mat-flat-button class="btn" color="primary" (click)="openCandidateFolder()">Open Candidate
+            Folder</button>
     </form>
 </div>

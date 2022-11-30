@@ -12,10 +12,10 @@ import { AboutComponent } from './about/about.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -32,7 +32,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatToolbarModule,
     MatButtonModule,
     MatFormFieldModule,
-    MatSelectModule,
+    MatAutocompleteModule,
     MatDatepickerModule,
     MatInputModule,
     MatNativeDateModule

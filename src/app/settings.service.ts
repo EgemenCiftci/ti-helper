@@ -18,11 +18,11 @@ export class SettingsService {
 
   loadSettings() {
     this.interviewerName = localStorage.getItem('interviewerName');
-    this.outputDirectory = localStorage.getItem('outputDirectory') ?? 'C:\\TI\\Candidates';
-    this.aspNetCoreCodePath = localStorage.getItem('aspNetCoreCodePath') ?? 'C:\\TI\\Docs\\web code review task.cs';
-    this.wpfCodePath = localStorage.getItem('wpfCodePath') ?? 'C:\\TI\\Docs\\desktop code review task.cs';
-    this.questionMaterialsPath = localStorage.getItem('questionMaterialsPath') ?? 'C:\\TI\\Docs\\question materials.cs';
-    this.interviewFormPath = localStorage.getItem('interviewFormPath') ?? 'C:\\TI\\Docs\\Interview Form CS template 0.8.xlsx';
+    this.outputDirectory = localStorage.getItem('outputDirectory') ?? 'Candidates';
+    this.aspNetCoreCodePath = localStorage.getItem('aspNetCoreCodePath') ?? '\\Docs\\web code review task.cs';
+    this.wpfCodePath = localStorage.getItem('wpfCodePath') ?? '\\Docs\\desktop code review task.cs';
+    this.questionMaterialsPath = localStorage.getItem('questionMaterialsPath') ?? '\\Docs\\question materials.cs';
+    this.interviewFormPath = localStorage.getItem('interviewFormPath') ?? '\\Docs\\Interview Form CS template 0.8.xlsx';
     this.websiteUrl = localStorage.getItem('websiteUrl') ?? 'https://www.snipp.live/new';
   }
 
