@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SettingsService } from '../settings.service';
 
 @Component({
   selector: 'app-settings',
@@ -10,17 +11,18 @@ export class SettingsComponent implements OnInit {
 
   form!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, 
+              private settingsService: SettingsService) { }
 
   ngOnInit() {
     this.form = this.formBuilder.group({
-      interviewerName: [null],
-      outputDirectory: ['C:\\Candidates', Validators.required],
-      aspNetCoreCodePath: ['C:\\Docs\\web code review task.cs'],
-      wpfCodePath: ['C:\\Docs\\desktop code review task.cs'],
-      questionMaterialsPath: ['C:\\Docs\\question materials.cs'],
-      interviewFormPath: ['C:\\Docs\\Interview Form CS template 0.8.xlsx'],
-      websiteUrl: ['https://www.snipp.live/new']
+      interviewerName: [this.settingsService.interviewerName],
+      outputDirectory: [this.settingsService.outputDirectory, Validators.required],
+      aspNetCoreCodePath: [this.settingsService.aspNetCoreCodePath],
+      wpfCodePath: [this.settingsService.wpfCodePath],
+      questionMaterialsPath: [this.settingsService.questionMaterialsPath],
+      interviewFormPath: [this.settingsService.interviewFormPath],
+      websiteUrl: [this.settingsService.websiteUrl]
     });
   }
 
@@ -29,6 +31,13 @@ export class SettingsComponent implements OnInit {
       return;
     }
 
-    console.log(this.form.value);
+    this.settingsService.interviewerName = this.form.value.interviewerName;
+    this.settingsService.outputDirectory = this.form.value.outputDirectory;
+    this.settingsService.aspNetCoreCodePath = this.form.value.aspNetCoreCodePath;
+    this.settingsService.wpfCodePath = this.form.value.wpfCodePath;
+    this.settingsService.questionMaterialsPath = this.form.value.questionMaterialsPath;
+    this.settingsService.interviewFormPath = this.form.value.interviewFormPath;
+    this.settingsService.websiteUrl = this.form.value.websiteUrl;
+    this.settingsService.saveSettings();
   }
 }
