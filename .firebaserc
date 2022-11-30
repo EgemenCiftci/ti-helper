@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "ti-helper-v1": {
+      "hosting": {
+        "ti-helper": [
+          "ti-helper-v1"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "ti-helper-v1"
+  }
+}
