@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SettingsService } from '../settings.service';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-settings',
@@ -18,10 +18,11 @@ export class SettingsComponent implements OnInit {
     this.form = this.formBuilder.group({
       interviewerName: [this.settingsService.interviewerName],
       outputDirectory: [this.settingsService.outputDirectory, Validators.required],
-      aspNetCoreCodePath: [this.settingsService.aspNetCoreCodePath],
-      wpfCodePath: [this.settingsService.wpfCodePath],
-      questionMaterialsPath: [this.settingsService.questionMaterialsPath],
-      interviewFormPath: [this.settingsService.interviewFormPath],
+      inputDirectory: [this.settingsService.inputDirectory, Validators.required],
+      aspNetCoreCodeFileName: [this.settingsService.aspNetCoreCodeFileName],
+      wpfCodeFileName: [this.settingsService.wpfCodeFileName],
+      questionMaterialsFileName: [this.settingsService.questionMaterialsFileName],
+      interviewFormFileName: [this.settingsService.interviewFormFileName],
       websiteUrl: [this.settingsService.websiteUrl]
     });
   }
@@ -33,10 +34,11 @@ export class SettingsComponent implements OnInit {
 
     this.settingsService.interviewerName = this.form.value.interviewerName;
     this.settingsService.outputDirectory = this.form.value.outputDirectory;
-    this.settingsService.aspNetCoreCodePath = this.form.value.aspNetCoreCodePath;
-    this.settingsService.wpfCodePath = this.form.value.wpfCodePath;
-    this.settingsService.questionMaterialsPath = this.form.value.questionMaterialsPath;
-    this.settingsService.interviewFormPath = this.form.value.interviewFormPath;
+    this.settingsService.inputDirectory = this.form.value.inputDirectory;
+    this.settingsService.aspNetCoreCodeFileName = this.form.value.aspNetCoreCodeFileName;
+    this.settingsService.wpfCodeFileName = this.form.value.wpfCodeFileName;
+    this.settingsService.questionMaterialsFileName = this.form.value.questionMaterialsFileName;
+    this.settingsService.interviewFormFileName = this.form.value.interviewFormFileName;
     this.settingsService.websiteUrl = this.form.value.websiteUrl;
     this.settingsService.saveSettings();
   }

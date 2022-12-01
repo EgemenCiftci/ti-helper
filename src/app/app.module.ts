@@ -5,9 +5,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { MainComponent } from './main/main.component';
-import { SettingsComponent } from './settings/settings.component';
-import { AboutComponent } from './about/about.component';
+import { MainComponent } from './components/main/main.component';
+import { SettingsComponent } from './components/settings/settings.component';
+import { AboutComponent } from './components/about/about.component';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';

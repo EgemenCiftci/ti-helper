@@ -1,7 +1,6 @@
 <div class="form-container">
-    <form [formGroup]="form" (submit)="submit()">
-        <p>{{tiDirectoryName ?? "Please select a TI directory..."}}</p>
-        <button mat-flat-button class="btn" color="primary" (click)="selectTiDirectory()">Select TI Directory</button>
+    <button mat-flat-button class="btn" color="primary" (click)="selectTiDirectory()">Select TI Directory (Current: {{tiDirectoryName ?? "None"}})</button>
+    <form *ngIf="tiDirectoryName" [formGroup]="form" (submit)="submit()">
         <mat-form-field class="form-field" appearance="fill">
             <mat-label>Candidate Name</mat-label>
             <input type="text" matInput formControlName="candidateName" [matAutocomplete]="auto">
@@ -13,7 +12,7 @@
         </mat-form-field>
         <mat-form-field class="form-field" appearance="fill">
             <mat-label>Interviewer Name</mat-label>
-            <input matInput formControlName="interviewerName">
+            <input matInput formControlName="interviewerName" type="text">
         </mat-form-field>
         <mat-form-field class="form-field" appearance="fill">
             <mat-label>Date</mat-label>
@@ -24,11 +23,8 @@
         </mat-form-field>
         <mat-form-field class="form-field" appearance="fill">
             <mat-label>Relevant Experience</mat-label>
-            <input matInput formControlName="relevantExperience">
+            <input matInput formControlName="relevantExperience" type="number">
         </mat-form-field>
-        <button mat-flat-button class="btn" color="primary" type="submit">Create Candidate Folder</button>
-        <button mat-flat-button class="btn" color="primary" type="submit">Update Candidate Folder</button>
-        <button mat-flat-button class="btn" color="primary" (click)="openCandidateFolder()">Open Candidate
-            Folder</button>
+        <button mat-flat-button class="btn" color="primary" type="submit">{{isInUpdateMode ? "Update" : "Create"}} Candidate Folder</button>
     </form>
 </div>
