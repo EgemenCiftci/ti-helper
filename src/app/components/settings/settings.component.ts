@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SettingsService } from 'src/app/services/settings.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-settings',
@@ -11,8 +12,9 @@ export class SettingsComponent implements OnInit {
 
   form!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, 
-              private settingsService: SettingsService) { }
+  constructor(private formBuilder: FormBuilder,
+    private settingsService: SettingsService,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.form = this.formBuilder.group({
@@ -41,5 +43,9 @@ export class SettingsComponent implements OnInit {
     this.settingsService.interviewFormFileName = this.form.value.interviewFormFileName;
     this.settingsService.websiteUrl = this.form.value.websiteUrl;
     this.settingsService.saveSettings();
+
+    this.snackBar.open('Settings saved successfully.', 'Close', {
+      duration: 3000,
+    });
   }
 }

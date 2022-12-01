@@ -45,7 +45,7 @@ export class MainComponent implements OnInit {
     const excelData = this.getExcelData(this.form.value);
 
     if (this.isInUpdateMode) {
-      this.updateCandidateFolder(excelData);
+      await this.updateCandidateFolder(excelData);
     } else {
       await this.createCandidateFolder(excelData);
     }

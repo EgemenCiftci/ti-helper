@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { SettingsService } from './settings.service';
 import * as Excel from 'exceljs';
 import { ExcelData } from '../models/excel-data';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class FileService {
   questionMaterialsFileHandle?: FileSystemFileHandle;
   interviewFormFileHandle?: FileSystemFileHandle;
 
-  constructor(private settingsService: SettingsService) {
+  constructor(private settingsService: SettingsService,
+    private snackBar: MatSnackBar) {
   }
 
   async initialize() {
@@ -95,6 +97,10 @@ export class FileService {
     let fileData = await this.readFromFile(this.interviewFormFileHandle);
     fileData = await this.updateExcel(fileData, excelData);
     await this.writeToFile(handle, excelData);
+
+    this.snackBar.open('Folder created successfully.', 'Close', {
+      duration: 3000,
+    });
   }
 
   async updateCandidateFolder(excelData: ExcelData) {
@@ -103,6 +109,10 @@ export class FileService {
     let fileData = await this.readFromFile(this.interviewFormFileHandle);
     fileData = await this.updateExcel(fileData, excelData);
     await this.writeToFile(handle, excelData);
+
+    this.snackBar.open('Folder updated successfully.', 'Close', {
+      duration: 3000,
+    });
   }
 
   async readFromFile(fileHandle: FileSystemFileHandle | undefined): Promise<any> {

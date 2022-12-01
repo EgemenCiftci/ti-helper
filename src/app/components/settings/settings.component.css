@@ -1,12 +1,18 @@
-.btn {
-    width: 100%;
+form{
+    padding: 10px 0px 10px 0px;
 }
 
 .form-field {
-    display: block
+    display: block;
+    margin: 0px 10px 0px 10px;
 }
 
-.form-container {
-    width: 400px;
-    padding: 10px;
+.sub-entry {
+    width: 50%;
+    float: left;
+}
+
+.button {
+    text-align: center;
+    clear: both;
 }
