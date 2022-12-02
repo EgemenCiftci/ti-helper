@@ -18,6 +18,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatInputModule,
     MatNativeDateModule,
     MatSnackBarModule,
-    MatDividerModule
+    MatDividerModule,
+    MatGridListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

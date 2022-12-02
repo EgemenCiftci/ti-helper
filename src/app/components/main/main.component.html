@@ -1,52 +1,60 @@
-<div class="container">
-    <div class="container">
-        <button mat-flat-button class="btn" color="primary" (click)="selectTiDirectory()">Select TI Directory (Current:
-            {{tiDirectoryName ?? "None"}})</button>
-    </div>
+<div class="d-flex flex-column">
+    <button mat-flat-button class="m-2" color="primary" (click)="selectTiDirectory()">Select TI Directory
+        (Current:
+        {{tiDirectoryName ?? "None"}})</button>
 
-    <div *ngIf="tiDirectoryName" class="container">
-        <mat-divider></mat-divider>
-        <form [formGroup]="form" (submit)="submit()">
-            <mat-form-field class="form-field" appearance="fill">
-                <mat-label>Candidate Name</mat-label>
-                <input type="text" matInput formControlName="candidateName" [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let name of candidateNames" [value]="name">
-                        {{name}}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-            <mat-form-field class="form-field" appearance="fill">
-                <mat-label>Interviewer Name</mat-label>
-                <input matInput formControlName="interviewerName" type="text">
-            </mat-form-field>
-            <mat-form-field class="form-field" appearance="fill">
-                <mat-label>Date</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="date">
-                <mat-hint>MM/DD/YYYY</mat-hint>
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-            <mat-form-field class="form-field" appearance="fill">
-                <mat-label>Relevant Experience</mat-label>
-                <input matInput formControlName="relevantExperience" type="number">
-            </mat-form-field>
-            <button mat-flat-button class="btn" color="primary" type="submit">{{isInUpdateMode ? "Update" : "Create"}}
-                Candidate Folder</button>
-        </form>
-    </div>
+    <div class="d-flex flex-row">
+        <div *ngIf="tiDirectoryName" class="flex-fill p-2">
+            <mat-divider class="mb-1"></mat-divider>
+            <form [formGroup]="form" (submit)="submit()">
+                <mat-form-field class="d-block mx-1" appearance="fill">
+                    <mat-label>Candidate Name</mat-label>
+                    <input type="text" matInput formControlName="candidateName" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let name of candidateNames" [value]="name">
+                            {{name}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field class="d-block mx-1" appearance="fill">
+                    <mat-label>Interviewer Name</mat-label>
+                    <input matInput formControlName="interviewerName" type="text">
+                </mat-form-field>
+                <mat-form-field class="d-block mx-1" appearance="fill">
+                    <mat-label>Date</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="date">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="d-block mx-1" appearance="fill">
+                    <mat-label>Relevant Experience</mat-label>
+                    <input matInput formControlName="relevantExperience" type="number">
+                </mat-form-field>
+                <button mat-flat-button class="w-100" color="primary" type="submit">{{isInUpdateMode ? "Update" :
+                    "Create"}}
+                    Candidate Folder</button>
+            </form>
+        </div>
 
-    <div *ngIf="tiDirectoryName" class="container">
-        <mat-divider></mat-divider>
-        <button mat-flat-button class="btn" color="primary" (click)="copyAspNetCoreCodeAndOpenWebsite()">Copy ASP.Net
-            Core Code And Open Website</button>
-        <button mat-flat-button class="btn" color="primary" (click)="copyWpfCodeAndOpenWebsite()">Copy WPF Code And Open
-            Website</button>
-    </div>
-
-    <div *ngIf="tiDirectoryName && questionMaterials?.length" class="container">
-        <mat-divider></mat-divider>
-        <button *ngFor="let qm of questionMaterials" mat-flat-button class="btn" color="primary"
-            (click)="selectQuestionMaterial(qm)">Copy Code For Line {{qm.line}}</button>
+        <div class="flex-fill p-2">
+            <div *ngIf="tiDirectoryName">
+                <mat-divider class="mb-1"></mat-divider>
+                <button mat-flat-button class="d-block w-100 mb-2" color="primary"
+                    (click)="copyAspNetCoreCodeAndOpenWebsite()">Copy
+                    ASP.Net
+                    Core Code And Open Website</button>
+                <button mat-flat-button class="d-block w-100 mb-2" color="primary"
+                    (click)="copyWpfCodeAndOpenWebsite()">Copy WPF Code
+                    And
+                    Open
+                    Website</button>
+            </div>
+            <div *ngIf="tiDirectoryName && questionMaterials?.length">
+                <mat-divider class="mb-1"></mat-divider>
+                <button *ngFor="let qm of questionMaterials" mat-flat-button class="d-block w-100 mb-2" color="primary"
+                    (click)="selectQuestionMaterial(qm)">Copy Code For Line {{qm.line}}</button>
+            </div>
+        </div>
     </div>
 </div>

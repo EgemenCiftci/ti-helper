@@ -44,6 +44,12 @@ export class SettingsComponent implements OnInit {
     this.settingsService.websiteUrl = this.form.value.websiteUrl;
     this.settingsService.saveSettings();
 
-    this.snackBarService.showSnackBar('Settings saved successfully');
+    this.snackBarService.showSnackBar('Settings saved successfully.');
   }
+
+  reset() {
+    this.settingsService.resetSettings();
+    this.ngOnInit();
+    this.snackBarService.showSnackBar('Settings reset successfully.');
+  } 
 }

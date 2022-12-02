@@ -38,4 +38,16 @@ export class SettingsService {
     localStorage.setItem('interviewFormFileName', this.interviewFormFileName);
     localStorage.setItem('websiteUrl', this.websiteUrl);
   }
+
+  resetSettings() {
+    localStorage.removeItem('interviewerName');
+    localStorage.removeItem('outputDirectory');
+    localStorage.removeItem('inputDirectory');
+    localStorage.removeItem('aspNetCoreCodeFileName');
+    localStorage.removeItem('wpfCodeFileName');
+    localStorage.removeItem('questionMaterialsFileName');
+    localStorage.removeItem('interviewFormFileName');
+    localStorage.removeItem('websiteUrl');
+    this.loadSettings();
+  }
 }

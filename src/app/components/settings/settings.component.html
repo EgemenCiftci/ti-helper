@@ -1,41 +1,44 @@
-<form [formGroup]="form" (submit)="submit()">
-    <div class="sub-entry">
-        <mat-form-field class="form-field" appearance="fill">
-            <mat-label>Output Directory</mat-label>
-            <input matInput formControlName="outputDirectory" type="text">
-        </mat-form-field>
-        <mat-form-field class="form-field" appearance="fill">
-            <mat-label>Interviewer Name</mat-label>
-            <input matInput formControlName="interviewerName" type="text">
-        </mat-form-field>
-        <mat-form-field class="form-field" appearance="fill">
-            <mat-label>Website Url</mat-label>
-            <input matInput formControlName="websiteUrl" type="text">
-        </mat-form-field>
+<form class="d-flex flex-column" [formGroup]="form" (submit)="submit()">
+    <div class="d-flex flex-row">
+        <div class="flex-fill p-2">
+            <mat-form-field class="d-block mx-1" appearance="fill">
+                <mat-label>Output Directory</mat-label>
+                <input matInput formControlName="outputDirectory" type="text">
+            </mat-form-field>
+            <mat-form-field class="d-block mx-1" appearance="fill">
+                <mat-label>Interviewer Name</mat-label>
+                <input matInput formControlName="interviewerName" type="text">
+            </mat-form-field>
+            <mat-form-field class="d-block mx-1" appearance="fill">
+                <mat-label>Website Url</mat-label>
+                <input matInput formControlName="websiteUrl" type="text">
+            </mat-form-field>
+        </div>
+        <div class="flex-fill p-2">
+            <mat-form-field class="d-block mx-1" appearance="fill">
+                <mat-label>Input Directory</mat-label>
+                <input matInput formControlName="inputDirectory" type="text">
+            </mat-form-field>
+            <mat-form-field class="d-block mx-1" appearance="fill">
+                <mat-label>Asp.Net Core Code File Name</mat-label>
+                <input matInput formControlName="aspNetCoreCodeFileName" type="text">
+            </mat-form-field>
+            <mat-form-field class="d-block mx-1" appearance="fill">
+                <mat-label>Wpf Code File Name</mat-label>
+                <input matInput formControlName="wpfCodeFileName" type="text">
+            </mat-form-field>
+            <mat-form-field class="d-block mx-1" appearance="fill">
+                <mat-label>Question Materials File Name</mat-label>
+                <input matInput formControlName="questionMaterialsFileName" type="text">
+            </mat-form-field>
+            <mat-form-field class="d-block mx-1" appearance="fill">
+                <mat-label>Interview Form File Name</mat-label>
+                <input matInput formControlName="interviewFormFileName" type="text">
+            </mat-form-field>
+        </div>
     </div>
-    <div class="sub-entry">
-        <mat-form-field class="form-field" appearance="fill">
-            <mat-label>Input Directory</mat-label>
-            <input matInput formControlName="inputDirectory" type="text">
-        </mat-form-field>
-        <mat-form-field class="form-field" appearance="fill">
-            <mat-label>Asp.Net Core Code File Name</mat-label>
-            <input matInput formControlName="aspNetCoreCodeFileName" type="text">
-        </mat-form-field>
-        <mat-form-field class="form-field" appearance="fill">
-            <mat-label>Wpf Code File Name</mat-label>
-            <input matInput formControlName="wpfCodeFileName" type="text">
-        </mat-form-field>
-        <mat-form-field class="form-field" appearance="fill">
-            <mat-label>Question Materials File Name</mat-label>
-            <input matInput formControlName="questionMaterialsFileName" type="text">
-        </mat-form-field>
-        <mat-form-field class="form-field" appearance="fill">
-            <mat-label>Interview Form File Name</mat-label>
-            <input matInput formControlName="interviewFormFileName" type="text">
-        </mat-form-field>
-    </div>
-    <div class="button">
-        <button mat-flat-button class="btn" color="primary" type="submit">Save</button>
+    <div class="d-flex flex-row px-2">
+        <button mat-flat-button class="flex-fill mx-1" color="primary" (click)="reset()">Reset</button>
+        <button mat-flat-button class="flex-fill mx-1" color="primary" type="submit">Save</button>
     </div>
 </form>
