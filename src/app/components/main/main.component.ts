@@ -32,8 +32,12 @@ export class MainComponent implements OnInit {
       relevantExperience: [0]
     });
 
-    this.form.get('candidateName')?.valueChanges.subscribe(val => {
-      this.isInUpdateMode = this.candidateNames.includes(val.trim());
+    this.form.get('candidateName')?.valueChanges.subscribe(async val => {
+      const candidateName = val.trim();
+      this.isInUpdateMode = this.candidateNames.includes(candidateName);
+      if (this.isInUpdateMode) {
+          this.setExcelData(await this.fileService.getCandidateData(candidateName));
+      }
     });
   }
 
@@ -55,6 +59,8 @@ export class MainComponent implements OnInit {
       await this.updateCandidateFolder(excelData);
     } else {
       await this.createCandidateFolder(excelData);
+      this.candidateNames = await this.fileService.getCandidateNames();
+      this.isInUpdateMode = this.candidateNames.includes(this.form.value.candidateName.trim());
     }
   }
 
@@ -65,6 +71,14 @@ export class MainComponent implements OnInit {
       date: formValue.date,
       relevantExperience: formValue.relevantExperience
     };
+  }
+
+  setExcelData(excelData: ExcelData) {
+    this.form.patchValue({
+      interviewerName: excelData.interviewerName,
+      date: excelData.date,
+      relevantExperience: excelData.relevantExperience
+    });
   }
 
   async createCandidateFolder(excelData: ExcelData) {

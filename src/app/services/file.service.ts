@@ -97,7 +97,7 @@ export class FileService {
     const handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: true });
     let fileData = await this.readFromFile(this.interviewFormFileHandle);
     fileData = await this.updateExcel(fileData, excelData);
-    await this.writeToFile(handle, excelData);
+    await this.writeToFile(handle, fileData);
 
     this.snackBarService.showSnackBar('Folder created successfully.');
   }
@@ -107,7 +107,7 @@ export class FileService {
     const handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: false });
     let fileData = await this.readFromFile(this.interviewFormFileHandle);
     fileData = await this.updateExcel(fileData, excelData);
-    await this.writeToFile(handle, excelData);
+    await this.writeToFile(handle, fileData);
 
     this.snackBarService.showSnackBar('Folder updated successfully.');
   }
@@ -137,7 +137,7 @@ export class FileService {
     const worksheet = workbook.getWorksheet('Overview');
     worksheet.getCell('B1').value = excelData.candidateName;
     worksheet.getCell('B2').value = excelData.interviewerName;
-    worksheet.getCell('B3').value = excelData.date;
+    worksheet.getCell('B3').value = excelData.date?.toDateString();
     worksheet.getCell('B8').value = excelData.relevantExperience;
     return await workbook.xlsx.writeBuffer();
   }
@@ -166,5 +166,23 @@ export class FileService {
     });
 
     return questionMaterials;
+  }
+
+  async getCandidateData(candidateName: string): Promise<ExcelData> {
+    const excelData = new ExcelData();
+    excelData.candidateName = candidateName;
+    const candidateDirectoryHandle = await this.getDirectoryHandle(this.outputDirectoryHandle, candidateName, false);
+    const handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: false });
+    const fileData = await this.readFromFile(handle);
+    if (fileData) {
+      const workbook = new Excel.Workbook();
+      await workbook.xlsx.load(fileData as any);
+      const worksheet = workbook.getWorksheet('Overview');
+      excelData.interviewerName = String(worksheet.getCell('B2').value);
+      excelData.date = new Date(String(worksheet.getCell('B3').value));
+      excelData.relevantExperience = Number(worksheet.getCell('B8').value);
+    }
+
+    return excelData;
   }
 }
