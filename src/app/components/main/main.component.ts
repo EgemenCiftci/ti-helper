@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ExcelData } from 'src/app/models/excel-data';
 import { QuestionMaterial } from 'src/app/models/question-material';
 import { FileService } from 'src/app/services/file.service';
 import { SettingsService } from 'src/app/services/settings.service';
+import { SnackBarService } from 'src/app/services/snack-bar.service';
 
 @Component({
   selector: 'app-main',
@@ -21,15 +21,15 @@ export class MainComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     private fileService: FileService,
-    private snackBar: MatSnackBar,
+    private snackBarService: SnackBarService,
     private settingsService: SettingsService) { }
 
   ngOnInit() {
     this.form = this.formBuilder.group({
       candidateName: [null, Validators.required],
-      interviewerName: [null],
+      interviewerName: [this.settingsService.interviewerName],
       date: [new Date()],
-      relevantExperience: [null]
+      relevantExperience: [0]
     });
 
     this.form.get('candidateName')?.valueChanges.subscribe(val => {
@@ -99,8 +99,6 @@ export class MainComponent implements OnInit {
 
   async copyToClipboard(text: string) {
     await navigator.clipboard.writeText(text);
-    this.snackBar.open('Code copied to clipboard.', 'Close', {
-      duration: 3000,
-    });
+    this.snackBarService.showSnackBar('Copied to clipboard');
   }
 }

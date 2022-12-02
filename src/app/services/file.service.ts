@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { SettingsService } from './settings.service';
 import * as Excel from 'exceljs';
 import { ExcelData } from '../models/excel-data';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { QuestionMaterial } from '../models/question-material';
+import { SnackBarService } from './snack-bar.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class FileService {
   interviewFormFileHandle?: FileSystemFileHandle;
 
   constructor(private settingsService: SettingsService,
-    private snackBar: MatSnackBar) {
+    private snackBarService: SnackBarService) {
   }
 
   async initialize() {
@@ -99,9 +99,7 @@ export class FileService {
     fileData = await this.updateExcel(fileData, excelData);
     await this.writeToFile(handle, excelData);
 
-    this.snackBar.open('Folder created successfully.', 'Close', {
-      duration: 3000,
-    });
+    this.snackBarService.showSnackBar('Folder created successfully.');
   }
 
   async updateCandidateFolder(excelData: ExcelData) {
@@ -111,9 +109,7 @@ export class FileService {
     fileData = await this.updateExcel(fileData, excelData);
     await this.writeToFile(handle, excelData);
 
-    this.snackBar.open('Folder updated successfully.', 'Close', {
-      duration: 3000,
-    });
+    this.snackBarService.showSnackBar('Folder updated successfully.');
   }
 
   private async readFromFile(fileHandle: FileSystemFileHandle | undefined): Promise<any> {
@@ -161,7 +157,7 @@ export class FileService {
   async getQuestionMaterials(): Promise<QuestionMaterial[]> {
     const questionMaterials: QuestionMaterial[] = [];
     const questionMaterialsText = await this.readAsText(this.questionMaterialsFileHandle);
-    const regex = new RegExp('line (?<line>\\d+?)\\r\\n\\r\\n(?<code>.*?)\\r\\n\\r\\n', 's');
+    const regex = /line (?<line>\d+?)\r\n\r\n(?<code>.*?)\r\n\r\n/gs;
     [...questionMaterialsText.matchAll(regex)].forEach((match) => {
       const qm = new QuestionMaterial();
       qm.line = Number(match.groups?.['line']);

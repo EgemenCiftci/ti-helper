@@ -47,6 +47,6 @@
     <div *ngIf="tiDirectoryName && questionMaterials?.length" class="container">
         <mat-divider></mat-divider>
         <button *ngFor="let qm of questionMaterials" mat-flat-button class="btn" color="primary"
-            (click)="selectQuestionMaterial(qm)">Line {{qm.line}}</button>
+            (click)="selectQuestionMaterial(qm)">Copy Code For Line {{qm.line}}</button>
     </div>
 </div>
