@@ -3,6 +3,7 @@ import { SettingsService } from './settings.service';
 import * as Excel from 'exceljs';
 import { ExcelData } from '../models/excel-data';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { QuestionMaterial } from '../models/question-material';
 
 @Injectable({
   providedIn: 'root'
@@ -115,14 +116,14 @@ export class FileService {
     });
   }
 
-  async readFromFile(fileHandle: FileSystemFileHandle | undefined): Promise<any> {
+  private async readFromFile(fileHandle: FileSystemFileHandle | undefined): Promise<any> {
     if (fileHandle) {
       return await fileHandle.getFile();
     }
     return undefined;
   }
 
-  async writeToFile(fileHandle: FileSystemFileHandle | undefined, data: any) {
+  private async writeToFile(fileHandle: FileSystemFileHandle | undefined, data: any) {
     if (fileHandle && data) {
       const writableStream = await (fileHandle as any).createWritable();
       await writableStream.write(data);
@@ -143,5 +144,31 @@ export class FileService {
     worksheet.getCell('B3').value = excelData.date;
     worksheet.getCell('B8').value = excelData.relevantExperience;
     return await workbook.xlsx.writeBuffer();
+  }
+
+  private async readAsText(fileHandle: FileSystemFileHandle | undefined): Promise<string> {
+    return (await this.readFromFile(fileHandle))?.text() ?? '';
+  }
+
+  async getAspNetCoreCode(): Promise<string> {
+    return await this.readAsText(this.aspNetCoreCodeFileHandle);
+  }
+
+  async getWpfCode(): Promise<string> {
+    return await this.readAsText(this.wpfCodeFileHandle);
+  }
+
+  async getQuestionMaterials(): Promise<QuestionMaterial[]> {
+    const questionMaterials: QuestionMaterial[] = [];
+    const questionMaterialsText = await this.readAsText(this.questionMaterialsFileHandle);
+    const regex = new RegExp('line (?<line>\\d+?)\\r\\n\\r\\n(?<code>.*?)\\r\\n\\r\\n', 's');
+    [...questionMaterialsText.matchAll(regex)].forEach((match) => {
+      const qm = new QuestionMaterial();
+      qm.line = Number(match.groups?.['line']);
+      qm.code = match.groups?.['code'];
+      questionMaterials.push(qm);
+    });
+
+    return questionMaterials;
   }
 }

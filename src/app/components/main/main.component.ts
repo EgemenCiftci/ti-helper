@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ExcelData } from 'src/app/models/excel-data';
+import { QuestionMaterial } from 'src/app/models/question-material';
 import { FileService } from 'src/app/services/file.service';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-main',
@@ -14,9 +17,12 @@ export class MainComponent implements OnInit {
   tiDirectoryName?: string;
   candidateNames: string[] = [];
   isInUpdateMode = false;
+  questionMaterials: QuestionMaterial[] = [];
 
   constructor(private formBuilder: FormBuilder,
-    private fileService: FileService) { }
+    private fileService: FileService,
+    private snackBar: MatSnackBar,
+    private settingsService: SettingsService) { }
 
   ngOnInit() {
     this.form = this.formBuilder.group({
@@ -35,6 +41,7 @@ export class MainComponent implements OnInit {
     await this.fileService.initialize();
     this.tiDirectoryName = this.fileService.tiDirectoryHandle?.name;
     this.candidateNames = await this.fileService.getCandidateNames();
+    this.questionMaterials = await this.fileService.getQuestionMaterials();
   }
 
   async submit() {
@@ -66,5 +73,34 @@ export class MainComponent implements OnInit {
 
   async updateCandidateFolder(excelData: ExcelData) {
     await this.fileService.updateCandidateFolder(excelData);
+  }
+
+  async copyAspNetCoreCodeAndOpenWebsite() {
+    const code = await this.fileService.getAspNetCoreCode();
+    await this.copyToClipboard(code);
+    this.openWebsiteInNewTab();
+  }
+
+  async copyWpfCodeAndOpenWebsite() {
+    const code = await this.fileService.getWpfCode();
+    await this.copyToClipboard(code);
+    this.openWebsiteInNewTab();
+  }
+
+  openWebsiteInNewTab() {
+    window.open(this.settingsService.websiteUrl, "_blank");
+  }
+
+  async selectQuestionMaterial(qm: QuestionMaterial) {
+    if (qm.code) {
+      await this.copyToClipboard(qm.code);
+    }
+  }
+
+  async copyToClipboard(text: string) {
+    await navigator.clipboard.writeText(text);
+    this.snackBar.open('Code copied to clipboard.', 'Close', {
+      duration: 3000,
+    });
   }
 }

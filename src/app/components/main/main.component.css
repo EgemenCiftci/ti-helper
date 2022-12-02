@@ -1,14 +1,17 @@
 .btn {
     width: 100%;
-    margin: 0px 10px 10px 10px;
+    margin-bottom: 3px;
 }
 
 .form-field {
     display: block;
-    margin: 0px 10px 0px 10px;
 }
 
-.form-container {
+.container {
     width: 400px;
-    padding: 10px 0px 10px 0px;
+    padding: 10px;
+}
+
+mat-divider {
+    margin-bottom: 10px;
 }
