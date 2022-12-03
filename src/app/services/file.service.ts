@@ -23,7 +23,7 @@ export class FileService {
 
   async initialize() {
     await this.getTiDirectoryHandle();
-    this.outputDirectoryHandle = await this.getDirectoryHandle(this.tiDirectoryHandle, this.settingsService.outputDirectory);
+    this.outputDirectoryHandle = await this.getDirectoryHandle(this.tiDirectoryHandle, this.settingsService.outputDirectory, true);
     this.inputDirectoryHandle = await this.getDirectoryHandle(this.tiDirectoryHandle, this.settingsService.inputDirectory);
     this.aspNetCoreCodeFileHandle = await this.getFileHandle(this.inputDirectoryHandle, this.settingsService.aspNetCoreCodeFileName);
     this.wpfCodeFileHandle = await this.getFileHandle(this.inputDirectoryHandle, this.settingsService.wpfCodeFileName);
@@ -33,18 +33,19 @@ export class FileService {
 
   async verifyPermission(fileHandle: any, readWrite: boolean) {
     const options: any = {};
+
     if (readWrite) {
       options.mode = 'readwrite';
     }
-    // Check if permission was already granted. If so, return true.
+
     if ((await fileHandle.queryPermission(options)) === 'granted') {
       return true;
     }
-    // Request permission. If the user grants permission, return true.
+
     if ((await fileHandle.requestPermission(options)) === 'granted') {
       return true;
     }
-    // The user didn't grant permission, so return false.
+
     return false;
   }
 
@@ -92,24 +93,12 @@ export class FileService {
     return undefined;
   }
 
-  async createCandidateFolder(excelData: ExcelData) {
+  async createUpdateCandidateFolder(excelData: ExcelData) {
     const candidateDirectoryHandle = await this.getDirectoryHandle(this.outputDirectoryHandle, excelData.candidateName, true);
     const handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: true });
     let fileData = await this.readFromFile(this.interviewFormFileHandle);
     fileData = await this.updateExcel(fileData, excelData);
     await this.writeToFile(handle, fileData);
-
-    this.snackBarService.showSnackBar('Folder created successfully.');
-  }
-
-  async updateCandidateFolder(excelData: ExcelData) {
-    const candidateDirectoryHandle = await this.getDirectoryHandle(this.outputDirectoryHandle, excelData.candidateName, false);
-    const handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: false });
-    let fileData = await this.readFromFile(this.interviewFormFileHandle);
-    fileData = await this.updateExcel(fileData, excelData);
-    await this.writeToFile(handle, fileData);
-
-    this.snackBarService.showSnackBar('Folder updated successfully.');
   }
 
   private async readFromFile(fileHandle: FileSystemFileHandle | undefined): Promise<any> {

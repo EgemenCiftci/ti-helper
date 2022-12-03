@@ -36,7 +36,7 @@ export class MainComponent implements OnInit {
       const candidateName = val.trim();
       this.isInUpdateMode = this.candidateNames.includes(candidateName);
       if (this.isInUpdateMode) {
-          this.setExcelData(await this.fileService.getCandidateData(candidateName));
+        this.setExcelData(await this.fileService.getCandidateData(candidateName));
       }
     });
   }
@@ -55,12 +55,14 @@ export class MainComponent implements OnInit {
 
     const excelData = this.getExcelData(this.form.value);
 
+    await this.fileService.createUpdateCandidateFolder(excelData);
+
     if (this.isInUpdateMode) {
-      await this.updateCandidateFolder(excelData);
+      this.snackBarService.showSnackBar('Folder updated successfully.');
     } else {
-      await this.createCandidateFolder(excelData);
       this.candidateNames = await this.fileService.getCandidateNames();
-      this.isInUpdateMode = this.candidateNames.includes(this.form.value.candidateName.trim());
+      this.isInUpdateMode = this.candidateNames.includes(excelData.candidateName);
+      this.snackBarService.showSnackBar('Folder created successfully.');
     }
   }
 
@@ -79,14 +81,6 @@ export class MainComponent implements OnInit {
       date: excelData.date,
       relevantExperience: excelData.relevantExperience
     });
-  }
-
-  async createCandidateFolder(excelData: ExcelData) {
-    await this.fileService.createCandidateFolder(excelData);
-  }
-
-  async updateCandidateFolder(excelData: ExcelData) {
-    await this.fileService.updateCandidateFolder(excelData);
   }
 
   async copyAspNetCoreCodeAndOpenWebsite() {
