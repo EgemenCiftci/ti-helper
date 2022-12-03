@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-about',
@@ -7,4 +8,9 @@ import { Component } from '@angular/core';
 })
 export class AboutComponent {
 
+  constructor(private snackBar: MatSnackBar) { }
+
+  snackBarTest() {
+    this.snackBar.open('Test...', 'X');
+  }
 }
