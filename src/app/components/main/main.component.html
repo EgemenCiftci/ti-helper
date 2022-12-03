@@ -35,26 +35,33 @@
                     Candidate Folder</button>
             </form>
             <div class="my-4" *ngIf="form?.value?.candidateName">
-                <button mat-flat-button class="w-100 mb-2" color="primary" (click)="linkedInPeopleSearch()">LinkedIn
-                    People Search</button>
-                <button mat-flat-button class="w-100 mb-2" color="primary" (click)="gitHubUserSearch()">GitHub User
-                    Search</button>
-                <button mat-flat-button class="w-100 mb-2" color="primary" (click)="googleSearch()">Google
-                    Search</button>
+                <button mat-flat-button class="w-100 mb-2" color="primary" (click)="linkedInPeopleSearch()">
+                    <span>LinkedIn People Search</span>
+                    <mat-icon>open_in_new</mat-icon>
+                </button>
+                <button mat-flat-button class="w-100 mb-2" color="primary" (click)="gitHubUserSearch()">
+                    <span>GitHub User Search</span>
+                    <mat-icon>open_in_new</mat-icon>
+                </button>
+                <button mat-flat-button class="w-100 mb-2" color="primary" (click)="googleSearch()">
+                    <span>Google Search</span>
+                    <mat-icon>open_in_new</mat-icon>
+                </button>
             </div>
         </div>
 
         <div class="flex-fill p-2">
             <div *ngIf="tiDirectoryName">
                 <button mat-flat-button class="d-block w-100 mb-2" color="primary"
-                    (click)="copyAspNetCoreCodeAndOpenWebsite()">Copy
-                    ASP.Net
-                    Core Code And Open Website</button>
+                    (click)="copyAspNetCoreCodeAndOpenWebsite()">
+                    <span>Copy ASP.Net Core Code And Open Website</span>
+                    <mat-icon>open_in_new</mat-icon>
+                </button>
                 <button mat-flat-button class="d-block w-100 mb-2" color="primary"
-                    (click)="copyWpfCodeAndOpenWebsite()">Copy WPF Code
-                    And
-                    Open
-                    Website</button>
+                    (click)="copyWpfCodeAndOpenWebsite()">
+                    <span>Copy WPF Code And Open Website</span>
+                    <mat-icon>open_in_new</mat-icon>
+                </button>
             </div>
             <div class="my-4" *ngIf="tiDirectoryName && questionMaterials?.length">
                 <button *ngFor="let qm of questionMaterials" mat-flat-button class="d-block w-100 mb-2" color="primary"
