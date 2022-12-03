@@ -29,7 +29,7 @@ export class SettingsComponent implements OnInit {
     });
   }
 
-  submit() {
+  save() {
     try {
       if (!this.form?.valid) {
         return;

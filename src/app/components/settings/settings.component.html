@@ -1,4 +1,4 @@
-<form class="d-flex flex-column" [formGroup]="form" (submit)="submit()">
+<form class="d-flex flex-column" [formGroup]="form">
     <div class="d-flex flex-row">
         <div class="flex-fill p-2">
             <mat-form-field class="d-block mx-1" appearance="fill">
@@ -39,6 +39,6 @@
     </div>
     <div class="d-flex flex-row px-2">
         <button mat-flat-button class="flex-fill mx-1" color="primary" (click)="reset()">Reset</button>
-        <button mat-flat-button class="flex-fill mx-1" color="primary" type="submit">Save</button>
+        <button mat-flat-button class="flex-fill mx-1" color="primary" (click)="save()">Save</button>
     </div>
 </form>
