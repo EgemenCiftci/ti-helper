@@ -34,6 +34,14 @@
                     "Create"}}
                     Candidate Folder</button>
             </form>
+            <div class="my-4" *ngIf="form?.value?.candidateName">
+                <button mat-flat-button class="w-100 mb-2" color="primary" (click)="linkedInPeopleSearch()">LinkedIn
+                    People Search</button>
+                <button mat-flat-button class="w-100 mb-2" color="primary" (click)="gitHubUserSearch()">GitHub User
+                    Search</button>
+                <button mat-flat-button class="w-100 mb-2" color="primary" (click)="googleSearch()">Google
+                    Search</button>
+            </div>
         </div>
 
         <div class="flex-fill p-2">
@@ -48,7 +56,7 @@
                     Open
                     Website</button>
             </div>
-            <div *ngIf="tiDirectoryName && questionMaterials?.length">
+            <div class="my-4" *ngIf="tiDirectoryName && questionMaterials?.length">
                 <button *ngFor="let qm of questionMaterials" mat-flat-button class="d-block w-100 mb-2" color="primary"
                     (click)="selectQuestionMaterial(qm)">Copy Code For Line {{qm.line}}</button>
             </div>

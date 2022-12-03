@@ -141,4 +141,34 @@ export class MainComponent implements OnInit {
   private async copyToClipboard(text: string) {
     await navigator.clipboard.writeText(text);
   }
+
+  linkedInPeopleSearch() {
+    try {
+      const url = `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(this.form.value.candidateName)}`;
+      window.open(url, "_blank");
+    } catch (error) {
+      console.error(error);
+      this.snackBarService.showSnackBar('Error while searching.');
+    }
+  }
+
+  gitHubUserSearch() {
+    try {
+      const url = `https://github.com/search?q=${encodeURIComponent(this.form.value.candidateName)}&type=users`;
+      window.open(url, "_blank");
+    } catch (error) {
+      console.error(error);
+      this.snackBarService.showSnackBar('Error while searching.');
+    }
+  }
+
+  googleSearch() {
+    try {
+      const url = `https://www.google.com/search?q=${encodeURIComponent(this.form.value.candidateName)}`;
+      window.open(url, "_blank");
+    } catch (error) {
+      console.error(error);
+      this.snackBarService.showSnackBar('Error while searching.');
+    }
+  }
 }
