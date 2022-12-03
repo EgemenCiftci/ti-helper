@@ -1,7 +1,8 @@
 <div class="d-flex flex-column">
-    <button mat-flat-button class="m-2" color="primary" (click)="selectTiDirectory()">Select TI Directory
-        (Current:
-        {{tiDirectoryName ?? "None"}})</button>
+    <button mat-flat-button class="m-2" color="primary" (click)="selectTiDirectory()">
+        <span>Select TI Directory (Current: {{tiDirectoryName ?? "None"}})</span>
+        <mat-icon>folder_open</mat-icon>
+    </button>
 
     <div class="d-flex flex-row">
         <div *ngIf="tiDirectoryName" class="flex-fill p-2">
@@ -30,9 +31,11 @@
                     <mat-label>Relevant Experience</mat-label>
                     <input matInput formControlName="relevantExperience" type="number">
                 </mat-form-field>
-                <button mat-flat-button class="w-100" color="primary" type="submit">{{isInUpdateMode ? "Update" :
-                    "Create"}}
-                    Candidate Folder</button>
+                <button mat-flat-button class="w-100" color="primary" type="submit">
+                    <span>{{isInUpdateMode ? "Update" : "Create"}} Candidate Folder</span>
+                    <mat-icon *ngIf="!isInUpdateMode">create_new_folder</mat-icon>
+                    <mat-icon *ngIf="isInUpdateMode">edit</mat-icon>
+                </button>
             </form>
             <div class="my-4" *ngIf="form?.value?.candidateName">
                 <button mat-flat-button class="w-100 mb-2" color="primary" (click)="linkedInPeopleSearch()">
