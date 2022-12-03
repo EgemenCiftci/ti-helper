@@ -5,7 +5,6 @@
 
     <div class="d-flex flex-row">
         <div *ngIf="tiDirectoryName" class="flex-fill p-2">
-            <mat-divider class="mb-1"></mat-divider>
             <form [formGroup]="form" (submit)="submit()">
                 <mat-form-field class="d-block mx-1" appearance="fill">
                     <mat-label>Candidate Name</mat-label>
@@ -39,7 +38,6 @@
 
         <div class="flex-fill p-2">
             <div *ngIf="tiDirectoryName">
-                <mat-divider class="mb-1"></mat-divider>
                 <button mat-flat-button class="d-block w-100 mb-2" color="primary"
                     (click)="copyAspNetCoreCodeAndOpenWebsite()">Copy
                     ASP.Net
@@ -51,7 +49,6 @@
                     Website</button>
             </div>
             <div *ngIf="tiDirectoryName && questionMaterials?.length">
-                <mat-divider class="mb-1"></mat-divider>
                 <button *ngFor="let qm of questionMaterials" mat-flat-button class="d-block w-100 mb-2" color="primary"
                     (click)="selectQuestionMaterial(qm)">Copy Code For Line {{qm.line}}</button>
             </div>

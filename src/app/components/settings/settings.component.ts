@@ -30,26 +30,36 @@ export class SettingsComponent implements OnInit {
   }
 
   submit() {
-    if (!this.form?.valid) {
-      return;
+    try {
+      if (!this.form?.valid) {
+        return;
+      }
+
+      this.settingsService.interviewerName = this.form.value.interviewerName;
+      this.settingsService.outputDirectory = this.form.value.outputDirectory;
+      this.settingsService.inputDirectory = this.form.value.inputDirectory;
+      this.settingsService.aspNetCoreCodeFileName = this.form.value.aspNetCoreCodeFileName;
+      this.settingsService.wpfCodeFileName = this.form.value.wpfCodeFileName;
+      this.settingsService.questionMaterialsFileName = this.form.value.questionMaterialsFileName;
+      this.settingsService.interviewFormFileName = this.form.value.interviewFormFileName;
+      this.settingsService.websiteUrl = this.form.value.websiteUrl;
+      this.settingsService.saveSettings();
+
+      this.snackBarService.showSnackBar('Settings saved successfully.');
+    } catch (error) {
+      console.error(error);
+      this.snackBarService.showSnackBar('Error while saving settings.');
     }
-
-    this.settingsService.interviewerName = this.form.value.interviewerName;
-    this.settingsService.outputDirectory = this.form.value.outputDirectory;
-    this.settingsService.inputDirectory = this.form.value.inputDirectory;
-    this.settingsService.aspNetCoreCodeFileName = this.form.value.aspNetCoreCodeFileName;
-    this.settingsService.wpfCodeFileName = this.form.value.wpfCodeFileName;
-    this.settingsService.questionMaterialsFileName = this.form.value.questionMaterialsFileName;
-    this.settingsService.interviewFormFileName = this.form.value.interviewFormFileName;
-    this.settingsService.websiteUrl = this.form.value.websiteUrl;
-    this.settingsService.saveSettings();
-
-    this.snackBarService.showSnackBar('Settings saved successfully.');
   }
 
   reset() {
-    this.settingsService.resetSettings();
-    this.ngOnInit();
-    this.snackBarService.showSnackBar('Settings reset successfully.');
-  } 
+    try {
+      this.settingsService.resetSettings();
+      this.ngOnInit();
+      this.snackBarService.showSnackBar('Settings reset successfully.');
+    } catch (error) {
+      console.error(error);
+      this.snackBarService.showSnackBar('Error while resetting settings.');
+    }
+  }
 }

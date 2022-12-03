@@ -3,7 +3,6 @@ import { SettingsService } from './settings.service';
 import * as Excel from 'exceljs';
 import { ExcelData } from '../models/excel-data';
 import { QuestionMaterial } from '../models/question-material';
-import { SnackBarService } from './snack-bar.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +16,7 @@ export class FileService {
   questionMaterialsFileHandle?: FileSystemFileHandle;
   interviewFormFileHandle?: FileSystemFileHandle;
 
-  constructor(private settingsService: SettingsService,
-    private snackBarService: SnackBarService) {
+  constructor(private settingsService: SettingsService) {
   }
 
   async initialize() {
@@ -72,25 +70,11 @@ export class FileService {
   }
 
   private async getFileHandle(handle: FileSystemDirectoryHandle | undefined, fileName: string, createIfNotExists = false): Promise<FileSystemFileHandle | undefined> {
-    if (handle) {
-      try {
-        return await handle.getFileHandle(fileName, { create: createIfNotExists });
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    return undefined;
+    return await handle?.getFileHandle(fileName, { create: createIfNotExists });
   }
 
   private async getDirectoryHandle(handle: FileSystemDirectoryHandle | undefined, directoryName: string, createIfNotExists = false): Promise<FileSystemDirectoryHandle | undefined> {
-    if (handle) {
-      try {
-        return await handle.getDirectoryHandle(directoryName, { create: createIfNotExists });
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    return undefined;
+    return await handle?.getDirectoryHandle(directoryName, { create: createIfNotExists });
   }
 
   async createUpdateCandidateFolder(excelData: ExcelData) {
@@ -101,11 +85,8 @@ export class FileService {
     await this.writeToFile(handle, fileData);
   }
 
-  private async readFromFile(fileHandle: FileSystemFileHandle | undefined): Promise<any> {
-    if (fileHandle) {
-      return await fileHandle.getFile();
-    }
-    return undefined;
+  private async readFromFile(fileHandle: FileSystemFileHandle | undefined): Promise<File | undefined> {
+    return await fileHandle?.getFile();
   }
 
   private async writeToFile(fileHandle: FileSystemFileHandle | undefined, data: any) {
@@ -116,7 +97,7 @@ export class FileService {
     }
   }
 
-  async updateExcel(fileData: any, excelData: ExcelData): Promise<any> {
+  private async updateExcel(fileData: any, excelData: ExcelData): Promise<any> {
     if (!fileData || !excelData) {
       return undefined;
     }

@@ -33,40 +33,55 @@ export class MainComponent implements OnInit {
     });
 
     this.form.get('candidateName')?.valueChanges.subscribe(async val => {
-      const candidateName = val.trim();
-      this.isInUpdateMode = this.candidateNames.includes(candidateName);
-      if (this.isInUpdateMode) {
-        this.setExcelData(await this.fileService.getCandidateData(candidateName));
+      try {
+        const candidateName = val.trim();
+        this.isInUpdateMode = this.candidateNames.includes(candidateName);
+        if (this.isInUpdateMode) {
+          this.setExcelData(await this.fileService.getCandidateData(candidateName));
+        }
+      } catch (error) {
+        console.error(error);
+        this.snackBarService.showSnackBar('Error while getting candidate data.');
       }
     });
   }
 
   async selectTiDirectory() {
-    await this.fileService.initialize();
-    this.tiDirectoryName = this.fileService.tiDirectoryHandle?.name;
-    this.candidateNames = await this.fileService.getCandidateNames();
-    this.questionMaterials = await this.fileService.getQuestionMaterials();
+    try {
+      await this.fileService.initialize();
+      this.tiDirectoryName = this.fileService.tiDirectoryHandle?.name;
+      this.candidateNames = await this.fileService.getCandidateNames();
+      this.questionMaterials = await this.fileService.getQuestionMaterials();
+    } catch (error) {
+      console.error(error);
+      this.snackBarService.showSnackBar('Error while selecting TI directory.');
+    }
   }
 
   async submit() {
-    if (!this.form?.valid) {
-      return;
-    }
+    try {
+      if (!this.form?.valid) {
+        return;
+      }
 
-    const excelData = this.getExcelData(this.form.value);
+      const excelData = this.getExcelData(this.form.value);
 
-    await this.fileService.createUpdateCandidateFolder(excelData);
+      await this.fileService.createUpdateCandidateFolder(excelData);
 
-    if (this.isInUpdateMode) {
-      this.snackBarService.showSnackBar('Folder updated successfully.');
-    } else {
-      this.candidateNames = await this.fileService.getCandidateNames();
-      this.isInUpdateMode = this.candidateNames.includes(excelData.candidateName);
-      this.snackBarService.showSnackBar('Folder created successfully.');
+      if (this.isInUpdateMode) {
+        this.snackBarService.showSnackBar('Folder updated successfully.');
+      } else {
+        this.candidateNames = await this.fileService.getCandidateNames();
+        this.isInUpdateMode = this.candidateNames.includes(excelData.candidateName);
+        this.snackBarService.showSnackBar('Folder created successfully.');
+      }
+    } catch (error) {
+      console.error(error);
+      this.snackBarService.showSnackBar('Error while creating/updating candidate folder.');
     }
   }
 
-  getExcelData(formValue: any): ExcelData {
+  private getExcelData(formValue: any): ExcelData {
     return {
       candidateName: formValue.candidateName.trim(),
       interviewerName: formValue.interviewerName.trim(),
@@ -75,7 +90,7 @@ export class MainComponent implements OnInit {
     };
   }
 
-  setExcelData(excelData: ExcelData) {
+  private setExcelData(excelData: ExcelData) {
     this.form.patchValue({
       interviewerName: excelData.interviewerName,
       date: excelData.date,
@@ -84,29 +99,46 @@ export class MainComponent implements OnInit {
   }
 
   async copyAspNetCoreCodeAndOpenWebsite() {
-    const code = await this.fileService.getAspNetCoreCode();
-    await this.copyToClipboard(code);
-    this.openWebsiteInNewTab();
+    try {
+      const code = await this.fileService.getAspNetCoreCode();
+      await this.copyToClipboard(code);
+      this.snackBarService.showSnackBar('Copied to clipboard');
+      this.openWebsiteInNewTab();
+    } catch (error) {
+      console.error(error);
+      this.snackBarService.showSnackBar('Error while copying code.');
+    }
   }
 
   async copyWpfCodeAndOpenWebsite() {
-    const code = await this.fileService.getWpfCode();
-    await this.copyToClipboard(code);
-    this.openWebsiteInNewTab();
+    try {
+      const code = await this.fileService.getWpfCode();
+      await this.copyToClipboard(code);
+      this.snackBarService.showSnackBar('Copied to clipboard');
+      this.openWebsiteInNewTab();
+    } catch (error) {
+      console.error(error);
+      this.snackBarService.showSnackBar('Error while copying code.');
+    }
   }
 
-  openWebsiteInNewTab() {
+  private openWebsiteInNewTab() {
     window.open(this.settingsService.websiteUrl, "_blank");
   }
 
   async selectQuestionMaterial(qm: QuestionMaterial) {
-    if (qm.code) {
-      await this.copyToClipboard(qm.code);
+    try {
+      if (qm.code) {
+        await this.copyToClipboard(qm.code);
+        this.snackBarService.showSnackBar('Copied to clipboard');
+      }
+    } catch (error) {
+      console.error(error);
+      this.snackBarService.showSnackBar('Error while copying code.');
     }
   }
 
-  async copyToClipboard(text: string) {
+  private async copyToClipboard(text: string) {
     await navigator.clipboard.writeText(text);
-    this.snackBarService.showSnackBar('Copied to clipboard');
   }
 }
