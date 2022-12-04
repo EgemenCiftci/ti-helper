@@ -12,6 +12,6 @@ body {
 
 .mat-mdc-snack-bar-container {
     --mat-mdc-snack-bar-button-color: white;
-    --mdc-snackbar-container-color: black;
-    --mdc-snackbar-supporting-text-color: yellow;
+    --mdc-snackbar-container-color: #4a4a4a;
+    --mdc-snackbar-supporting-text-color: #e4e4e4;
 }
