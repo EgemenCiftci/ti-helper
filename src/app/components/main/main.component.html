@@ -6,70 +6,93 @@
 
     <div class="d-flex flex-row">
         <div *ngIf="tiDirectoryName" class="flex-fill p-2">
-            <form [formGroup]="form" (submit)="submit()">
-                <mat-form-field class="d-block mx-1" appearance="fill">
-                    <mat-label>Candidate Name</mat-label>
-                    <input type="text" matInput formControlName="candidateName" [matAutocomplete]="auto">
-                    <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let name of candidateNames" [value]="name">
-                            {{name}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-                <mat-form-field class="d-block mx-1" appearance="fill">
-                    <mat-label>Interviewer Name</mat-label>
-                    <input matInput formControlName="interviewerName" type="text">
-                </mat-form-field>
-                <mat-form-field class="d-block mx-1" appearance="fill">
-                    <mat-label>Date</mat-label>
-                    <input matInput [matDatepicker]="picker" formControlName="date">
-                    <mat-hint>MM/DD/YYYY</mat-hint>
-                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
-                <mat-form-field class="d-block mx-1" appearance="fill">
-                    <mat-label>Relevant Experience</mat-label>
-                    <input matInput formControlName="relevantExperience" type="number">
-                </mat-form-field>
-                <button mat-flat-button class="w-100" color="primary" type="submit">
-                    <span>{{isInUpdateMode ? "Update" : "Create"}} Candidate Folder</span>
-                    <mat-icon *ngIf="!isInUpdateMode">create_new_folder</mat-icon>
-                    <mat-icon *ngIf="isInUpdateMode">edit</mat-icon>
-                </button>
-            </form>
-            <div class="my-4" *ngIf="form?.value?.candidateName">
-                <button mat-flat-button class="w-100 mb-2" color="primary" (click)="linkedInPeopleSearch()">
-                    <span>LinkedIn People Search</span>
-                    <mat-icon>open_in_new</mat-icon>
-                </button>
-                <button mat-flat-button class="w-100 mb-2" color="primary" (click)="gitHubUserSearch()">
-                    <span>GitHub User Search</span>
-                    <mat-icon>open_in_new</mat-icon>
-                </button>
-                <button mat-flat-button class="w-100 mb-2" color="primary" (click)="googleSearch()">
-                    <span>Google Search</span>
-                    <mat-icon>open_in_new</mat-icon>
-                </button>
-            </div>
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>Overview</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <form [formGroup]="form">
+                        <mat-form-field class="d-block mx-1" appearance="fill">
+                            <mat-label>Candidate Name</mat-label>
+                            <input type="text" matInput formControlName="candidateName" [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option *ngFor="let name of candidateNames" [value]="name">
+                                    {{name}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                        <mat-form-field class="d-block mx-1" appearance="fill">
+                            <mat-label>Interviewer Name</mat-label>
+                            <input matInput formControlName="interviewerName" type="text">
+                        </mat-form-field>
+                        <mat-form-field class="d-block mx-1" appearance="fill">
+                            <mat-label>Date</mat-label>
+                            <input matInput [matDatepicker]="picker" formControlName="date">
+                            <mat-hint>MM/DD/YYYY</mat-hint>
+                            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field class="d-block mx-1" appearance="fill">
+                            <mat-label>Relevant Experience</mat-label>
+                            <input matInput formControlName="relevantExperience" type="number">
+                        </mat-form-field>
+                    </form>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-flat-button class="w-100" color="primary" (click)="submit()">
+                        <span>{{isInUpdateMode ? "Update" : "Create"}} Candidate Folder</span>
+                        <mat-icon *ngIf="!isInUpdateMode">create_new_folder</mat-icon>
+                        <mat-icon *ngIf="isInUpdateMode">edit</mat-icon>
+                    </button>
+                </mat-card-actions>
+            </mat-card>
+            <mat-card class="my-4" *ngIf="form?.value?.candidateName">
+                <mat-card-header>
+                    <mat-card-title>Search</mat-card-title>
+                </mat-card-header>
+                <mat-card-actions>
+                    <button mat-flat-button class="w-100 mx-1" color="primary" (click)="googleSearch()">
+                        <span>Google</span>
+                        <mat-icon>open_in_new</mat-icon>
+                    </button>
+                    <button mat-flat-button class="w-100 mx-1" color="primary" (click)="linkedInPeopleSearch()">
+                        <span>LinkedIn</span>
+                        <mat-icon>open_in_new</mat-icon>
+                    </button>
+                    <button mat-flat-button class="w-100 mx-1" color="primary" (click)="gitHubUserSearch()">
+                        <span>GitHub</span>
+                        <mat-icon>open_in_new</mat-icon>
+                    </button>
+                </mat-card-actions>
+            </mat-card>
         </div>
 
         <div class="flex-fill p-2">
-            <div *ngIf="tiDirectoryName">
-                <button mat-flat-button class="d-block w-100 mb-2" color="primary"
-                    (click)="copyAspNetCoreCodeAndOpenWebsite()">
-                    <span>Copy ASP.Net Core Code And Open Website</span>
-                    <mat-icon>open_in_new</mat-icon>
-                </button>
-                <button mat-flat-button class="d-block w-100 mb-2" color="primary"
-                    (click)="copyWpfCodeAndOpenWebsite()">
-                    <span>Copy WPF Code And Open Website</span>
-                    <mat-icon>open_in_new</mat-icon>
-                </button>
-            </div>
-            <div class="my-4" *ngIf="tiDirectoryName && questionMaterials?.length">
-                <button *ngFor="let qm of questionMaterials" mat-flat-button class="d-block w-100 mb-2" color="primary"
-                    (click)="selectQuestionMaterial(qm)">Copy Code For Line {{qm.line}}</button>
-            </div>
+            <mat-card *ngIf="tiDirectoryName">
+                <mat-card-header>
+                    <mat-card-title>Code Review</mat-card-title>
+                </mat-card-header>
+                <mat-card-actions>
+                    <button mat-flat-button class="w-100 mx-1" color="primary"
+                        (click)="copyAspNetCoreCodeAndOpenWebsite()">
+                        <span>Copy ASP.Net Core Code And Open Website</span>
+                        <mat-icon>open_in_new</mat-icon>
+                    </button>
+                    <button mat-flat-button class="w-100 mx-1" color="primary" (click)="copyWpfCodeAndOpenWebsite()">
+                        <span>Copy WPF Code And Open Website</span>
+                        <mat-icon>open_in_new</mat-icon>
+                    </button>
+                </mat-card-actions>
+            </mat-card>
+            <mat-card class="my-4" *ngIf="tiDirectoryName && questionMaterials?.length">
+                <mat-card-header>
+                    <mat-card-title>Copy Code</mat-card-title>
+                </mat-card-header>
+                <mat-card-actions>
+                    <button *ngFor="let qm of questionMaterials" mat-flat-button class="w-100 mx-1"
+                        color="primary" (click)="selectQuestionMaterial(qm)">Line {{qm.line}}</button>
+                </mat-card-actions>
+            </mat-card>
         </div>
     </div>
 </div>
