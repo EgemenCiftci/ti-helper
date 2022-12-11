@@ -67,11 +67,16 @@
                     </form>
                 </mat-card-content>
                 <mat-card-actions>
-                    <button mat-flat-button class="w-100" color="primary" [disabled]="!overviewForm.valid"
+                    <button mat-flat-button class="w-100 mx-1" color="primary" [disabled]="!overviewForm.valid"
                         (click)="submit()">
                         <span>{{isInUpdateMode ? "Update" : "Create"}} Candidate Folder</span>
                         <mat-icon *ngIf="!isInUpdateMode">create_new_folder</mat-icon>
                         <mat-icon *ngIf="isInUpdateMode">edit</mat-icon>
+                    </button>
+                    <button mat-flat-button class="w-100 mx-1" color="primary" *ngIf="isInUpdateMode" [disabled]="!overviewForm.valid"
+                        (click)="refresh()">
+                        <span>Refresh</span>
+                        <mat-icon>refresh</mat-icon>
                     </button>
                 </mat-card-actions>
             </mat-card>

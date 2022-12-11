@@ -36,7 +36,7 @@ export class MainComponent implements OnInit {
       relevantExperience: [0],
       communication: [''],
       finalResultLevel: [''],
-      overallImpression: ['']
+      overallImpression: ['Part of the overall feedback please include input for:\na.	Ability to code – based on questions on second tab\nb.	Ability to design and engineer – based on architecture questions, oop, patterns, etc.\nc.	Practical task results\nd.	Ability to perform in the project – understanding methodology/sdlc/estimation\ne.	Ability to communicate – knowing English, expressing thoughts']
     });
 
     this.overviewForm.get('candidateName')?.valueChanges.subscribe(async val => {
@@ -92,6 +92,21 @@ export class MainComponent implements OnInit {
     } catch (error) {
       console.error(error);
       this.snackBarService.showSnackBar('Error while creating/updating candidate folder.');
+    }
+  }
+
+  async refresh() {
+    try {
+      if (!this.overviewForm?.valid || !this.isInUpdateMode) {
+        return;
+      }
+
+      this.setExcelData(await this.fileService.getCandidateData(this.overviewForm.value.candidateName));
+
+      this.snackBarService.showSnackBar('Folder refreshed successfully.');
+    } catch (error) {
+      console.error(error);
+      this.snackBarService.showSnackBar('Error while refreshing candidate folder.');
     }
   }
 

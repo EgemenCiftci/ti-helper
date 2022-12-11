@@ -113,7 +113,7 @@ export class FileService {
     worksheet.getCell('B7').value = excelData.overallImpression;
     worksheet.getCell('B8').value = excelData.relevantExperience;
     worksheet.getCell('B9').value = excelData.finalResultLevel;
-    worksheet.getCell('E9').value = excelData.finalResultScore;
+    worksheet.getCell('E9').value = (!excelData.finalResultScore || excelData.finalResultScore < 2.5) ? undefined : excelData.finalResultScore;
 
     return await workbook.xlsx.writeBuffer();
   }
