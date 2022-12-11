@@ -105,10 +105,16 @@ export class FileService {
     const workbook = new Excel.Workbook();
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet('Overview');
+
     worksheet.getCell('B1').value = excelData.candidateName;
     worksheet.getCell('B2').value = excelData.interviewerName;
     worksheet.getCell('B3').value = excelData.date?.toDateString();
+    worksheet.getCell('B4').value = excelData.communication;
+    worksheet.getCell('B7').value = excelData.overallImpression;
     worksheet.getCell('B8').value = excelData.relevantExperience;
+    worksheet.getCell('B9').value = excelData.finalResultLevel;
+    worksheet.getCell('E9').value = excelData.finalResultScore;
+
     return await workbook.xlsx.writeBuffer();
   }
 
@@ -144,15 +150,67 @@ export class FileService {
     const candidateDirectoryHandle = await this.getDirectoryHandle(this.outputDirectoryHandle, candidateName, false);
     const handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: false });
     const fileData = await this.readFromFile(handle);
+
     if (fileData) {
       const workbook = new Excel.Workbook();
       await workbook.xlsx.load(fileData as any);
       const worksheet = workbook.getWorksheet('Overview');
       excelData.interviewerName = String(worksheet.getCell('B2').value);
       excelData.date = new Date(String(worksheet.getCell('B3').value));
+      excelData.communication = String(worksheet.getCell('B4').value);
+      excelData.overallImpression = String(worksheet.getCell('B7').value);
       excelData.relevantExperience = Number(worksheet.getCell('B8').value);
+      excelData.finalResultLevel = String(worksheet.getCell('B9').value);
+      excelData.finalResultScore = Number(worksheet.getCell('E9').value);
     }
 
     return excelData;
+  }
+
+  async getFinalResultScore(candidateName: string, finalResultLevel: string | undefined): Promise<number | undefined> {
+    if (!finalResultLevel) {
+      return undefined;
+    }
+
+    const candidateDirectoryHandle = await this.getDirectoryHandle(this.outputDirectoryHandle, candidateName, false);
+    const handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: false });
+    const fileData = await this.readFromFile(handle);
+
+    if (!fileData) {
+      return undefined;
+    }
+
+    const workbook = new Excel.Workbook();
+    await workbook.xlsx.load(fileData as any);
+    const worksheet = workbook.getWorksheet('CS questions');
+    const cell = this.getFinalResultScoreCell(finalResultLevel);
+    return cell ? Number(worksheet.getCell(cell).value) : undefined;
+  }
+
+  getFinalResultScoreCell(finalResultLevel: string): string | undefined {
+    if (finalResultLevel.toLowerCase() === 'junior') {
+      return 'K11';
+    } else if (finalResultLevel.toLowerCase() === 'regular') {
+      return 'K12';
+    } else if (finalResultLevel.toLowerCase() === 'senior') {
+      return 'K13';
+    } else {
+      return undefined;
+    }
+  }
+
+  async getPracticalTaskScore(candidateName: string): Promise<number | undefined> {
+    const candidateDirectoryHandle = await this.getDirectoryHandle(this.outputDirectoryHandle, candidateName, false);
+    const handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: false });
+    const fileData = await this.readFromFile(handle);
+
+    if (!fileData) {
+      return undefined;
+    }
+
+    const workbook = new Excel.Workbook();
+    await workbook.xlsx.load(fileData as any);
+    const worksheet = workbook.getWorksheet('Overview');
+    return Number(worksheet.getCell('B6').value);
   }
 }

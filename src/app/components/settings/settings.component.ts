@@ -25,7 +25,8 @@ export class SettingsComponent implements OnInit {
       wpfCodeFileName: [this.settingsService.wpfCodeFileName],
       questionMaterialsFileName: [this.settingsService.questionMaterialsFileName],
       interviewFormFileName: [this.settingsService.interviewFormFileName],
-      websiteUrl: [this.settingsService.websiteUrl]
+      websiteUrl: [this.settingsService.websiteUrl],
+      openAiApiKey: [this.settingsService.openAiApiKey]
     });
   }
 
@@ -35,14 +36,15 @@ export class SettingsComponent implements OnInit {
         return;
       }
 
-      this.settingsService.interviewerName = this.form.value.interviewerName;
-      this.settingsService.outputDirectory = this.form.value.outputDirectory;
-      this.settingsService.inputDirectory = this.form.value.inputDirectory;
-      this.settingsService.aspNetCoreCodeFileName = this.form.value.aspNetCoreCodeFileName;
-      this.settingsService.wpfCodeFileName = this.form.value.wpfCodeFileName;
-      this.settingsService.questionMaterialsFileName = this.form.value.questionMaterialsFileName;
-      this.settingsService.interviewFormFileName = this.form.value.interviewFormFileName;
-      this.settingsService.websiteUrl = this.form.value.websiteUrl;
+      this.settingsService.interviewerName = this.form.value.interviewerName.trim();
+      this.settingsService.outputDirectory = this.form.value.outputDirectory.trim();
+      this.settingsService.inputDirectory = this.form.value.inputDirectory.trim();
+      this.settingsService.aspNetCoreCodeFileName = this.form.value.aspNetCoreCodeFileName.trim();
+      this.settingsService.wpfCodeFileName = this.form.value.wpfCodeFileName.trim();
+      this.settingsService.questionMaterialsFileName = this.form.value.questionMaterialsFileName.trim();
+      this.settingsService.interviewFormFileName = this.form.value.interviewFormFileName.trim();
+      this.settingsService.websiteUrl = this.form.value.websiteUrl.trim();
+      this.settingsService.openAiApiKey = this.form.value.openAiApiKey.trim();
       this.settingsService.saveSettings();
 
       this.snackBarService.showSnackBar('Settings saved successfully.');

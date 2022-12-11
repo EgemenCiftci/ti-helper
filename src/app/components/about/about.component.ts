@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TextGenerationService } from 'src/app/services/text-generation.service';
 
 @Component({
   selector: 'app-about',
@@ -8,9 +9,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class AboutComponent {
 
-  constructor(private snackBar: MatSnackBar) { }
+  constructor(private snackBar: MatSnackBar, 
+    private textGenerationService: TextGenerationService) { }
 
-  snackBarTest() {
-    this.snackBar.open('Test...', 'X');
+  async test() {
+    const text = await this.textGenerationService.generateText('Hello world!');
+    alert(text);
   }
 }

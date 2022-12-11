@@ -12,6 +12,7 @@ export class SettingsService {
   questionMaterialsFileName!: string;
   interviewFormFileName!: string;
   websiteUrl!: string;
+  openAiApiKey!: string;
 
   constructor() {
     this.loadSettings();
@@ -26,6 +27,7 @@ export class SettingsService {
     this.questionMaterialsFileName = localStorage.getItem('questionMaterialsFileName') ?? 'question materials.cs';
     this.interviewFormFileName = localStorage.getItem('interviewFormFileName') ?? 'Interview Form CS template 0.8.xlsx';
     this.websiteUrl = localStorage.getItem('websiteUrl') ?? 'https://www.snipp.live/new';
+    this.openAiApiKey = localStorage.getItem('openAiApiKey') ?? '';
   }
 
   saveSettings() {
@@ -37,6 +39,7 @@ export class SettingsService {
     localStorage.setItem('questionMaterialsFileName', this.questionMaterialsFileName);
     localStorage.setItem('interviewFormFileName', this.interviewFormFileName);
     localStorage.setItem('websiteUrl', this.websiteUrl);
+    localStorage.setItem('openAiApiKey', this.openAiApiKey);
   }
 
   resetSettings() {
@@ -48,6 +51,7 @@ export class SettingsService {
     localStorage.removeItem('questionMaterialsFileName');
     localStorage.removeItem('interviewFormFileName');
     localStorage.removeItem('websiteUrl');
+    localStorage.removeItem('openAiApiKey');
     this.loadSettings();
   }
 }
