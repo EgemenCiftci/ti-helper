@@ -1,4 +1,10 @@
-# TiHelper
+# Technical Interview Helper
+
+Used technologies:
+- File system access API
+- Excel read/write using ExcelJS
+- OpenAI api
+- Web storage API
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.1.
 
