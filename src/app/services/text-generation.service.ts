@@ -29,5 +29,4 @@ export class TextGenerationService {
 
     return response.data.choices[0].text;
   }
-
 }

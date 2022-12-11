@@ -25,7 +25,7 @@ export class MainComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
     private fileService: FileService,
     private snackBarService: SnackBarService,
-    private settingsService: SettingsService,
+    public settingsService: SettingsService,
     private textGenerationService: TextGenerationService) { }
 
   ngOnInit() {

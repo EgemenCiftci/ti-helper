@@ -122,7 +122,7 @@
                         (click)="selectQuestionMaterial(qm)">Line {{qm.line}}</button>
                 </mat-card-actions>
             </mat-card>
-            <mat-card class="my-4" *ngIf="isInUpdateMode">
+            <mat-card class="my-4" *ngIf="isInUpdateMode && settingsService.openAiApiKey">
                 <mat-card-header>
                     <mat-card-title>Overall Impression Generator</mat-card-title>
                 </mat-card-header>
