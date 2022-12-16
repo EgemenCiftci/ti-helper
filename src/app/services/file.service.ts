@@ -78,10 +78,10 @@ export class FileService {
   }
 
   async createUpdateCandidateFolder(excelData: ExcelData) {
-    const candidateDirectoryHandle = await this.getDirectoryHandle(this.outputDirectoryHandle, excelData.candidateName, true);
-    const handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: true });
     let fileData = await this.readFromFile(this.interviewFormFileHandle);
     fileData = await this.updateExcel(fileData, excelData);
+    const candidateDirectoryHandle = await this.getDirectoryHandle(this.outputDirectoryHandle, excelData.candidateName, true);
+    const handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: true });
     await this.writeToFile(handle, fileData);
   }
 
@@ -155,6 +155,7 @@ export class FileService {
       const workbook = new Excel.Workbook();
       await workbook.xlsx.load(fileData as any);
       const worksheet = workbook.getWorksheet('Overview');
+      
       excelData.interviewerName = String(worksheet.getCell('B2').value);
       excelData.date = new Date(String(worksheet.getCell('B3').value));
       excelData.communication = String(worksheet.getCell('B4').value);
