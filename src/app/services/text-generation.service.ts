@@ -22,7 +22,7 @@ export class TextGenerationService {
     this.initialize(this.settingsService.openAiApiKey);
     const response = await this.openai.createCompletion({
       model: "text-davinci-003",
-      prompt: "Improve the following text:\n" + text + "\n",
+      prompt: "Write a long technical interview summary about the candidate using this data.\n" + text + "\n",
       temperature: 0,
       max_tokens: 256,
     });

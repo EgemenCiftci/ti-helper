@@ -214,21 +214,21 @@ export class MainComponent implements OnInit {
       }
 
       let text = '';
-      text += this.extraInfoForm.value.arrived ? `The candidate arrived the interview ${this.extraInfoForm.value.arrived}.\r\n` : '';
-      text += this.overviewForm.value.communication ? `The candidate's communication skills are ${this.overviewForm.value.communication}.\r\n` : '';
+      text += this.extraInfoForm.value.arrived ? `Arrived: ${this.extraInfoForm.value.arrived}\n` : '';
+      text += this.overviewForm.value.communication ? `Communication skills: ${this.overviewForm.value.communication}\n` : '';
 
       const practicalTaskScore = await this.fileService.getPracticalTaskScore(this.overviewForm.value.candidateName);
       const practicalTaskScoreText = this.getPracticalTaskScoreText(practicalTaskScore);
-      text += practicalTaskScoreText ? `The candidate's practical skills are ${practicalTaskScoreText}.\r\n` : '';
+      text += practicalTaskScoreText ? `Practical skills: ${practicalTaskScoreText}\n` : '';
 
       const finalResultScore = await this.fileService.getFinalResultScore(this.overviewForm.value.candidateName, this.overviewForm.value.finalResultLevel);
       const finalResultScoreText = this.getFinalResultScoreText(finalResultScore);
-      text += finalResultScoreText ? `The candidate's theoretical skills are ${finalResultScoreText}.\r\n` : '';
+      text += finalResultScoreText ? `Theoretical skills: ${finalResultScoreText}\n` : '';
 
-      text += this.extraInfoForm.value.goodAt ? `The candidate is good at ${this.extraInfoForm.value.goodAt}.\r\n` : '';
-      text += this.extraInfoForm.value.badAt ? `The candidate is bad at ${this.extraInfoForm.value.badAt}.\r\n` : '';
-      text += this.extraInfoForm.value.durationMinutes ? `The interview lasted ${this.extraInfoForm.value.durationMinutes} minutes.\r\n` : '';
-      text += this.overviewForm.value.finalResultLevel ? `The candidate's final result level is ${this.overviewForm.value.finalResultLevel}.\r\n` : '';
+      text += this.extraInfoForm.value.goodAt ? `Good at: ${this.extraInfoForm.value.goodAt}\n` : '';
+      text += this.extraInfoForm.value.badAt ? `Bad at: ${this.extraInfoForm.value.badAt}\n` : '';
+      text += this.extraInfoForm.value.durationMinutes ? `Interview duration: ${this.extraInfoForm.value.durationMinutes} minutes\n` : '';
+      text += this.overviewForm.value.finalResultLevel ? `Final result level: ${this.overviewForm.value.finalResultLevel}\n` : '';
 
       const generatedText = await this.textGenerationService.generateText(text);
       this.generatedOverallImpression.setValue(generatedText);
