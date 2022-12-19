@@ -23,7 +23,7 @@ export class TextGenerationService {
     const response = await this.openai.createCompletion({
       model: "text-davinci-003",
       prompt: "Write a long technical interview summary about the candidate using this data.\n" + text + "\n",
-      temperature: 0,
+      temperature: this.settingsService.openAiTemperature, // Should be between 0 and 1
       max_tokens: 256,
     });
 

@@ -13,6 +13,7 @@ export class SettingsService {
   interviewFormFileName!: string;
   websiteUrl!: string;
   openAiApiKey!: string;
+  openAiTemperature!: number;
 
   constructor() {
     this.loadSettings();
@@ -28,6 +29,7 @@ export class SettingsService {
     this.interviewFormFileName = localStorage.getItem('interviewFormFileName') ?? 'Interview Form CS template 0.8.xlsx';
     this.websiteUrl = localStorage.getItem('websiteUrl') ?? 'https://www.snipp.live/new';
     this.openAiApiKey = localStorage.getItem('openAiApiKey') ?? '';
+    this.openAiTemperature = Number(localStorage.getItem('openAiApiTemperature') ?? '0.5');
   }
 
   saveSettings() {
@@ -40,6 +42,7 @@ export class SettingsService {
     localStorage.setItem('interviewFormFileName', this.interviewFormFileName);
     localStorage.setItem('websiteUrl', this.websiteUrl);
     localStorage.setItem('openAiApiKey', this.openAiApiKey);
+    localStorage.setItem('openAiApiTemperature', String(this.openAiTemperature));
   }
 
   resetSettings() {
@@ -52,6 +55,7 @@ export class SettingsService {
     localStorage.removeItem('interviewFormFileName');
     localStorage.removeItem('websiteUrl');
     localStorage.removeItem('openAiApiKey');
+    localStorage.removeItem('openAiApiTemperature');
     this.loadSettings();
   }
 }

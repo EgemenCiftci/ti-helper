@@ -26,7 +26,8 @@ export class SettingsComponent implements OnInit {
       questionMaterialsFileName: [this.settingsService.questionMaterialsFileName],
       interviewFormFileName: [this.settingsService.interviewFormFileName],
       websiteUrl: [this.settingsService.websiteUrl],
-      openAiApiKey: [this.settingsService.openAiApiKey]
+      openAiApiKey: [this.settingsService.openAiApiKey],
+      openAiTemperature: [this.settingsService.openAiTemperature, [Validators.min(0), Validators.max(1)]]
     });
   }
 
@@ -45,6 +46,7 @@ export class SettingsComponent implements OnInit {
       this.settingsService.interviewFormFileName = this.form.value.interviewFormFileName.trim();
       this.settingsService.websiteUrl = this.form.value.websiteUrl.trim();
       this.settingsService.openAiApiKey = this.form.value.openAiApiKey.trim();
+      this.settingsService.openAiTemperature = this.form.value.openAiTemperature;
       this.settingsService.saveSettings();
 
       this.snackBarService.showSnackBar('Settings saved successfully.');
