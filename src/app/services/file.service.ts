@@ -77,11 +77,19 @@ export class FileService {
     return await handle?.getDirectoryHandle(directoryName, { create: createIfNotExists });
   }
 
-  async createUpdateCandidateFolder(excelData: ExcelData) {
-    let fileData = await this.readFromFile(this.interviewFormFileHandle);
-    fileData = await this.updateExcel(fileData, excelData);
+  async createCandidateFolder(excelData: ExcelData) {
     const candidateDirectoryHandle = await this.getDirectoryHandle(this.outputDirectoryHandle, excelData.candidateName, true);
     const handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: true });
+    let fileData = await this.readFromFile(this.interviewFormFileHandle);
+    fileData = await this.updateExcel(fileData, excelData);
+    await this.writeToFile(handle, fileData);
+  }
+
+  async updateCandidateFolder(excelData: ExcelData) {
+    const candidateDirectoryHandle = await this.getDirectoryHandle(this.outputDirectoryHandle, excelData.candidateName, false);
+    const handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: false });
+    let fileData = await this.readFromFile(handle);
+    fileData = await this.updateExcel(fileData, excelData);
     await this.writeToFile(handle, fileData);
   }
 

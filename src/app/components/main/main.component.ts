@@ -72,7 +72,7 @@ export class MainComponent implements OnInit {
     }
   }
 
-  async submit() {
+  async createUpdateCandidateFolder() {
     try {
       if (!this.overviewForm?.valid) {
         return;
@@ -80,11 +80,11 @@ export class MainComponent implements OnInit {
 
       const excelData = this.getExcelData(this.overviewForm.value);
 
-      await this.fileService.createUpdateCandidateFolder(excelData);
-
       if (this.isInUpdateMode) {
+        await this.fileService.updateCandidateFolder(excelData);
         this.snackBarService.showSnackBar('Folder updated successfully.');
       } else {
+        await this.fileService.createCandidateFolder(excelData);
         this.candidateNames = await this.fileService.getCandidateNames();
         this.isInUpdateMode = this.candidateNames.includes(excelData.candidateName);
         this.snackBarService.showSnackBar('Folder created successfully.');
