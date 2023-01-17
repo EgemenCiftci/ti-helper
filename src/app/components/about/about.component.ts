@@ -8,6 +8,7 @@ import { TextGenerationService } from 'src/app/services/text-generation.service'
   styleUrls: ['./about.component.css']
 })
 export class AboutComponent {
+  version = require('package.json').version;
 
   constructor(private snackBar: MatSnackBar, 
     private textGenerationService: TextGenerationService) { }
