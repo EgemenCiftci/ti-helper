@@ -113,7 +113,7 @@ export class MainComponent implements OnInit {
   private getExcelData(formValue: any): ExcelData {
     return {
       candidateName: formValue.candidateName.trim(),
-      interviewerName: formValue.interviewerName.trim(),
+      interviewerName: formValue.interviewerName?.trim(),
       date: formValue.date,
       relevantExperience: formValue.relevantExperience,
       communication: formValue.communication,

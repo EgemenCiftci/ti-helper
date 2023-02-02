@@ -78,16 +78,14 @@ export class FileService {
   }
 
   async createCandidateFolder(excelData: ExcelData) {
-    const candidateDirectoryHandle = await this.getDirectoryHandle(this.outputDirectoryHandle, excelData.candidateName, true);
-    const handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: true });
+    const handle = await this.getCandidateInterviewFormFileHandle(excelData.candidateName, true);
     let fileData = await this.readFromFile(this.interviewFormFileHandle);
     fileData = await this.updateExcel(fileData, excelData);
     await this.writeToFile(handle, fileData);
   }
 
   async updateCandidateFolder(excelData: ExcelData) {
-    const candidateDirectoryHandle = await this.getDirectoryHandle(this.outputDirectoryHandle, excelData.candidateName, false);
-    const handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: false });
+    const handle = await this.getCandidateInterviewFormFileHandle(excelData.candidateName, false);
     let fileData = await this.readFromFile(handle);
     fileData = await this.updateExcel(fileData, excelData);
     await this.writeToFile(handle, fileData);
@@ -155,15 +153,14 @@ export class FileService {
   async getCandidateData(candidateName: string): Promise<ExcelData> {
     const excelData = new ExcelData();
     excelData.candidateName = candidateName;
-    const candidateDirectoryHandle = await this.getDirectoryHandle(this.outputDirectoryHandle, candidateName, false);
-    const handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: false });
+    const handle = await this.getCandidateInterviewFormFileHandle(excelData.candidateName, false);
     const fileData = await this.readFromFile(handle);
 
     if (fileData) {
       const workbook = new Excel.Workbook();
       await workbook.xlsx.load(fileData as any);
       const worksheet = workbook.getWorksheet('Overview');
-      
+
       excelData.interviewerName = String(worksheet.getCell('B2').value);
       excelData.date = new Date(String(worksheet.getCell('B3').value));
       excelData.communication = String(worksheet.getCell('B4').value);
@@ -181,8 +178,7 @@ export class FileService {
       return undefined;
     }
 
-    const candidateDirectoryHandle = await this.getDirectoryHandle(this.outputDirectoryHandle, candidateName, false);
-    const handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: false });
+    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
     const fileData = await this.readFromFile(handle);
 
     if (!fileData) {
@@ -209,8 +205,7 @@ export class FileService {
   }
 
   async getPracticalTaskScore(candidateName: string): Promise<number | undefined> {
-    const candidateDirectoryHandle = await this.getDirectoryHandle(this.outputDirectoryHandle, candidateName, false);
-    const handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: false });
+    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
     const fileData = await this.readFromFile(handle);
 
     if (!fileData) {
@@ -221,5 +216,24 @@ export class FileService {
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet('Overview');
     return Number(worksheet.getCell('B6').value);
+  }
+
+  private async getCandidateInterviewFormFileHandle(candidateName: string, createIfNotExists: boolean): Promise<FileSystemFileHandle | undefined> {
+    const candidateDirectoryHandle = await this.getDirectoryHandle(this.outputDirectoryHandle, candidateName, createIfNotExists);
+    const fileName = `${candidateName} - ${this.settingsService.interviewFormFileName}`;
+
+    let handle: FileSystemFileHandle | undefined;
+
+    try {
+      handle = await candidateDirectoryHandle?.getFileHandle(fileName, { create: createIfNotExists });
+    } catch {
+      try {
+        handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: createIfNotExists });
+      } catch {
+        handle = undefined;
+      }
+    } finally {
+      return handle;
+    }
   }
 }
