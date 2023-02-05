@@ -3,6 +3,9 @@ import { SettingsService } from './settings.service';
 import * as Excel from 'exceljs';
 import { ExcelData } from '../models/excel-data';
 import { QuestionMaterial } from '../models/question-material';
+import { MappingsService } from './mappings.service';
+import { Item } from '../models/item';
+import { Section } from '../models/section';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +19,9 @@ export class FileService {
   questionMaterialsFileHandle?: FileSystemFileHandle;
   interviewFormFileHandle?: FileSystemFileHandle;
 
-  constructor(private settingsService: SettingsService) {
+  constructor(
+    private settingsService: SettingsService,
+    private mappingsService: MappingsService) {
   }
 
   async initialize() {
@@ -77,6 +82,12 @@ export class FileService {
     return await handle?.getDirectoryHandle(directoryName, { create: createIfNotExists });
   }
 
+  async createCandidateFolderAndCopyInterviewFormFile(candidateName: string) {
+    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, true);
+    let fileData = await this.readFromFile(this.interviewFormFileHandle);
+    await this.writeToFile(handle, fileData);
+  }
+
   async createCandidateFolder(excelData: ExcelData) {
     const handle = await this.getCandidateInterviewFormFileHandle(excelData.candidateName, true);
     let fileData = await this.readFromFile(this.interviewFormFileHandle);
@@ -103,6 +114,31 @@ export class FileService {
     }
   }
 
+  async getExcelData(candidateName: string): Promise<ExcelData | undefined> {
+    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
+    const fileData = await this.readFromFile(handle);
+
+    if (!fileData) {
+      return undefined;
+    }
+
+    const workbook = new Excel.Workbook();
+    await workbook.xlsx.load(fileData as any);
+    const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
+
+    const excelData: ExcelData = {
+      candidateName: String(worksheet.getCell(this.mappingsService.mappings.overview.candidateNameCell).value),
+      interviewerName: String(worksheet.getCell(this.mappingsService.mappings.overview.interviewerNameCell).value),
+      date: new Date(String(worksheet.getCell(this.mappingsService.mappings.overview.dateCell).value)),
+      relevantExperience: Number(worksheet.getCell(this.mappingsService.mappings.overview.relevantExperienceCell).value),
+      communication: String(worksheet.getCell(this.mappingsService.mappings.overview.communicationCell).value),
+      finalResultLevel: String(worksheet.getCell(this.mappingsService.mappings.overview.finalResultLevelCell).value),
+      overallImpression: String(worksheet.getCell(this.mappingsService.mappings.overview.overallImpressionCell).value)
+    };
+
+    return excelData;
+  }
+
   private async updateExcel(fileData: any, excelData: ExcelData): Promise<any> {
     if (!fileData || !excelData) {
       return undefined;
@@ -110,16 +146,16 @@ export class FileService {
 
     const workbook = new Excel.Workbook();
     await workbook.xlsx.load(fileData as any);
-    const worksheet = workbook.getWorksheet('Overview');
+    const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
 
-    worksheet.getCell('B1').value = excelData.candidateName;
-    worksheet.getCell('B2').value = excelData.interviewerName;
-    worksheet.getCell('B3').value = excelData.date?.toDateString();
-    worksheet.getCell('B4').value = excelData.communication;
-    worksheet.getCell('B7').value = excelData.overallImpression;
-    worksheet.getCell('B8').value = excelData.relevantExperience;
-    worksheet.getCell('B9').value = excelData.finalResultLevel;
-    worksheet.getCell('E9').value = (!excelData.finalResultScore || excelData.finalResultScore < 2.5) ? undefined : excelData.finalResultScore;
+    worksheet.getCell(this.mappingsService.mappings.overview.candidateNameCell).value = excelData.candidateName;
+    worksheet.getCell(this.mappingsService.mappings.overview.interviewerNameCell).value = excelData.interviewerName;
+    worksheet.getCell(this.mappingsService.mappings.overview.dateCell).value = excelData.date?.toDateString();
+    worksheet.getCell(this.mappingsService.mappings.overview.communicationCell).value = excelData.communication;
+    worksheet.getCell(this.mappingsService.mappings.overview.overallImpressionCell).value = excelData.overallImpression;
+    worksheet.getCell(this.mappingsService.mappings.overview.relevantExperienceCell).value = excelData.relevantExperience;
+    worksheet.getCell(this.mappingsService.mappings.overview.finalResultLevelCell).value = excelData.finalResultLevel;
+    worksheet.getCell(this.mappingsService.mappings.overview.finalResultScoreCell).value = (!excelData.finalResultScore || excelData.finalResultScore < 2.5) ? undefined : excelData.finalResultScore;
 
     return await workbook.xlsx.writeBuffer();
   }
@@ -159,15 +195,15 @@ export class FileService {
     if (fileData) {
       const workbook = new Excel.Workbook();
       await workbook.xlsx.load(fileData as any);
-      const worksheet = workbook.getWorksheet('Overview');
+      const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
 
-      excelData.interviewerName = String(worksheet.getCell('B2').value);
-      excelData.date = new Date(String(worksheet.getCell('B3').value));
-      excelData.communication = String(worksheet.getCell('B4').value);
-      excelData.overallImpression = String(worksheet.getCell('B7').value);
-      excelData.relevantExperience = Number(worksheet.getCell('B8').value);
-      excelData.finalResultLevel = String(worksheet.getCell('B9').value);
-      excelData.finalResultScore = Number(worksheet.getCell('E9').value);
+      excelData.interviewerName = String(worksheet.getCell(this.mappingsService.mappings.overview.interviewerNameCell).value);
+      excelData.date = new Date(String(worksheet.getCell(this.mappingsService.mappings.overview.dateCell).value));
+      excelData.communication = String(worksheet.getCell(this.mappingsService.mappings.overview.communicationCell).value);
+      excelData.overallImpression = String(worksheet.getCell(this.mappingsService.mappings.overview.overallImpressionCell).value);
+      excelData.relevantExperience = Number(worksheet.getCell(this.mappingsService.mappings.overview.relevantExperienceCell).value);
+      excelData.finalResultLevel = String(worksheet.getCell(this.mappingsService.mappings.overview.finalResultLevelCell).value);
+      excelData.finalResultScore = Number(worksheet.getCell(this.mappingsService.mappings.overview.finalResultScoreCell).value);
     }
 
     return excelData;
@@ -187,18 +223,18 @@ export class FileService {
 
     const workbook = new Excel.Workbook();
     await workbook.xlsx.load(fileData as any);
-    const worksheet = workbook.getWorksheet('CS questions');
+    const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
     const cell = this.getFinalResultScoreCell(finalResultLevel);
     return cell ? Number(worksheet.getCell(cell).value) : undefined;
   }
 
   getFinalResultScoreCell(finalResultLevel: string): string | undefined {
     if (finalResultLevel.toLowerCase() === 'junior') {
-      return 'K11';
+      return this.mappingsService.mappings.csQuestions.juniorScoreCell;
     } else if (finalResultLevel.toLowerCase() === 'regular') {
-      return 'K12';
+      return this.mappingsService.mappings.csQuestions.regularScoreCell;
     } else if (finalResultLevel.toLowerCase() === 'senior') {
-      return 'K13';
+      return this.mappingsService.mappings.csQuestions.seniorScoreCell;
     } else {
       return undefined;
     }
@@ -214,8 +250,8 @@ export class FileService {
 
     const workbook = new Excel.Workbook();
     await workbook.xlsx.load(fileData as any);
-    const worksheet = workbook.getWorksheet('Overview');
-    return Number(worksheet.getCell('B6').value);
+    const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
+    return Number(worksheet.getCell(this.mappingsService.mappings.overview.practicalTaskScoreCell).value);
   }
 
   private async getCandidateInterviewFormFileHandle(candidateName: string, createIfNotExists: boolean): Promise<FileSystemFileHandle | undefined> {
@@ -235,5 +271,187 @@ export class FileService {
     } finally {
       return handle;
     }
+  }
+
+  async getTaskItems(candidateName: string, selectedTask: string | undefined): Promise<Item[]> {
+    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
+    const fileData = await this.readFromFile(handle);
+
+    if (fileData) {
+      const workbook = new Excel.Workbook();
+      await workbook.xlsx.load(fileData as any);
+      const worksheet = workbook.getWorksheet(this.mappingsService.mappings.tasks.worksheetName);
+
+      let rows: number[];
+      switch (selectedTask) {
+        case 'ASP.NET Core Code Review':
+          rows = this.mappingsService.mappings.tasks.aspNetCoreCommentRows;
+          break;
+        case 'WPF Code Review':
+          rows = this.mappingsService.mappings.tasks.wpfCommentRows;
+          break;
+        default:
+          return [];
+      }
+
+      const items = rows.map(row => {
+        const item = new Item();
+        item.question = String(worksheet.getCell(`${this.mappingsService.mappings.tasks.questionColumn}${row}`).value);
+        item.scoreCell = `${this.mappingsService.mappings.tasks.scoreColumn}${row}`;
+        item.score = Number(worksheet.getCell(item.scoreCell).value);
+        return item;
+      });
+
+      return items;
+    }
+
+    return [];
+  }
+
+  async getSections(candidateName: string): Promise<Section[]> {
+    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
+    const fileData = await this.readFromFile(handle);
+
+    if (fileData) {
+      const workbook = new Excel.Workbook();
+      await workbook.xlsx.load(fileData as any);
+      const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
+
+      const csQuestions = this.mappingsService.mappings.csQuestions;
+      const sections = this.mappingsService.mappings.csQuestions.sections.map(section => {
+        const sectionData = new Section();
+        sectionData.title = String(worksheet.getCell(`${csQuestions.questionColumn}${section.titleRow}`).value);
+        sectionData.suddenDeathItems = section.suddenDeathRows?.map(row => {
+          const item = new Item();
+          item.question = String(worksheet.getCell(`${csQuestions.questionColumn}${row}`).value);
+          item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
+          item.scoreCell = `${csQuestions.scoreColumn}${row}`;
+          item.score = Number(worksheet.getCell(item.scoreCell).value);
+          return item;
+        });
+        sectionData.mandatoryItems = section.mandataryRows?.map(row => {
+          const item = new Item();
+          item.question = String(worksheet.getCell(`${csQuestions.questionColumn}${row}`).value);
+          item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
+          item.scoreCell = `${csQuestions.scoreColumn}${row}`;
+          item.score = Number(worksheet.getCell(item.scoreCell).value);
+          return item;
+        });
+        sectionData.juniorItems = section.juniorRows?.map(row => {
+          const item = new Item();
+          item.question = String(worksheet.getCell(`${csQuestions.questionColumn}${row}`).value);
+          item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
+          item.scoreCell = `${csQuestions.scoreColumn}${row}`;
+          item.score = Number(worksheet.getCell(item.scoreCell).value);
+          return item;
+        });
+        sectionData.regularItems = section.regularRows?.map(row => {
+          const item = new Item();
+          item.question = String(worksheet.getCell(`${csQuestions.questionColumn}${row}`).value);
+          item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
+          item.scoreCell = `${csQuestions.scoreColumn}${row}`;
+          item.score = Number(worksheet.getCell(item.scoreCell).value);
+          return item;
+        });
+        sectionData.seniorItems = section.seniorRows?.map(row => {
+          const item = new Item();
+          item.question = String(worksheet.getCell(`${csQuestions.questionColumn}${row}`).value);
+          item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
+          item.scoreCell = `${csQuestions.scoreColumn}${row}`;
+          item.score = Number(worksheet.getCell(item.scoreCell).value);
+          return item;
+        });
+        return sectionData;
+      });
+
+      return sections;
+    }
+
+    return [];
+  }
+
+  async setCandidateName(candidateName: string): Promise<any> {
+    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
+    const fileData = await this.readFromFile(handle);
+
+    const workbook = new Excel.Workbook();
+    await workbook.xlsx.load(fileData as any);
+    const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
+
+    worksheet.getCell(this.mappingsService.mappings.overview.candidateNameCell).value = candidateName;
+
+    return await workbook.xlsx.writeBuffer();
+  }
+
+  async setOverview(candidateName: string, overview: any): Promise<any> {
+    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
+    const fileData = await this.readFromFile(handle);
+
+    const workbook = new Excel.Workbook();
+    await workbook.xlsx.load(fileData as any);
+    const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
+
+    worksheet.getCell(this.mappingsService.mappings.overview.interviewerNameCell).value = overview.interviewerName;
+    worksheet.getCell(this.mappingsService.mappings.overview.dateCell).value = overview.date;
+    worksheet.getCell(this.mappingsService.mappings.overview.relevantExperienceCell).value = overview.relevantExperience;
+
+    return await workbook.xlsx.writeBuffer();
+  }
+
+  async setResult(candidateName: string, result: any): Promise<any> {
+    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
+    const fileData = await this.readFromFile(handle);
+
+    const workbook = new Excel.Workbook();
+    await workbook.xlsx.load(fileData as any);
+    const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
+
+    worksheet.getCell(this.mappingsService.mappings.overview.communicationCell).value = result.communication;
+    worksheet.getCell(this.mappingsService.mappings.overview.finalResultLevelCell).value = result.finalResultLevel;
+    worksheet.getCell(this.mappingsService.mappings.overview.overallImpressionCell).value = result.overallImpression;
+
+    return await workbook.xlsx.writeBuffer();
+  }
+
+  async setTaskItems(candidateName: string, taskItems?: Item[]): Promise<any> {
+    if (!taskItems) {
+      return;
+    }
+
+    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
+    const fileData = await this.readFromFile(handle);
+
+    const workbook = new Excel.Workbook();
+    await workbook.xlsx.load(fileData as any);
+    const worksheet = workbook.getWorksheet(this.mappingsService.mappings.tasks.worksheetName);
+
+    taskItems.forEach(item => {
+      worksheet.getCell(item.scoreCell).value = item.score;
+    });
+
+    return await workbook.xlsx.writeBuffer();
+  }
+
+  async setSections(candidateName: string, sections?: Section[]): Promise<any> {
+    if (!sections) {
+      return;
+    }
+
+    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
+    const fileData = await this.readFromFile(handle);
+
+    const workbook = new Excel.Workbook();
+    await workbook.xlsx.load(fileData as any);
+    const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
+
+    sections.forEach(section => {
+      section.suddenDeathItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score);
+      section.mandatoryItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score);
+      section.juniorItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score);
+      section.regularItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score);
+      section.seniorItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score);
+    });
+
+    return await workbook.xlsx.writeBuffer();
   }
 }

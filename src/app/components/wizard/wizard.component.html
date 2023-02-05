@@ -1,0 +1,176 @@
+<mat-stepper #stepper linear="true">
+  <mat-step label="TI Directory" [completed]="tiDirectoryName">
+    <button mat-flat-button class="w-100 my-2" color="primary" (click)="selectTiDirectory(stepper)">
+      <span>Select TI Directory (Current: {{tiDirectoryName ?? "None"}})</span>
+      <mat-icon>folder_open</mat-icon>
+    </button>
+  </mat-step>
+  <mat-step [stepControl]="candidateNameFormGroup" label="Candidate Name">
+    <form [formGroup]="candidateNameFormGroup" (ngSubmit)="onCandidateNameFormSubmit()">
+      <mat-form-field class="d-block mx-1" appearance="fill">
+        <mat-label>Candidate Name</mat-label>
+        <input type="text" matInput formControlName="candidateName" [matAutocomplete]="auto" required>
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let name of candidateNames" [value]="name">
+            {{name}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperNext>Submit</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step label="Search Candidate" optional="true">
+    <button mat-flat-button class="w-100 my-2" color="primary" (click)="googleSearch()">
+      <span>Google</span>
+      <mat-icon>open_in_new</mat-icon>
+    </button>
+    <button mat-flat-button class="w-100 mb-2" color="primary" (click)="linkedInPeopleSearch()">
+      <span>LinkedIn</span>
+      <mat-icon>open_in_new</mat-icon>
+    </button>
+    <button mat-flat-button class="w-100 mb-2" color="primary" (click)="gitHubUserSearch()">
+      <span>GitHub</span>
+      <mat-icon>open_in_new</mat-icon>
+    </button>
+    <div>
+      <button mat-button matStepperNext>Next</button>
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="overviewFormGroup" label="Overview">
+    <form [formGroup]="overviewFormGroup" (ngSubmit)="onOverviewFormSubmit()">
+      <mat-form-field class="d-block mx-1" appearance="fill">
+        <mat-label>Interviewer Name</mat-label>
+        <input matInput formControlName="interviewerName" type="text">
+      </mat-form-field>
+      <mat-form-field class="d-block mx-1" appearance="fill">
+        <mat-label>Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="d-block mx-1" appearance="fill">
+        <mat-label>Relevant Experience</mat-label>
+        <input matInput formControlName="relevantExperience" type="number">
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperNext>Submit</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step label="Select Task" [completed]="selectedTask">
+    <button mat-flat-button class="w-100 my-2" color="primary" (click)="selectAspNetCoreCodeReview(stepper)">
+      <span>ASP.Net Core Code Review</span>
+      <mat-icon>open_in_new</mat-icon>
+    </button>
+    <button mat-flat-button class="w-100 mb-2" color="primary" (click)="selectWpfCodeReview(stepper)">
+      <span>WPF Code Review</span>
+      <mat-icon>open_in_new</mat-icon>
+    </button>
+  </mat-step>
+  <mat-step [stepControl]="taskFormGroup" [label]="selectedTask ?? 'Task'">
+    <form [formGroup]="taskFormGroup" (ngSubmit)="onTaskFormSubmit()">
+      <div *ngFor="let item of taskItems">
+        <mat-slider min="-1" max="4" showTickMarks discrete>
+          <input matSliderThumb [(ngModel)]="item.score" [ngModelOptions]="{standalone: true}">
+        </mat-slider>
+        <span>{{item.question}}</span>
+      </div>
+      <div>
+        <button mat-button matStepperNext>Submit</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="questionsFormGroup" label="CS Questions">
+    <form [formGroup]="questionsFormGroup" (ngSubmit)="onQuestionsFormSubmit()">
+      <mat-stepper orientation="vertical">
+        <mat-step *ngFor="let section of sections" [label]="section.title ?? ''">
+          <h3>Sudden Death</h3>
+          <div *ngFor="let item0 of section.suddenDeathItems">
+            <input type="number" matInput min="-1" max="4" [(ngModel)]="item0.answer"
+              [ngModelOptions]="{standalone: true}">
+            <span>{{item0.question}}</span>
+            <span>{{item0.answer}}</span>
+          </div>
+          <mat-divider></mat-divider>
+          <h3>Mandatory</h3>
+          <div *ngFor="let item1 of section.mandatoryItems">
+            <input type="number" matInput min="-1" max="4" [(ngModel)]="item1.answer"
+              [ngModelOptions]="{standalone: true}">
+            <span>{{item1.question}}</span>
+            <span>{{item1.answer}}</span>
+          </div>
+          <mat-divider></mat-divider>
+          <h3>Junior</h3>
+          <div *ngFor="let item2 of section.juniorItems">
+            <input type="number" matInput min="-1" max="4" [(ngModel)]="item2.answer"
+              [ngModelOptions]="{standalone: true}">
+            <span>{{item2.question}}</span>
+            <span>{{item2.answer}}</span>
+          </div>
+          <mat-divider></mat-divider>
+          <h3>Regular</h3>
+          <div *ngFor="let item3 of section.regularItems">
+            <input type="number" matInput min="-1" max="4" [(ngModel)]="item3.answer"
+              [ngModelOptions]="{standalone: true}">
+            <span>{{item3.question}}</span>
+            <span>{{item3.answer}}</span>
+          </div>
+          <mat-divider></mat-divider>
+          <h3>Senior</h3>
+          <div *ngFor="let item4 of section.seniorItems">
+            <input type="number" matInput min="-1" max="4" [(ngModel)]="item4.answer"
+              [ngModelOptions]="{standalone: true}">
+            <span>{{item4.question}}</span>
+            <span>{{item4.answer}}</span>
+          </div>
+          <div>
+            <button mat-button matStepperPrevious type="button">Back</button>
+            <button mat-button matStepperNext type="button">Next</button>
+          </div>
+        </mat-step>
+      </mat-stepper>
+      <div>
+        <button mat-button matStepperNext>Submit</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="resultFormGroup" label="Result">
+    <form [formGroup]="resultFormGroup" (ngSubmit)="onResultFormSubmit()">
+      <mat-form-field class="d-block mx-1" appearance="fill">
+        <mat-label>Communication</mat-label>
+        <mat-select formControlName="communication">
+          <mat-option>None</mat-option>
+          <mat-option value="Not assessed">Not assessed</mat-option>
+          <mat-option value="Not communicative at all">Not communicative at all</mat-option>
+          <mat-option value="Poor English / strong accent">Poor English / strong
+            accent</mat-option>
+          <mat-option value="Good English / strong accent">Good English / strong
+            accent</mat-option>
+          <mat-option value="Easy to talk to">Easy to talk to</mat-option>
+          <mat-option value="Good English / no accent">Good English / no accent</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="d-block mx-1" appearance="fill">
+        <mat-label>Final Result Level</mat-label>
+        <mat-select formControlName="finalResultLevel">
+          <mat-option>None</mat-option>
+          <mat-option value="Failed">Failed</mat-option>
+          <mat-option value="Junior">Junior</mat-option>
+          <mat-option value="Regular">Regular</mat-option>
+          <mat-option value="Senior">Senior</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="d-block mx-1" appearance="fill">
+        <mat-label>Overall Impression</mat-label>
+        <textarea matInput formControlName="overallImpression"></textarea>
+      </mat-form-field>
+      <div>
+        <button mat-button>Submit</button>
+        <button mat-button type="button" (click)="reset(stepper)">Reset</button>
+      </div>
+    </form>
+  </mat-step>
+</mat-stepper>
