@@ -4,6 +4,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { ExcelData } from 'src/app/models/excel-data';
 import { Item } from 'src/app/models/item';
 import { QuestionMaterial } from 'src/app/models/question-material';
+import { Scoring } from 'src/app/models/scoring';
 import { Section } from 'src/app/models/section';
 import { FileService } from 'src/app/services/file.service';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -23,6 +24,7 @@ export class WizardComponent implements OnInit {
   selectedTask?: string;
   taskItems?: Item[];
   sections?: Section[];
+  scoring?: Scoring;
   candidateNameFormGroup = this._formBuilder.group({
     candidateName: ['', Validators.required]
   });
@@ -131,6 +133,8 @@ export class WizardComponent implements OnInit {
 
       await this._fileService.setSections(this.candidateName, this.sections);
       this._snackBarService.showSnackBar('Submitted successfully.');
+
+      this.scoring = await this._fileService.getScoring(this.candidateName);
     } catch (error) {
       console.error(error);
       this._snackBarService.showSnackBar('Error while submitting task items.');
@@ -250,5 +254,6 @@ export class WizardComponent implements OnInit {
     this.tiDirectoryName = undefined;
     this.candidateNames = [];
     this.questionMaterials = [];
+    this.scoring = undefined;
   }
 }

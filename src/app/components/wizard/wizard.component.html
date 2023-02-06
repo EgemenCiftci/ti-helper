@@ -53,7 +53,7 @@
       </mat-form-field>
       <mat-form-field class="d-block mx-1" appearance="fill">
         <mat-label>Relevant Experience</mat-label>
-        <input matInput formControlName="relevantExperience" type="number">
+        <input matInput formControlName="relevantExperience" type="number" autocomplete="off">
       </mat-form-field>
       <div>
         <button mat-button matStepperNext>Submit</button>
@@ -73,9 +73,7 @@
   <mat-step [stepControl]="taskFormGroup" [label]="selectedTask ?? 'Task'">
     <form [formGroup]="taskFormGroup" (ngSubmit)="onTaskFormSubmit()">
       <div *ngFor="let item of taskItems">
-        <mat-slider min="-1" max="4" showTickMarks discrete>
-          <input matSliderThumb [(ngModel)]="item.score" [ngModelOptions]="{standalone: true}">
-        </mat-slider>
+        <app-score [(selectedValue)]="item.score"></app-score>
         <span>{{item.question}}</span>
       </div>
       <div>
@@ -89,40 +87,35 @@
         <mat-step *ngFor="let section of sections" [label]="section.title ?? ''">
           <h3>Sudden Death</h3>
           <div *ngFor="let item0 of section.suddenDeathItems">
-            <input type="number" matInput min="-1" max="4" [(ngModel)]="item0.answer"
-              [ngModelOptions]="{standalone: true}">
+            <app-score [(selectedValue)]="item0.score"></app-score>
             <span>{{item0.question}}</span>
             <span>{{item0.answer}}</span>
           </div>
           <mat-divider></mat-divider>
           <h3>Mandatory</h3>
           <div *ngFor="let item1 of section.mandatoryItems">
-            <input type="number" matInput min="-1" max="4" [(ngModel)]="item1.answer"
-              [ngModelOptions]="{standalone: true}">
+            <app-score [(selectedValue)]="item1.score"></app-score>
             <span>{{item1.question}}</span>
             <span>{{item1.answer}}</span>
           </div>
           <mat-divider></mat-divider>
           <h3>Junior</h3>
           <div *ngFor="let item2 of section.juniorItems">
-            <input type="number" matInput min="-1" max="4" [(ngModel)]="item2.answer"
-              [ngModelOptions]="{standalone: true}">
+            <app-score [(selectedValue)]="item2.score"></app-score>
             <span>{{item2.question}}</span>
             <span>{{item2.answer}}</span>
           </div>
           <mat-divider></mat-divider>
           <h3>Regular</h3>
           <div *ngFor="let item3 of section.regularItems">
-            <input type="number" matInput min="-1" max="4" [(ngModel)]="item3.answer"
-              [ngModelOptions]="{standalone: true}">
+            <app-score [(selectedValue)]="item3.score"></app-score>
             <span>{{item3.question}}</span>
             <span>{{item3.answer}}</span>
           </div>
           <mat-divider></mat-divider>
           <h3>Senior</h3>
           <div *ngFor="let item4 of section.seniorItems">
-            <input type="number" matInput min="-1" max="4" [(ngModel)]="item4.answer"
-              [ngModelOptions]="{standalone: true}">
+            <app-score [(selectedValue)]="item4.score"></app-score>
             <span>{{item4.question}}</span>
             <span>{{item4.answer}}</span>
           </div>
@@ -139,6 +132,28 @@
   </mat-step>
   <mat-step [stepControl]="resultFormGroup" label="Result">
     <form [formGroup]="resultFormGroup" (ngSubmit)="onResultFormSubmit()">
+      <table class="my-2">
+        <tr>
+          <th>Scoring </th>
+          <th>Score </th>
+          <th>Result </th>
+        </tr>
+        <tr>
+          <td>Junior</td>
+          <td>{{scoring?.junior?.score}}</td>
+          <td>{{scoring?.junior?.result}}</td>
+        </tr>
+        <tr>
+          <td>Regular</td>
+          <td>{{scoring?.regular?.score}}</td>
+          <td>{{scoring?.regular?.result}}</td>
+        </tr>
+        <tr>
+          <td>Senior</td>
+          <td>{{scoring?.senior?.score}}</td>
+          <td>{{scoring?.senior?.result}}</td>
+        </tr>
+      </table>
       <mat-form-field class="d-block mx-1" appearance="fill">
         <mat-label>Communication</mat-label>
         <mat-select formControlName="communication">

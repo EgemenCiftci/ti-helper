@@ -6,6 +6,8 @@ import { QuestionMaterial } from '../models/question-material';
 import { MappingsService } from './mappings.service';
 import { Item } from '../models/item';
 import { Section } from '../models/section';
+import { Scoring } from '../models/scoring';
+import { ScoreResult } from '../models/score-result';
 
 @Injectable({
   providedIn: 'root'
@@ -225,7 +227,7 @@ export class FileService {
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
     const cell = this.getFinalResultScoreCell(finalResultLevel);
-    return cell ? Number(worksheet.getCell(cell).value) : undefined;
+    return cell ? Number(worksheet.getCell(cell).result) : undefined;
   }
 
   getFinalResultScoreCell(finalResultLevel: string): string | undefined {
@@ -251,7 +253,7 @@ export class FileService {
     const workbook = new Excel.Workbook();
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
-    return Number(worksheet.getCell(this.mappingsService.mappings.overview.practicalTaskScoreCell).value);
+    return Number(worksheet.getCell(this.mappingsService.mappings.overview.practicalTaskScoreCell).result);
   }
 
   private async getCandidateInterviewFormFileHandle(candidateName: string, createIfNotExists: boolean): Promise<FileSystemFileHandle | undefined> {
@@ -453,5 +455,27 @@ export class FileService {
     });
 
     return await workbook.xlsx.writeBuffer();
+  }
+
+  async getScoring(candidateName: string): Promise<Scoring> {
+    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
+    const fileData = await this.readFromFile(handle);
+
+    const workbook = new Excel.Workbook();
+    await workbook.xlsx.load(fileData as any);
+    const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
+
+    const scoring = new Scoring();
+    scoring.junior = new ScoreResult();
+    scoring.junior.score = Number(worksheet.getCell(this.mappingsService.mappings.csQuestions.juniorScoreCell).result);
+    scoring.junior.result = String(worksheet.getCell(this.mappingsService.mappings.csQuestions.juniorResultCell).result);
+    scoring.regular = new ScoreResult();
+    scoring.regular.score = Number(worksheet.getCell(this.mappingsService.mappings.csQuestions.regularScoreCell).result);
+    scoring.regular.result = String(worksheet.getCell(this.mappingsService.mappings.csQuestions.regularResultCell).result);
+    scoring.senior = new ScoreResult();
+    scoring.senior.score = Number(worksheet.getCell(this.mappingsService.mappings.csQuestions.seniorScoreCell).result);
+    scoring.senior.result = String(worksheet.getCell(this.mappingsService.mappings.csQuestions.seniorResultCell).result);
+
+    return scoring;
   }
 }

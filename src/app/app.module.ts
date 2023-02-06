@@ -10,6 +10,7 @@ import { MainComponent } from './components/main/main.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { AboutComponent } from './components/about/about.component';
 import { WizardComponent } from './components/wizard/wizard.component';
+import { ScoreComponent } from './components/score/score.component';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,7 +25,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSliderModule } from '@angular/material/slider';
-import { MatDivider, MatDividerModule } from '@angular/material/divider';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -32,7 +35,8 @@ import { MatDivider, MatDividerModule } from '@angular/material/divider';
     MainComponent,
     SettingsComponent,
     AboutComponent,
-    WizardComponent
+    WizardComponent,
+    ScoreComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +57,9 @@ import { MatDivider, MatDividerModule } from '@angular/material/divider';
     MatSelectModule,
     MatStepperModule,
     MatSliderModule,
-    MatDividerModule
+    MatDividerModule,
+    MatRadioModule,
+    MatTooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent]

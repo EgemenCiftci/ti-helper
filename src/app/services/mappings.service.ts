@@ -69,6 +69,9 @@ export class MappingsService {
       juniorScoreCell: "K11",
       regularScoreCell: "K12",
       seniorScoreCell: "K13",
+      juniorResultCell: "L11",
+      regularResultCell: "L12",
+      seniorResultCell: "L13",
       sections: [
         {
           titleRow: 16,
