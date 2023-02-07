@@ -84,7 +84,7 @@
   <mat-step [stepControl]="questionsFormGroup" label="CS Questions">
     <form [formGroup]="questionsFormGroup" (ngSubmit)="onQuestionsFormSubmit()">
       <mat-stepper orientation="vertical">
-        <mat-step *ngFor="let section of sections" [label]="section.title ?? ''">
+        <mat-step *ngFor="let section of sections" [label]="section.title ?? ''" optional="true">
           <h3>Sudden Death</h3>
           <div *ngFor="let item0 of section.suddenDeathItems">
             <app-score [(selectedValue)]="item0.score"></app-score>
