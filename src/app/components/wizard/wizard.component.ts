@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { MAT_RADIO_DEFAULT_OPTIONS } from '@angular/material/radio';
 import { MatStepper } from '@angular/material/stepper';
 import { ExcelData } from 'src/app/models/excel-data';
 import { Item } from 'src/app/models/item';
@@ -255,5 +256,22 @@ export class WizardComponent implements OnInit {
     this.candidateNames = [];
     this.questionMaterials = [];
     this.scoring = undefined;
+  }
+
+  getQuestionMaterial(row: number): QuestionMaterial | undefined {
+    return this.questionMaterials.find(f => f.line === row);
+  }
+
+  async selectQuestionMaterial(row: number) {
+    try {
+      const qm = this.getQuestionMaterial(row);
+      if (qm?.code) {
+        await this.copyToClipboard(qm.code);
+        this._snackBarService.showSnackBar('Copied to clipboard');
+      }
+    } catch (error) {
+      console.error(error);
+      this._snackBarService.showSnackBar('Error while copying code.');
+    }
   }
 }

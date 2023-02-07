@@ -328,6 +328,7 @@ export class FileService {
           item.question = String(worksheet.getCell(`${csQuestions.questionColumn}${row}`).value);
           item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
           item.scoreCell = `${csQuestions.scoreColumn}${row}`;
+          item.row = row;
           item.score = Number(worksheet.getCell(item.scoreCell).value);
           return item;
         });
@@ -336,6 +337,7 @@ export class FileService {
           item.question = String(worksheet.getCell(`${csQuestions.questionColumn}${row}`).value);
           item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
           item.scoreCell = `${csQuestions.scoreColumn}${row}`;
+          item.row = row;
           item.score = Number(worksheet.getCell(item.scoreCell).value);
           return item;
         });
@@ -344,6 +346,7 @@ export class FileService {
           item.question = String(worksheet.getCell(`${csQuestions.questionColumn}${row}`).value);
           item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
           item.scoreCell = `${csQuestions.scoreColumn}${row}`;
+          item.row = row;
           item.score = Number(worksheet.getCell(item.scoreCell).value);
           return item;
         });
@@ -352,6 +355,7 @@ export class FileService {
           item.question = String(worksheet.getCell(`${csQuestions.questionColumn}${row}`).value);
           item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
           item.scoreCell = `${csQuestions.scoreColumn}${row}`;
+          item.row = row;
           item.score = Number(worksheet.getCell(item.scoreCell).value);
           return item;
         });
@@ -360,6 +364,7 @@ export class FileService {
           item.question = String(worksheet.getCell(`${csQuestions.questionColumn}${row}`).value);
           item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
           item.scoreCell = `${csQuestions.scoreColumn}${row}`;
+          item.row = row;
           item.score = Number(worksheet.getCell(item.scoreCell).value);
           return item;
         });

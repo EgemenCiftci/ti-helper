@@ -72,10 +72,16 @@
   </mat-step>
   <mat-step [stepControl]="taskFormGroup" [label]="selectedTask ?? 'Task'">
     <form [formGroup]="taskFormGroup" (ngSubmit)="onTaskFormSubmit()">
-      <div *ngFor="let item of taskItems">
-        <app-score [(selectedValue)]="item.score"></app-score>
-        <span>{{item.question}}</span>
-      </div>
+      <table>
+        <tr *ngFor="let item of taskItems">
+          <td class="score-column">
+            <app-score [(selectedValue)]="item.score"></app-score>
+          </td>
+          <td>
+            {{item.question}}
+          </td>
+        </tr>
+      </table>
       <div>
         <button mat-button matStepperNext>Submit</button>
       </div>
@@ -84,44 +90,138 @@
   <mat-step [stepControl]="questionsFormGroup" label="CS Questions">
     <form [formGroup]="questionsFormGroup" (ngSubmit)="onQuestionsFormSubmit()">
       <mat-stepper orientation="vertical">
-        <mat-step *ngFor="let section of sections" [label]="section.title ?? ''" optional="true">
-          <h3>Sudden Death</h3>
-          <div *ngFor="let item0 of section.suddenDeathItems">
-            <app-score [(selectedValue)]="item0.score"></app-score>
-            <span>{{item0.question}}</span>
-            <span>{{item0.answer}}</span>
-          </div>
-          <mat-divider></mat-divider>
-          <h3>Mandatory</h3>
-          <div *ngFor="let item1 of section.mandatoryItems">
-            <app-score [(selectedValue)]="item1.score"></app-score>
-            <span>{{item1.question}}</span>
-            <span>{{item1.answer}}</span>
-          </div>
-          <mat-divider></mat-divider>
-          <h3>Junior</h3>
-          <div *ngFor="let item2 of section.juniorItems">
-            <app-score [(selectedValue)]="item2.score"></app-score>
-            <span>{{item2.question}}</span>
-            <span>{{item2.answer}}</span>
-          </div>
-          <mat-divider></mat-divider>
-          <h3>Regular</h3>
-          <div *ngFor="let item3 of section.regularItems">
-            <app-score [(selectedValue)]="item3.score"></app-score>
-            <span>{{item3.question}}</span>
-            <span>{{item3.answer}}</span>
-          </div>
-          <mat-divider></mat-divider>
-          <h3>Senior</h3>
-          <div *ngFor="let item4 of section.seniorItems">
-            <app-score [(selectedValue)]="item4.score"></app-score>
-            <span>{{item4.question}}</span>
-            <span>{{item4.answer}}</span>
-          </div>
+        <mat-step *ngFor="let section of sections; first as isFirst; last as isLast" [label]="section.title ?? ''"
+          optional="true">
+          <table>
+            <tr>
+              <th colspan="4">
+                <h3>Sudden Death</h3>
+              </th>
+            </tr>
+            <tr *ngFor="let item of section.suddenDeathItems">
+              <td class="score-column">
+                <app-score [(selectedValue)]="item.score"></app-score>
+              </td>
+              <td>
+                {{item.question}}
+              </td>
+              <td class="button-column">
+                <button *ngIf="getQuestionMaterial(item.row)" mat-flat-button color="primary" type="button" (click)="selectQuestionMaterial(item.row)">Line
+                  {{item.row}} - Copy
+                  Code</button>
+              </td>
+              <td class="px-3">
+                {{item.answer}}
+              </td>
+            </tr>
+            <tr>
+              <td colspan="4">
+                <mat-divider></mat-divider>
+              </td>
+            </tr>
+            <tr>
+              <th colspan="4">
+                <h3>Mandatory</h3>
+              </th>
+            </tr>
+            <tr *ngFor="let item of section.mandatoryItems">
+              <td class="score-column">
+                <app-score [(selectedValue)]="item.score"></app-score>
+              </td>
+              <td>
+                {{item.question}}
+              </td>
+              <td class="button-column">
+                <button *ngIf="getQuestionMaterial(item.row)" mat-flat-button color="primary" type="button" (click)="selectQuestionMaterial(item.row)">Line
+                  {{item.row}} - Copy
+                  Code</button>
+              </td>
+              <td class="px-3">
+                {{item.answer}}
+              </td>
+            </tr>
+            <tr>
+              <td colspan="4">
+                <mat-divider></mat-divider>
+              </td>
+            </tr>
+            <tr>
+              <th colspan="4">
+                <h3>Junior</h3>
+              </th>
+            </tr>
+            <tr *ngFor="let item of section.juniorItems">
+              <td class="score-column">
+                <app-score [(selectedValue)]="item.score"></app-score>
+              </td>
+              <td>
+                {{item.question}}
+              </td>
+              <td class="button-column">
+                <button *ngIf="getQuestionMaterial(item.row)" mat-flat-button color="primary" type="button" (click)="selectQuestionMaterial(item.row)">Line
+                  {{item.row}} - Copy
+                  Code</button>
+              </td>
+              <td class="px-3">
+                {{item.answer}}
+              </td>
+            </tr>
+            <tr>
+              <td colspan="4">
+                <mat-divider></mat-divider>
+              </td>
+            </tr>
+            <tr>
+              <th colspan="4">
+                <h3>Regular</h3>
+              </th>
+            </tr>
+            <tr *ngFor="let item of section.regularItems">
+              <td class="score-column">
+                <app-score [(selectedValue)]="item.score"></app-score>
+              </td>
+              <td>
+                {{item.question}}
+              </td>
+              <td class="button-column">
+                <button *ngIf="getQuestionMaterial(item.row)" mat-flat-button color="primary" type="button" (click)="selectQuestionMaterial(item.row)">Line
+                  {{item.row}} - Copy
+                  Code</button>
+              </td>
+              <td class="px-3">
+                {{item.answer}}
+              </td>
+            </tr>
+            <tr>
+              <td colspan="4">
+                <mat-divider></mat-divider>
+              </td>
+            </tr>
+            <tr>
+              <th colspan="4">
+                <h3>Senior</h3>
+              </th>
+            </tr>
+            <tr *ngFor="let item of section.seniorItems">
+              <td class="score-column">
+                <app-score [(selectedValue)]="item.score"></app-score>
+              </td>
+              <td>
+                {{item.question}}
+              </td>
+              <td class="button-column">
+                <button *ngIf="getQuestionMaterial(item.row)" mat-flat-button color="primary" type="button" (click)="selectQuestionMaterial(item.row)">Line
+                  {{item.row}} - Copy
+                  Code</button>
+              </td>
+              <td class="px-3">
+                {{item.answer}}
+              </td>
+            </tr>
+          </table>
           <div>
-            <button mat-button matStepperPrevious type="button">Back</button>
-            <button mat-button matStepperNext type="button">Next</button>
+            <button mat-button matStepperPrevious type="button" *ngIf="!isFirst">Back</button>
+            <button mat-button matStepperNext type="button" *ngIf="!isLast">Next</button>
           </div>
         </mat-step>
       </mat-stepper>

@@ -3,4 +3,5 @@ export class Item {
     answer?: string;
     score?: number;
     scoreCell: string = '';
+    row: number = 0;
 }

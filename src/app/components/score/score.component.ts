@@ -7,6 +7,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class ScoreComponent {
   values = [-1, 0, 1, 2, 3, 4];
+  classes = ["red", "red", "red", "orange", "yellow", "green"];
 
   private _selectedValue?: number;
   @Output() selectedValueChange = new EventEmitter<number | undefined>();
@@ -20,6 +21,10 @@ export class ScoreComponent {
       this._selectedValue = val;
       this.selectedValueChange.emit(this._selectedValue);
     }
+  }
+
+  getClass(value: number): string {
+    return this.classes[this.values.indexOf(value)];
   }
 }
 
