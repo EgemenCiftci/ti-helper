@@ -36,24 +36,6 @@ export class FileService {
     this.interviewFormFileHandle = await this.getFileHandle(this.inputDirectoryHandle, this.settingsService.interviewFormFileName);
   }
 
-  async verifyPermission(fileHandle: any, readWrite: boolean) {
-    const options: any = {};
-
-    if (readWrite) {
-      options.mode = 'readwrite';
-    }
-
-    if ((await fileHandle.queryPermission(options)) === 'granted') {
-      return true;
-    }
-
-    if ((await fileHandle.requestPermission(options)) === 'granted') {
-      return true;
-    }
-
-    return false;
-  }
-
   private async getTiDirectoryHandle() {
     this.tiDirectoryHandle = await (window as any).showDirectoryPicker({ startIn: 'documents' });
   }
@@ -86,34 +68,40 @@ export class FileService {
 
   async createCandidateFolderAndCopyInterviewFormFile(candidateName: string) {
     const handle = await this.getCandidateInterviewFormFileHandle(candidateName, true);
-    let fileData = await this.readFromFile(this.interviewFormFileHandle);
+    const fileData = await this.readFromFile(this.interviewFormFileHandle);
     await this.writeToFile(handle, fileData);
   }
 
   async createCandidateFolder(excelData: ExcelData) {
     const handle = await this.getCandidateInterviewFormFileHandle(excelData.candidateName, true);
-    let fileData = await this.readFromFile(this.interviewFormFileHandle);
-    fileData = await this.updateExcel(fileData, excelData);
-    await this.writeToFile(handle, fileData);
+    const fileData = await this.readFromFile(this.interviewFormFileHandle);
+    const bufferData = await this.updateExcel(fileData as any, excelData);
+    await this.writeToFile(handle, bufferData);
   }
 
   async updateCandidateFolder(excelData: ExcelData) {
     const handle = await this.getCandidateInterviewFormFileHandle(excelData.candidateName, false);
-    let fileData = await this.readFromFile(handle);
-    fileData = await this.updateExcel(fileData, excelData);
-    await this.writeToFile(handle, fileData);
+    const fileData = await this.readFromFile(handle);
+    const bufferData = await this.updateExcel(fileData as any, excelData);
+    await this.writeToFile(handle, bufferData);
   }
 
-  private async readFromFile(fileHandle: FileSystemFileHandle | undefined): Promise<File | undefined> {
-    return await fileHandle?.getFile();
+  private async readFromFile(fileHandle: FileSystemFileHandle | undefined): Promise<File> {
+    if (!fileHandle) {
+      throw new Error('File handle is undefined');
+    }
+
+    return await fileHandle.getFile();
   }
 
   private async writeToFile(fileHandle: FileSystemFileHandle | undefined, data: any) {
-    if (fileHandle && data) {
-      const writableStream = await (fileHandle as any).createWritable();
-      await writableStream.write(data);
-      await writableStream.close();
+    if (!fileHandle) {
+      throw new Error('File handle is undefined');
     }
+
+    const writableStream = await (fileHandle as any).createWritable();
+    await writableStream.write(data);
+    await writableStream.close();
   }
 
   async getExcelData(candidateName: string): Promise<ExcelData | undefined> {
@@ -141,13 +129,13 @@ export class FileService {
     return excelData;
   }
 
-  private async updateExcel(fileData: any, excelData: ExcelData): Promise<any> {
+  private async updateExcel(fileData: Excel.Buffer, excelData: ExcelData): Promise<Excel.Buffer> {
     if (!fileData || !excelData) {
-      return undefined;
+      throw new Error('File data or excel data is undefined');
     }
 
     const workbook = new Excel.Workbook();
-    await workbook.xlsx.load(fileData as any);
+    await workbook.xlsx.load(fileData);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
 
     worksheet.getCell(this.mappingsService.mappings.overview.candidateNameCell).value = excelData.candidateName;
@@ -377,7 +365,7 @@ export class FileService {
     return [];
   }
 
-  async setCandidateName(candidateName: string): Promise<any> {
+  async setCandidateName(candidateName: string): Promise<Excel.Buffer> {
     const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
     const fileData = await this.readFromFile(handle);
 
@@ -390,7 +378,7 @@ export class FileService {
     return await workbook.xlsx.writeBuffer();
   }
 
-  async setOverview(candidateName: string, overview: any): Promise<any> {
+  async setOverview(candidateName: string, overview: any): Promise<Excel.Buffer> {
     const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
     const fileData = await this.readFromFile(handle);
 
@@ -405,7 +393,7 @@ export class FileService {
     return await workbook.xlsx.writeBuffer();
   }
 
-  async setResult(candidateName: string, result: any): Promise<any> {
+  async setResult(candidateName: string, result: any): Promise<Excel.Buffer> {
     const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
     const fileData = await this.readFromFile(handle);
 
@@ -420,9 +408,9 @@ export class FileService {
     return await workbook.xlsx.writeBuffer();
   }
 
-  async setTaskItems(candidateName: string, taskItems?: Item[]): Promise<any> {
+  async setTaskItems(candidateName: string, taskItems?: Item[]): Promise<Excel.Buffer> {
     if (!taskItems) {
-      return;
+      throw new Error('Task items are not defined');
     }
 
     const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
@@ -439,9 +427,9 @@ export class FileService {
     return await workbook.xlsx.writeBuffer();
   }
 
-  async setSections(candidateName: string, sections?: Section[]): Promise<any> {
+  async setSections(candidateName: string, sections?: Section[]): Promise<Excel.Buffer> {
     if (!sections) {
-      return;
+      throw new Error("Sections are not defined");
     }
 
     const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
