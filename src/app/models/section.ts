@@ -7,4 +7,7 @@ export class Section {
     juniorItems?: Item[];
     regularItems?: Item[];
     seniorItems?: Item[];
+    juniorScore?: number;
+    regularScore?: number;
+    seniorScore?: number;
 }

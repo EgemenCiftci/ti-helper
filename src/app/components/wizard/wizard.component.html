@@ -90,7 +90,7 @@
   <mat-step [stepControl]="questionsFormGroup" label="CS Questions">
     <form [formGroup]="questionsFormGroup" (ngSubmit)="onQuestionsFormSubmit()">
       <mat-stepper orientation="vertical">
-        <mat-step *ngFor="let section of sections; first as isFirst; last as isLast" [label]="section.title ?? ''"
+        <mat-step *ngFor="let section of sections; first as isFirst; last as isLast" [label]="(section.title ?? '')"
           optional="true">
           <table>
             <tr>
@@ -147,7 +147,7 @@
             </tr>
             <tr>
               <th colspan="4">
-                <h3>Junior</h3>
+                <h3>Junior (Score: {{section.juniorScore}})</h3>
               </th>
             </tr>
             <tr *ngFor="let item of section.juniorItems">
@@ -173,7 +173,7 @@
             </tr>
             <tr>
               <th colspan="4">
-                <h3>Regular</h3>
+                <h3>Regular (Score: {{section.regularScore}})</h3>
               </th>
             </tr>
             <tr *ngFor="let item of section.regularItems">
@@ -199,7 +199,7 @@
             </tr>
             <tr>
               <th colspan="4">
-                <h3>Senior</h3>
+                <h3>Senior (Score: {{section.seniorScore}})</h3>
               </th>
             </tr>
             <tr *ngFor="let item of section.seniorItems">

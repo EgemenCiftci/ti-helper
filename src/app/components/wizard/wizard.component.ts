@@ -148,7 +148,7 @@ export class WizardComponent implements OnInit {
         return;
       }
 
-      await this._fileService.setResult(this.candidateName, this.resultFormGroup.value);
+      await this._fileService.setResult(this.candidateName, this.resultFormGroup.value, this.scoring);
       this._snackBarService.showSnackBar('Submitted successfully.');
     } catch (error) {
       console.error(error);
