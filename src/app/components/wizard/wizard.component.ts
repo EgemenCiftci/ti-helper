@@ -1,7 +1,8 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
+import { debounceTime, Subject, Subscription } from 'rxjs';
 import { ExcelData } from 'src/app/models/excel-data';
 import { Item } from 'src/app/models/item';
 import { QuestionMaterial } from 'src/app/models/question-material';
@@ -16,7 +17,7 @@ import { SnackBarService } from 'src/app/services/snack-bar.service';
   templateUrl: './wizard.component.html',
   styleUrls: ['./wizard.component.css']
 })
-export class WizardComponent implements OnInit {
+export class WizardComponent implements OnInit, AfterViewInit, OnDestroy {
   candidateNames: string[] = [];
   candidateName: string = '';
   tiDirectoryName?: string;
@@ -26,6 +27,7 @@ export class WizardComponent implements OnInit {
   taskItems?: Item[];
   sections?: Section[];
   scoring?: Scoring;
+  taskScores?: { aspNetCoreScore: number, wpfScore: number };
   candidateNameFormGroup = this._formBuilder.group({
     candidateName: ['', Validators.required]
   });
@@ -41,6 +43,18 @@ export class WizardComponent implements OnInit {
     finalResultLevel: [''],
     overallImpression: ['Part of the overall feedback please include input for:\na.	Ability to code – based on questions on second tab\nb.	Ability to design and engineer – based on architecture questions, oop, patterns, etc.\nc.	Practical task results\nd.	Ability to perform in the project – understanding methodology/sdlc/estimation\ne.	Ability to communicate – knowing English, expressing thoughts']
   });
+  handleTaskScoreSubject = new Subject<void>();
+  handleTaskScoreSubscription?: Subscription;
+  handleQuestionsScoreSubject = new Subject<void>();
+  handleQuestionsScoreSubscription?: Subscription;
+  sentences = [
+    "The candidate arrived early/on time/late.\n",
+    "The total time of the interview was 60 minutes.\n",
+    "I am satisfied with the candidate’s performance.\n",
+    "I am not satisfied with the candidate’s performance.\n",
+    "I am not pleased with the candidate’s performance.\n",
+    "I am very disappointed with the candidate’s performance.\n"
+  ];
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -58,6 +72,28 @@ export class WizardComponent implements OnInit {
         this._snackBarService.showSnackBar('Error while getting candidate data.');
       }
     });
+  }
+
+  ngAfterViewInit() {
+    this.handleTaskScoreSubscription = this.handleTaskScoreSubject.asObservable().pipe(debounceTime(2000)).subscribe(async () => {
+      await this.processTaskStep();
+    });
+    this.handleQuestionsScoreSubscription = this.handleQuestionsScoreSubject.asObservable().pipe(debounceTime(2000)).subscribe(async () => {
+      await this.processQuestionsStep();
+    });
+  }
+
+  ngOnDestroy() {
+    this.handleTaskScoreSubscription?.unsubscribe();
+    this.handleQuestionsScoreSubscription?.unsubscribe();
+  }
+
+  handleTaskScoreChange() {
+    this.handleTaskScoreSubject.next();
+  }
+
+  handleQuestionsScoreChange() {
+    this.handleQuestionsScoreSubject.next();
   }
 
   async selectTiDirectory(stepper: MatStepper) {
@@ -134,6 +170,8 @@ export class WizardComponent implements OnInit {
 
       await this._fileService.setTaskItems(this.candidateName, this.taskItems);
       this._snackBarService.showSnackBar('Submitted successfully.');
+
+      this.taskScores = await this._fileService.getTaskScores(this.candidateName);
     } catch (error) {
       console.error(error);
       this._snackBarService.showSnackBar('Error while submitting task items.');
@@ -287,5 +325,23 @@ export class WizardComponent implements OnInit {
       console.error(error);
       this._snackBarService.showSnackBar('Error while copying code.');
     }
+  }
+
+  getTaskScore(selectedTask?: string): number | undefined {
+    if (selectedTask === "ASP.NET Core Code Review") {
+      return this.taskScores?.aspNetCoreScore;
+    } else if (selectedTask === "WPF Code Review") {
+      return this.taskScores?.wpfScore;
+    } else {
+      return undefined;
+    }
+  }
+
+  addSentence(sentence: string) {
+    this.resultFormGroup.value.overallImpression += sentence;
+    this.resultFormGroup.patchValue({
+      overallImpression: this.resultFormGroup.value.overallImpression
+    });
+    
   }
 }

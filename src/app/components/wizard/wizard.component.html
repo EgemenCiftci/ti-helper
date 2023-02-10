@@ -72,10 +72,11 @@
   </mat-step>
   <mat-step [stepControl]="taskFormGroup" [label]="selectedTask ?? 'Task'">
     <form [formGroup]="taskFormGroup">
+      <p>Score: {{getTaskScore(selectedTask)}}</p>
       <table>
         <tr *ngFor="let item of taskItems">
           <td class="score-column">
-            <app-score [(selectedValue)]="item.score" (change)="processTaskStep()"></app-score>
+            <app-score [(selectedValue)]="item.score" (change)="handleTaskScoreChange()"></app-score>
           </td>
           <td>
             {{item.question}}
@@ -100,7 +101,7 @@
             </tr>
             <tr *ngFor="let item of section.suddenDeathItems">
               <td class="score-column">
-                <app-score [(selectedValue)]="item.score" (change)="processQuestionsStep()"></app-score>
+                <app-score [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
               </td>
               <td>
                 {{item.question}}
@@ -127,7 +128,7 @@
             </tr>
             <tr *ngFor="let item of section.mandatoryItems">
               <td class="score-column">
-                <app-score [(selectedValue)]="item.score" (change)="processQuestionsStep()"></app-score>
+                <app-score [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
               </td>
               <td>
                 {{item.question}}
@@ -154,7 +155,7 @@
             </tr>
             <tr *ngFor="let item of section.juniorItems">
               <td class="score-column">
-                <app-score [(selectedValue)]="item.score" (change)="processQuestionsStep()"></app-score>
+                <app-score [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
               </td>
               <td>
                 {{item.question}}
@@ -181,7 +182,7 @@
             </tr>
             <tr *ngFor="let item of section.regularItems">
               <td class="score-column">
-                <app-score [(selectedValue)]="item.score" (change)="processQuestionsStep()"></app-score>
+                <app-score [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
               </td>
               <td>
                 {{item.question}}
@@ -208,7 +209,7 @@
             </tr>
             <tr *ngFor="let item of section.seniorItems">
               <td class="score-column">
-                <app-score [(selectedValue)]="item.score" (change)="processQuestionsStep()"></app-score>
+                <app-score [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
               </td>
               <td>
                 {{item.question}}
@@ -287,6 +288,7 @@
         <mat-label>Overall Impression</mat-label>
         <textarea matInput formControlName="overallImpression"></textarea>
       </mat-form-field>
+      <button *ngFor="let sentence of sentences" mat-flat-button class="w-100 my-2" color="primary" (click)="addSentence(sentence)">{{sentence}}</button>
       <div>
         <button type="button" mat-button matStepperNext>Next</button>
       </div>

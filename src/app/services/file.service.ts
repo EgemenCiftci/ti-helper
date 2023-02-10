@@ -441,6 +441,19 @@ export class FileService {
     this.writeToFile(handle, await workbook.xlsx.writeBuffer());
   }
 
+  async getTaskScores(candidateName: string): Promise<{ aspNetCoreScore: number, wpfScore: number }> {
+    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
+    const fileData = await this.readFromFile(handle);
+
+    const workbook = new Excel.Workbook();
+    await workbook.xlsx.load(fileData as any);
+    const worksheet = workbook.getWorksheet(this.mappingsService.mappings.tasks.worksheetName);
+
+    const aspNetCoreScore = Number(worksheet.getCell(`${this.mappingsService.mappings.tasks.scoreColumn}${this.mappingsService.mappings.tasks.aspNetScoreRow}`).result);
+    const wpfScore = Number(worksheet.getCell(`${this.mappingsService.mappings.tasks.scoreColumn}${this.mappingsService.mappings.tasks.wpfScoreRow}`).result);
+    return { aspNetCoreScore, wpfScore };
+  }
+
   async setSections(candidateName: string, sections?: Section[]) {
     if (!sections) {
       throw new Error("Sections are not defined");
