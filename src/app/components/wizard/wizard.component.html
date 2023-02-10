@@ -1,4 +1,4 @@
-<mat-stepper #stepper linear="true">
+<mat-stepper #stepper linear="true" (selectionChange)="stepperSelectionChange($event)">
   <mat-step label="TI Directory" [completed]="tiDirectoryName">
     <button mat-flat-button class="w-100 my-2" color="primary" (click)="selectTiDirectory(stepper)">
       <span>Select TI Directory (Current: {{tiDirectoryName ?? "None"}})</span>
@@ -6,7 +6,7 @@
     </button>
   </mat-step>
   <mat-step [stepControl]="candidateNameFormGroup" label="Candidate Name">
-    <form [formGroup]="candidateNameFormGroup" (ngSubmit)="onCandidateNameFormSubmit()">
+    <form [formGroup]="candidateNameFormGroup">
       <mat-form-field class="d-block mx-1" appearance="fill">
         <mat-label>Candidate Name</mat-label>
         <input type="text" matInput formControlName="candidateName" [matAutocomplete]="auto" required>
@@ -17,7 +17,7 @@
         </mat-autocomplete>
       </mat-form-field>
       <div>
-        <button mat-button matStepperNext>Submit</button>
+        <button type="button" mat-button matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
@@ -39,7 +39,7 @@
     </div>
   </mat-step>
   <mat-step [stepControl]="overviewFormGroup" label="Overview">
-    <form [formGroup]="overviewFormGroup" (ngSubmit)="onOverviewFormSubmit()">
+    <form [formGroup]="overviewFormGroup">
       <mat-form-field class="d-block mx-1" appearance="fill">
         <mat-label>Interviewer Name</mat-label>
         <input matInput formControlName="interviewerName" type="text">
@@ -56,7 +56,7 @@
         <input matInput formControlName="relevantExperience" type="number" autocomplete="off">
       </mat-form-field>
       <div>
-        <button mat-button matStepperNext>Submit</button>
+        <button type="button" mat-button matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
@@ -71,11 +71,11 @@
     </button>
   </mat-step>
   <mat-step [stepControl]="taskFormGroup" [label]="selectedTask ?? 'Task'">
-    <form [formGroup]="taskFormGroup" (ngSubmit)="onTaskFormSubmit()">
+    <form [formGroup]="taskFormGroup">
       <table>
         <tr *ngFor="let item of taskItems">
           <td class="score-column">
-            <app-score [(selectedValue)]="item.score"></app-score>
+            <app-score [(selectedValue)]="item.score" (change)="processTaskStep()"></app-score>
           </td>
           <td>
             {{item.question}}
@@ -83,12 +83,12 @@
         </tr>
       </table>
       <div>
-        <button mat-button matStepperNext>Submit</button>
+        <button type="button" mat-button matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
   <mat-step [stepControl]="questionsFormGroup" label="CS Questions">
-    <form [formGroup]="questionsFormGroup" (ngSubmit)="onQuestionsFormSubmit()">
+    <form [formGroup]="questionsFormGroup">
       <mat-stepper orientation="vertical">
         <mat-step *ngFor="let section of sections; first as isFirst; last as isLast" [label]="(section.title ?? '')"
           optional="true">
@@ -100,13 +100,14 @@
             </tr>
             <tr *ngFor="let item of section.suddenDeathItems">
               <td class="score-column">
-                <app-score [(selectedValue)]="item.score"></app-score>
+                <app-score [(selectedValue)]="item.score" (change)="processQuestionsStep()"></app-score>
               </td>
               <td>
                 {{item.question}}
               </td>
               <td class="button-column">
-                <button *ngIf="getQuestionMaterial(item.row)" mat-flat-button color="primary" type="button" (click)="selectQuestionMaterial(item.row)">Line
+                <button *ngIf="getQuestionMaterial(item.row)" mat-flat-button color="primary" type="button"
+                  (click)="selectQuestionMaterial(item.row)">Line
                   {{item.row}} - Copy
                   Code</button>
               </td>
@@ -126,13 +127,14 @@
             </tr>
             <tr *ngFor="let item of section.mandatoryItems">
               <td class="score-column">
-                <app-score [(selectedValue)]="item.score"></app-score>
+                <app-score [(selectedValue)]="item.score" (change)="processQuestionsStep()"></app-score>
               </td>
               <td>
                 {{item.question}}
               </td>
               <td class="button-column">
-                <button *ngIf="getQuestionMaterial(item.row)" mat-flat-button color="primary" type="button" (click)="selectQuestionMaterial(item.row)">Line
+                <button *ngIf="getQuestionMaterial(item.row)" mat-flat-button color="primary" type="button"
+                  (click)="selectQuestionMaterial(item.row)">Line
                   {{item.row}} - Copy
                   Code</button>
               </td>
@@ -152,13 +154,14 @@
             </tr>
             <tr *ngFor="let item of section.juniorItems">
               <td class="score-column">
-                <app-score [(selectedValue)]="item.score"></app-score>
+                <app-score [(selectedValue)]="item.score" (change)="processQuestionsStep()"></app-score>
               </td>
               <td>
                 {{item.question}}
               </td>
               <td class="button-column">
-                <button *ngIf="getQuestionMaterial(item.row)" mat-flat-button color="primary" type="button" (click)="selectQuestionMaterial(item.row)">Line
+                <button *ngIf="getQuestionMaterial(item.row)" mat-flat-button color="primary" type="button"
+                  (click)="selectQuestionMaterial(item.row)">Line
                   {{item.row}} - Copy
                   Code</button>
               </td>
@@ -178,13 +181,14 @@
             </tr>
             <tr *ngFor="let item of section.regularItems">
               <td class="score-column">
-                <app-score [(selectedValue)]="item.score"></app-score>
+                <app-score [(selectedValue)]="item.score" (change)="processQuestionsStep()"></app-score>
               </td>
               <td>
                 {{item.question}}
               </td>
               <td class="button-column">
-                <button *ngIf="getQuestionMaterial(item.row)" mat-flat-button color="primary" type="button" (click)="selectQuestionMaterial(item.row)">Line
+                <button *ngIf="getQuestionMaterial(item.row)" mat-flat-button color="primary" type="button"
+                  (click)="selectQuestionMaterial(item.row)">Line
                   {{item.row}} - Copy
                   Code</button>
               </td>
@@ -204,13 +208,14 @@
             </tr>
             <tr *ngFor="let item of section.seniorItems">
               <td class="score-column">
-                <app-score [(selectedValue)]="item.score"></app-score>
+                <app-score [(selectedValue)]="item.score" (change)="processQuestionsStep()"></app-score>
               </td>
               <td>
                 {{item.question}}
               </td>
               <td class="button-column">
-                <button *ngIf="getQuestionMaterial(item.row)" mat-flat-button color="primary" type="button" (click)="selectQuestionMaterial(item.row)">Line
+                <button *ngIf="getQuestionMaterial(item.row)" mat-flat-button color="primary" type="button"
+                  (click)="selectQuestionMaterial(item.row)">Line
                   {{item.row}} - Copy
                   Code</button>
               </td>
@@ -226,12 +231,12 @@
         </mat-step>
       </mat-stepper>
       <div>
-        <button mat-button matStepperNext>Submit</button>
+        <button type="button" mat-button matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
   <mat-step [stepControl]="resultFormGroup" label="Result">
-    <form [formGroup]="resultFormGroup" (ngSubmit)="onResultFormSubmit()">
+    <form [formGroup]="resultFormGroup">
       <table class="my-2">
         <tr>
           <th>Scoring </th>
@@ -283,9 +288,21 @@
         <textarea matInput formControlName="overallImpression"></textarea>
       </mat-form-field>
       <div>
-        <button mat-button>Submit</button>
-        <button mat-button type="button" (click)="reset(stepper)">Reset</button>
+        <button type="button" mat-button matStepperNext>Next</button>
       </div>
     </form>
+  </mat-step>
+  <mat-step label="Done">
+    <h3>Q&A Part:</h3>
+    <p>If you have any questions you can ask me now.</p>
+    <mat-divider></mat-divider>
+    <h3>Finishing:</h3>
+    <p>Thank you for taking the time to participate in our technical interview.</p>
+    <p>I will send your results to my colleague and he/she will return to you for the next steps.</p>
+    <p>If you have any further questions or concerns, you can ask him/her as well.</p>
+    <p>I appreciate your interest in our company and I wish you the best of luck in your job search.</p>
+    <div>
+      <button mat-button type="button" (click)="reset(stepper)">Reset</button>
+    </div>
   </mat-step>
 </mat-stepper>

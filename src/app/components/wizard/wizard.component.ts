@@ -1,6 +1,6 @@
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MAT_RADIO_DEFAULT_OPTIONS } from '@angular/material/radio';
 import { MatStepper } from '@angular/material/stepper';
 import { ExcelData } from 'src/app/models/excel-data';
 import { Item } from 'src/app/models/item';
@@ -74,7 +74,21 @@ export class WizardComponent implements OnInit {
     }
   }
 
-  async onCandidateNameFormSubmit() {
+  async stepperSelectionChange(event: StepperSelectionEvent) {
+    switch (event.previouslySelectedIndex) {
+      case 1:
+        await this.processCandidateNameStep();
+        break;
+      case 3:
+        await this.processOverviewStep();
+        break;
+      case 7:
+        await this.processResultStep();
+        break;
+    }
+  }
+
+  async processCandidateNameStep() {
     try {
       if (!this.candidateNameFormGroup?.valid) {
         return;
@@ -98,7 +112,7 @@ export class WizardComponent implements OnInit {
     }
   }
 
-  async onOverviewFormSubmit() {
+  async processOverviewStep() {
     try {
       if (!this.overviewFormGroup?.valid) {
         return;
@@ -112,7 +126,7 @@ export class WizardComponent implements OnInit {
     }
   }
 
-  async onTaskFormSubmit() {
+  async processTaskStep() {
     try {
       if (!this.taskFormGroup?.valid) {
         return;
@@ -126,7 +140,7 @@ export class WizardComponent implements OnInit {
     }
   }
 
-  async onQuestionsFormSubmit() {
+  async processQuestionsStep() {
     try {
       if (!this.questionsFormGroup?.valid) {
         return;
@@ -142,7 +156,7 @@ export class WizardComponent implements OnInit {
     }
   }
 
-  async onResultFormSubmit() {
+  async processResultStep() {
     try {
       if (!this.resultFormGroup?.valid) {
         return;

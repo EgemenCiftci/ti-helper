@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
   selector: 'app-score',
@@ -10,7 +11,8 @@ export class ScoreComponent {
   classes = ["red", "red", "red", "orange", "yellow", "green"];
 
   private _selectedValue?: number;
-  @Output() selectedValueChange = new EventEmitter<number | undefined>();
+  @Output() selectedValueChange = new EventEmitter<number | undefined>(); // emits on every change
+  @Output() change = new EventEmitter<MatRadioChange>(); // emits only on user interaction
   @Input()
   get selectedValue(): number | undefined {
     return this._selectedValue;
@@ -25,6 +27,10 @@ export class ScoreComponent {
 
   getClass(value: number): string {
     return this.classes[this.values.indexOf(value)];
+  }
+
+  onChange($event: MatRadioChange) {
+    this.change.emit($event);
   }
 }
 
