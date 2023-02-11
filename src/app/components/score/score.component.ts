@@ -7,7 +7,7 @@ import { MatRadioChange } from '@angular/material/radio';
   styleUrls: ['./score.component.css']
 })
 export class ScoreComponent {
-  values = [-1, 0, 1, 2, 3, 4];
+  values = [-1, undefined, 1, 2, 3, 4];
   classes = ["red", "red", "red", "orange", "yellow", "green"];
 
   private _selectedValue?: number;
@@ -25,7 +25,7 @@ export class ScoreComponent {
     }
   }
 
-  getClass(value: number): string {
+  getClass(value?: number): string {
     return this.classes[this.values.indexOf(value)];
   }
 

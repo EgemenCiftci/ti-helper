@@ -72,20 +72,6 @@ export class FileService {
     await this.writeToFile(handle, fileData);
   }
 
-  async createCandidateFolder(excelData: ExcelData) {
-    const handle = await this.getCandidateInterviewFormFileHandle(excelData.candidateName, true);
-    const fileData = await this.readFromFile(this.interviewFormFileHandle);
-    const bufferData = await this.updateExcel(fileData as any, excelData);
-    await this.writeToFile(handle, bufferData);
-  }
-
-  async updateCandidateFolder(excelData: ExcelData) {
-    const handle = await this.getCandidateInterviewFormFileHandle(excelData.candidateName, false);
-    const fileData = await this.readFromFile(handle);
-    const bufferData = await this.updateExcel(fileData as any, excelData);
-    await this.writeToFile(handle, bufferData);
-  }
-
   private async readFromFile(fileHandle: FileSystemFileHandle | undefined): Promise<File> {
     if (!fileHandle) {
       throw new Error('File handle is undefined');
@@ -129,27 +115,6 @@ export class FileService {
     return excelData;
   }
 
-  private async updateExcel(fileData: Excel.Buffer, excelData: ExcelData): Promise<Excel.Buffer> {
-    if (!fileData || !excelData) {
-      throw new Error('File data or excel data is undefined');
-    }
-
-    const workbook = new Excel.Workbook();
-    await workbook.xlsx.load(fileData);
-    const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
-
-    worksheet.getCell(this.mappingsService.mappings.overview.candidateNameCell).value = excelData.candidateName;
-    worksheet.getCell(this.mappingsService.mappings.overview.interviewerNameCell).value = excelData.interviewerName;
-    worksheet.getCell(this.mappingsService.mappings.overview.dateCell).value = excelData.date?.toDateString();
-    worksheet.getCell(this.mappingsService.mappings.overview.communicationCell).value = excelData.communication;
-    worksheet.getCell(this.mappingsService.mappings.overview.overallImpressionCell).value = excelData.overallImpression;
-    worksheet.getCell(this.mappingsService.mappings.overview.relevantExperienceCell).value = excelData.relevantExperience;
-    worksheet.getCell(this.mappingsService.mappings.overview.finalResultLevelCell).value = excelData.finalResultLevel;
-    worksheet.getCell(this.mappingsService.mappings.overview.finalResultScoreCell).value = (!excelData.finalResultScore || excelData.finalResultScore < 2.5) ? undefined : excelData.finalResultScore;
-
-    return await workbook.xlsx.writeBuffer();
-  }
-
   private async readAsText(fileHandle: FileSystemFileHandle | undefined): Promise<string> {
     return (await this.readFromFile(fileHandle))?.text() ?? '';
   }
@@ -174,74 +139,6 @@ export class FileService {
     });
 
     return questionMaterials;
-  }
-
-  async getCandidateData(candidateName: string): Promise<ExcelData> {
-    const excelData = new ExcelData();
-    excelData.candidateName = candidateName;
-    const handle = await this.getCandidateInterviewFormFileHandle(excelData.candidateName, false);
-    const fileData = await this.readFromFile(handle);
-
-    if (fileData) {
-      const workbook = new Excel.Workbook();
-      await workbook.xlsx.load(fileData as any);
-      const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
-
-      excelData.interviewerName = String(worksheet.getCell(this.mappingsService.mappings.overview.interviewerNameCell).value);
-      excelData.date = new Date(String(worksheet.getCell(this.mappingsService.mappings.overview.dateCell).value));
-      excelData.communication = String(worksheet.getCell(this.mappingsService.mappings.overview.communicationCell).value);
-      excelData.overallImpression = String(worksheet.getCell(this.mappingsService.mappings.overview.overallImpressionCell).value);
-      excelData.relevantExperience = Number(worksheet.getCell(this.mappingsService.mappings.overview.relevantExperienceCell).value);
-      excelData.finalResultLevel = String(worksheet.getCell(this.mappingsService.mappings.overview.finalResultLevelCell).value);
-      excelData.finalResultScore = Number(worksheet.getCell(this.mappingsService.mappings.overview.finalResultScoreCell).value);
-    }
-
-    return excelData;
-  }
-
-  async getFinalResultScore(candidateName: string, finalResultLevel: string | undefined): Promise<number | undefined> {
-    if (!finalResultLevel) {
-      return undefined;
-    }
-
-    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
-    const fileData = await this.readFromFile(handle);
-
-    if (!fileData) {
-      return undefined;
-    }
-
-    const workbook = new Excel.Workbook();
-    await workbook.xlsx.load(fileData as any);
-    const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
-    const cell = this.getFinalResultScoreCell(finalResultLevel);
-    return cell ? Number(worksheet.getCell(cell).result) : undefined;
-  }
-
-  getFinalResultScoreCell(finalResultLevel: string): string | undefined {
-    if (finalResultLevel.toLowerCase() === 'junior') {
-      return this.mappingsService.mappings.csQuestions.juniorScoreCell;
-    } else if (finalResultLevel.toLowerCase() === 'regular') {
-      return this.mappingsService.mappings.csQuestions.regularScoreCell;
-    } else if (finalResultLevel.toLowerCase() === 'senior') {
-      return this.mappingsService.mappings.csQuestions.seniorScoreCell;
-    } else {
-      return undefined;
-    }
-  }
-
-  async getPracticalTaskScore(candidateName: string): Promise<number | undefined> {
-    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
-    const fileData = await this.readFromFile(handle);
-
-    if (!fileData) {
-      return undefined;
-    }
-
-    const workbook = new Excel.Workbook();
-    await workbook.xlsx.load(fileData as any);
-    const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
-    return Number(worksheet.getCell(this.mappingsService.mappings.overview.practicalTaskScoreCell).result);
   }
 
   private async getCandidateInterviewFormFileHandle(candidateName: string, createIfNotExists: boolean): Promise<FileSystemFileHandle | undefined> {
@@ -288,7 +185,7 @@ export class FileService {
         const item = new Item();
         item.question = String(worksheet.getCell(`${this.mappingsService.mappings.tasks.questionColumn}${row}`).value);
         item.scoreCell = `${this.mappingsService.mappings.tasks.scoreColumn}${row}`;
-        item.score = Number(worksheet.getCell(item.scoreCell).value);
+        item.score = Number(worksheet.getCell(item.scoreCell).value) ?? undefined;
         return item;
       });
 
@@ -317,7 +214,7 @@ export class FileService {
           item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
           item.scoreCell = `${csQuestions.scoreColumn}${row}`;
           item.row = row;
-          item.score = Number(worksheet.getCell(item.scoreCell).value);
+          item.score = Number(worksheet.getCell(item.scoreCell).value) ?? undefined;
           return item;
         });
         sectionData.mandatoryItems = section.mandatary?.rows?.map(row => {
@@ -326,7 +223,7 @@ export class FileService {
           item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
           item.scoreCell = `${csQuestions.scoreColumn}${row}`;
           item.row = row;
-          item.score = Number(worksheet.getCell(item.scoreCell).value);
+          item.score = Number(worksheet.getCell(item.scoreCell).value) ?? undefined;
           return item;
         });
         sectionData.juniorItems = section.junior.rows?.map(row => {
@@ -335,7 +232,7 @@ export class FileService {
           item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
           item.scoreCell = `${csQuestions.scoreColumn}${row}`;
           item.row = row;
-          item.score = Number(worksheet.getCell(item.scoreCell).value);
+          item.score = Number(worksheet.getCell(item.scoreCell).value) ?? undefined;
           return item;
         });
         sectionData.regularItems = section.regular.rows?.map(row => {
@@ -344,7 +241,7 @@ export class FileService {
           item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
           item.scoreCell = `${csQuestions.scoreColumn}${row}`;
           item.row = row;
-          item.score = Number(worksheet.getCell(item.scoreCell).value);
+          item.score = Number(worksheet.getCell(item.scoreCell).value) ?? undefined;
           return item;
         });
         sectionData.seniorItems = section.senior.rows?.map(row => {
@@ -353,12 +250,12 @@ export class FileService {
           item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
           item.scoreCell = `${csQuestions.scoreColumn}${row}`;
           item.row = row;
-          item.score = Number(worksheet.getCell(item.scoreCell).value);
+          item.score = Number(worksheet.getCell(item.scoreCell).value) ?? undefined;
           return item;
         });
-        sectionData.juniorScore = Number(worksheet.getCell(`${csQuestions.scoreColumn}${section.junior.scoreRow}`).value);
-        sectionData.regularScore = Number(worksheet.getCell(`${csQuestions.scoreColumn}${section.regular.scoreRow}`).value);
-        sectionData.seniorScore = Number(worksheet.getCell(`${csQuestions.scoreColumn}${section.senior.scoreRow}`).value);
+        sectionData.juniorScore = Number(worksheet.getCell(`${csQuestions.scoreColumn}${section.junior.scoreRow}`).value) ?? undefined;
+        sectionData.regularScore = Number(worksheet.getCell(`${csQuestions.scoreColumn}${section.regular.scoreRow}`).value) ?? undefined;
+        sectionData.seniorScore = Number(worksheet.getCell(`${csQuestions.scoreColumn}${section.senior.scoreRow}`).value) ?? undefined;
         return sectionData;
       });
 
