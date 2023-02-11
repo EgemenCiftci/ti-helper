@@ -32,7 +32,7 @@ export class WizardComponent implements OnInit, AfterViewInit, OnDestroy {
     candidateName: ['', Validators.required]
   });
   overviewFormGroup = this._formBuilder.group({
-    interviewerName: [this._settingsService.interviewerName],
+    interviewerName: [this.settingsService.interviewerName],
     date: [new Date()],
     relevantExperience: [0]
   });
@@ -47,18 +47,10 @@ export class WizardComponent implements OnInit, AfterViewInit, OnDestroy {
   handleTaskScoreSubscription?: Subscription;
   handleQuestionsScoreSubject = new Subject<void>();
   handleQuestionsScoreSubscription?: Subscription;
-  sentences = [
-    "The candidate arrived early/on time/late.\n",
-    "The total time of the interview was 60 minutes.\n",
-    "I am satisfied with the candidate’s performance.\n",
-    "I am not satisfied with the candidate’s performance.\n",
-    "I am not pleased with the candidate’s performance.\n",
-    "I am very disappointed with the candidate’s performance.\n"
-  ];
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _settingsService: SettingsService,
+    public settingsService: SettingsService,
     private _fileService: FileService,
     private _snackBarService: SnackBarService) { }
 
@@ -256,7 +248,7 @@ export class WizardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private openWebsiteInNewTab() {
-    window.open(this._settingsService.websiteUrl, "_blank");
+    window.open(this.settingsService.websiteUrl, "_blank");
   }
 
   private async copyToClipboard(text: string) {
@@ -338,10 +330,9 @@ export class WizardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addSentence(sentence: string) {
-    this.resultFormGroup.value.overallImpression += sentence;
+    this.resultFormGroup.value.overallImpression += `${sentence}\n`;
     this.resultFormGroup.patchValue({
       overallImpression: this.resultFormGroup.value.overallImpression
     });
-    
   }
 }

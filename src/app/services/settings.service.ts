@@ -12,8 +12,26 @@ export class SettingsService {
   questionMaterialsFileName!: string;
   interviewFormFileName!: string;
   websiteUrl!: string;
-  openAiApiKey!: string;
-  openAiTemperature!: number;
+  preformedSentences!: string[];
+  private defaultPreformedSentences = [
+    "The candidate arrived early/on time/late for the interview.",
+    "The total duration was XX minutes.",
+    "In the practical part, the candidate could not find some of the items but did a good job overall.",
+    "In the practical part, the candidate could not find most of the items and fail. He has some missing knowledge about XX.",
+    "In the theoretical part, the candidate answered most of the senior questions correctly. He needs to improve in XX.",
+    "In the theoretical part, the candidate could not answer or partially answered most of the questions correctly. He needs to improve his knowledge.",
+    "The candidate expressed their thoughts easily and clearly. There were no problems in communication.",
+    "There were some problems in communication because of the accent but not too serious.",
+    "There were some problems in communication because the candidate could not express himself in some situations.",
+    "My overall impression was good and the candidate fits the senior role.",
+    "Unfortunately, the candidate failed the interview.",
+    "I sometimes felt that the candidate was searching the internet.",
+    "The candidate likes to learn and has a deep understanding of many CS subjects.",
+    "The candidate could quickly answer my questions.",
+    "This candidate is a fast thinker and knows a lot.",
+    "The candidate has the good technical knowledge and likes to talk.",
+    "I think the candidate has the ability to find a suitable solution when he doesn't know the exact answer."
+  ];
 
   constructor() {
     this.loadSettings();
@@ -28,8 +46,8 @@ export class SettingsService {
     this.questionMaterialsFileName = localStorage.getItem('questionMaterialsFileName') ?? 'question materials.cs';
     this.interviewFormFileName = localStorage.getItem('interviewFormFileName') ?? 'Interview Form CS template 0.8.xlsx';
     this.websiteUrl = localStorage.getItem('websiteUrl') ?? 'https://www.snipp.live/new';
-    this.openAiApiKey = localStorage.getItem('openAiApiKey') ?? '';
-    this.openAiTemperature = Number(localStorage.getItem('openAiApiTemperature') ?? '0.5');
+    const ps = localStorage.getItem('preformedSentences');
+    this.preformedSentences = ps === null ? this.defaultPreformedSentences : JSON.parse(ps);
   }
 
   saveSettings() {
@@ -41,8 +59,7 @@ export class SettingsService {
     localStorage.setItem('questionMaterialsFileName', this.questionMaterialsFileName);
     localStorage.setItem('interviewFormFileName', this.interviewFormFileName);
     localStorage.setItem('websiteUrl', this.websiteUrl);
-    localStorage.setItem('openAiApiKey', this.openAiApiKey);
-    localStorage.setItem('openAiApiTemperature', String(this.openAiTemperature));
+    localStorage.setItem('preformedSentences', JSON.stringify(this.preformedSentences));
   }
 
   resetSettings() {
@@ -54,8 +71,7 @@ export class SettingsService {
     localStorage.removeItem('questionMaterialsFileName');
     localStorage.removeItem('interviewFormFileName');
     localStorage.removeItem('websiteUrl');
-    localStorage.removeItem('openAiApiKey');
-    localStorage.removeItem('openAiApiTemperature');
+    localStorage.removeItem('preformedSentences');
     this.loadSettings();
   }
 }

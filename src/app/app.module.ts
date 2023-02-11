@@ -6,7 +6,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { MainComponent } from './components/main/main.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { AboutComponent } from './components/about/about.component';
 import { WizardComponent } from './components/wizard/wizard.component';
@@ -28,11 +27,12 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatListModule } from '@angular/material/list';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MainComponent,
     SettingsComponent,
     AboutComponent,
     WizardComponent,
@@ -59,7 +59,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatSliderModule,
     MatDividerModule,
     MatRadioModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatListModule,
+    MatChipsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

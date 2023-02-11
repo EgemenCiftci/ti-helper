@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { SettingsService } from 'src/app/services/settings.service';
 import { SnackBarService } from 'src/app/services/snack-bar.service';
 
@@ -9,7 +10,6 @@ import { SnackBarService } from 'src/app/services/snack-bar.service';
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
-
   form!: FormGroup;
 
   constructor(private formBuilder: FormBuilder,
@@ -26,8 +26,7 @@ export class SettingsComponent implements OnInit {
       questionMaterialsFileName: [this.settingsService.questionMaterialsFileName],
       interviewFormFileName: [this.settingsService.interviewFormFileName],
       websiteUrl: [this.settingsService.websiteUrl],
-      openAiApiKey: [this.settingsService.openAiApiKey],
-      openAiTemperature: [this.settingsService.openAiTemperature, [Validators.min(0), Validators.max(1)]]
+      preformedSentences: [this.settingsService.preformedSentences]
     });
   }
 
@@ -45,8 +44,7 @@ export class SettingsComponent implements OnInit {
       this.settingsService.questionMaterialsFileName = this.form.value.questionMaterialsFileName.trim();
       this.settingsService.interviewFormFileName = this.form.value.interviewFormFileName.trim();
       this.settingsService.websiteUrl = this.form.value.websiteUrl.trim();
-      this.settingsService.openAiApiKey = this.form.value.openAiApiKey.trim();
-      this.settingsService.openAiTemperature = this.form.value.openAiTemperature;
+      this.settingsService.preformedSentences = this.form.value.preformedSentences;
       this.settingsService.saveSettings();
 
       this.snackBarService.showSnackBar('Settings saved successfully.');
@@ -64,6 +62,24 @@ export class SettingsComponent implements OnInit {
     } catch (error) {
       console.error(error);
       this.snackBarService.showSnackBar('Error while resetting settings.');
+    }
+  }
+
+  addSentence(event: MatChipInputEvent) {
+    const value = (event.value || '').trim();
+
+    if (value) {
+      this.form.get('preformedSentences')?.value.push(value);
+    }
+
+    event.chipInput!.clear();
+  }
+
+  removeSentence(sentence: string) {
+    const index = this.form.get('preformedSentences')?.value.indexOf(sentence);
+
+    if (index >= 0) {
+      this.form.get('preformedSentences')?.value.splice(index, 1);
     }
   }
 }

@@ -287,8 +287,13 @@
       <mat-form-field class="d-block mx-1" appearance="fill">
         <mat-label>Overall Impression</mat-label>
         <textarea matInput formControlName="overallImpression"></textarea>
+        <button *ngIf="resultFormGroup.get('overallImpression')?.value" matSuffix mat-icon-button aria-label="Clear"
+          (click)="resultFormGroup.get('overallImpression')?.setValue('')">
+          <mat-icon>close</mat-icon>
+        </button>
       </mat-form-field>
-      <button *ngFor="let sentence of sentences" mat-flat-button class="w-100 my-2" color="primary" (click)="addSentence(sentence)">{{sentence}}</button>
+      <button *ngFor="let sentence of settingsService.preformedSentences" mat-flat-button class="w-100 my-2"
+        color="primary" (click)="addSentence(sentence)">{{sentence}}</button>
       <div>
         <button type="button" mat-button matStepperNext>Next</button>
       </div>
