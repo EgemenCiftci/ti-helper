@@ -30,6 +30,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatListModule } from '@angular/material/list';
 import { MatChipsModule } from '@angular/material/chips';
 
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,7 +63,8 @@ import { MatChipsModule } from '@angular/material/chips';
     MatRadioModule,
     MatTooltipModule,
     MatListModule,
-    MatChipsModule
+    MatChipsModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]

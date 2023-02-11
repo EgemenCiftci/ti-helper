@@ -291,23 +291,22 @@
           (click)="resultFormGroup.get('overallImpression')?.setValue('')">
           <mat-icon>close</mat-icon>
         </button>
+        <mat-chip-listbox class="mat-mdc-chip-set-stacked">
+          <mat-chip *ngFor="let sentence of settingsService.preformedSentences" color="primary"
+            (click)="addSentence(sentence)">
+            {{sentence}}
+          </mat-chip>
+        </mat-chip-listbox>
       </mat-form-field>
-      <button *ngFor="let sentence of settingsService.preformedSentences" mat-flat-button class="w-100 my-2"
-        color="primary" (click)="addSentence(sentence)">{{sentence}}</button>
+      <!--       <button *ngFor="let sentence of settingsService.preformedSentences" mat-flat-button class="w-100 my-2"
+        color="primary" (click)="addSentence(sentence)">{{sentence}}</button> -->
       <div>
         <button type="button" mat-button matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
   <mat-step label="Done">
-    <h3>Q&A Part:</h3>
-    <p>If you have any questions you can ask me now.</p>
-    <mat-divider></mat-divider>
-    <h3>Finishing:</h3>
-    <p>Thank you for taking the time to participate in our technical interview.</p>
-    <p>I will send your results to my colleague and he/she will return to you for the next steps.</p>
-    <p>If you have any further questions or concerns, you can ask him/her as well.</p>
-    <p>I appreciate your interest in our company and I wish you the best of luck in your job search.</p>
+    <h1>🎈🎊🎉</h1>
     <div>
       <button mat-button type="button" (click)="reset(stepper)">Reset</button>
     </div>

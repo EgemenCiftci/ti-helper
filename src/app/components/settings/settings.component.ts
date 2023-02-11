@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SettingsService } from 'src/app/services/settings.service';
 import { SnackBarService } from 'src/app/services/snack-bar.service';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-settings',
@@ -81,5 +82,9 @@ export class SettingsComponent implements OnInit {
     if (index >= 0) {
       this.form.get('preformedSentences')?.value.splice(index, 1);
     }
+  }
+
+  dropSentence(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.form.get('preformedSentences')?.value, event.previousIndex, event.currentIndex);
   }
 }

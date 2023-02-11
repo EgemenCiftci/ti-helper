@@ -15,8 +15,9 @@
             </mat-form-field>
             <mat-form-field class="d-block mx-1" appearance="fill">
                 <mat-label>Preformed Sentences</mat-label>
-                <mat-chip-grid #chipGrid formControlName="preformedSentences">
+                <mat-chip-grid #chipGrid cdkDropList cdkDropListOrientation="vertical" (cdkDropListDropped)="dropSentence($event)" formControlName="preformedSentences">
                     <mat-chip-row *ngFor="let sentence of form.get('preformedSentences')?.value"
+                    cdkDrag
                         (removed)="removeSentence(sentence)">
                         {{sentence}}
                         <button matChipRemove>

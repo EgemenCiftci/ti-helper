@@ -5,3 +5,7 @@
 .button-column {
     width: 200px;
 }
+
+textarea {
+    height: 230px !important;
+}
