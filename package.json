@@ -22,6 +22,7 @@
     "@angular/platform-browser-dynamic": "^15.1.4",
     "@angular/router": "^15.1.4",
     "exceljs": "^4.3.0",
+    "hyperformula": "^2.3.0",
     "openai": "^3.1.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",

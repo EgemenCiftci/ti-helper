@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SettingsService } from './settings.service';
 import * as Excel from 'exceljs';
+import { HyperFormula } from 'hyperformula';
 import { ExcelData } from '../models/excel-data';
 import { QuestionMaterial } from '../models/question-material';
 import { MappingsService } from './mappings.service';
@@ -8,6 +9,8 @@ import { Item } from '../models/item';
 import { Section } from '../models/section';
 import { Scoring } from '../models/scoring';
 import { ScoreResult } from '../models/score-result';
+import { Sheet, Sheets } from 'hyperformula/typings/Sheet';
+import { RawCellContent } from 'hyperformula/typings/CellContentParser';
 
 @Injectable({
   providedIn: 'root'
@@ -357,8 +360,12 @@ export class FileService {
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.tasks.worksheetName);
 
-    const aspNetCoreScore = Number(worksheet.getCell(`${this.mappingsService.mappings.tasks.scoreColumn}${this.mappingsService.mappings.tasks.aspNetScoreRow}`).result);
-    const wpfScore = Number(worksheet.getCell(`${this.mappingsService.mappings.tasks.scoreColumn}${this.mappingsService.mappings.tasks.wpfScoreRow}`).result);
+    const sheets = this.getSheets(workbook);
+    const aspNetCoreScoreCellFormula = worksheet.getCell(`${this.mappingsService.mappings.tasks.scoreColumn}${this.mappingsService.mappings.tasks.aspNetScoreRow}`).formula;
+    const aspNetCoreScore = this.evaluateFormula(this.mappingsService.mappings.tasks.worksheetName, aspNetCoreScoreCellFormula, sheets);
+    const wpfScoreCellFormula = worksheet.getCell(`${this.mappingsService.mappings.tasks.scoreColumn}${this.mappingsService.mappings.tasks.wpfScoreRow}`).formula;
+    const wpfScore = this.evaluateFormula(this.mappingsService.mappings.tasks.worksheetName, wpfScoreCellFormula, sheets);
+
     return { aspNetCoreScore, wpfScore };
   }
 
@@ -405,5 +412,41 @@ export class FileService {
     scoring.senior.result = String(worksheet.getCell(this.mappingsService.mappings.csQuestions.seniorResultCell).result);
 
     return scoring;
+  }
+
+  evaluateFormula(sheetName: string, formula: string, sheets: Sheets): number {
+    const hf = HyperFormula.buildFromSheets(sheets, { licenseKey: 'gpl-v3' });
+    const sheetId = hf.getSheetId(sheetName);
+    if (sheetId === undefined) {
+      throw new Error(`Sheet ${sheetName} is not found`);
+    }
+    return Number(hf.calculateFormula(`=${formula}`, sheetId));
+  }
+
+  getSheets(workbook: Excel.Workbook): Sheets {
+    const sheets: Sheets = {};
+
+    workbook.eachSheet(worksheet => {
+      if(worksheet.state === 'hidden') {
+        return;
+      }
+
+      const sheetData: Sheet = new Array<Array<RawCellContent>>();
+
+      worksheet.eachRow({includeEmpty: true}, row => {
+        const rowData: RawCellContent[] = [];
+
+        row.eachCell({includeEmpty: true}, cell => {
+            const cellData = cell.formula ? `=${cell.formula}` : ((cell.value as any)?.formula || (cell.value as any)?.richText ? undefined : cell.value);
+            rowData.push(cellData as RawCellContent);
+        });
+
+        sheetData.push(rowData);
+      });
+
+      sheets[worksheet.name] = sheetData;
+    });
+
+    return sheets;
   }
 }
