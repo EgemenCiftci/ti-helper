@@ -102,11 +102,13 @@ export class FileService {
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
 
+    const relevantExperience = Number(worksheet.getCell(this.mappingsService.mappings.overview.relevantExperienceCell).value);
+
     const excelData: ExcelData = {
       candidateName: String(worksheet.getCell(this.mappingsService.mappings.overview.candidateNameCell).value),
       interviewerName: String(worksheet.getCell(this.mappingsService.mappings.overview.interviewerNameCell).value),
       date: new Date(String(worksheet.getCell(this.mappingsService.mappings.overview.dateCell).value)),
-      relevantExperience: Number(worksheet.getCell(this.mappingsService.mappings.overview.relevantExperienceCell).value),
+      relevantExperience: relevantExperience ? relevantExperience : undefined,
       communication: String(worksheet.getCell(this.mappingsService.mappings.overview.communicationCell).value),
       finalResultLevel: String(worksheet.getCell(this.mappingsService.mappings.overview.finalResultLevelCell).value),
       overallImpression: String(worksheet.getCell(this.mappingsService.mappings.overview.overallImpressionCell).value)
@@ -185,7 +187,8 @@ export class FileService {
         const item = new Item();
         item.question = String(worksheet.getCell(`${this.mappingsService.mappings.tasks.questionColumn}${row}`).value);
         item.scoreCell = `${this.mappingsService.mappings.tasks.scoreColumn}${row}`;
-        item.score = Number(worksheet.getCell(item.scoreCell).value) ?? undefined;
+        const score = Number(worksheet.getCell(item.scoreCell).value);
+        item.score = score ? score : undefined;
         return item;
       });
 
@@ -214,7 +217,8 @@ export class FileService {
           item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
           item.scoreCell = `${csQuestions.scoreColumn}${row}`;
           item.row = row;
-          item.score = Number(worksheet.getCell(item.scoreCell).value) ?? undefined;
+          const score = Number(worksheet.getCell(item.scoreCell).value);
+          item.score = score ? score : undefined;
           return item;
         });
         sectionData.mandatoryItems = section.mandatary?.rows?.map(row => {
@@ -223,7 +227,8 @@ export class FileService {
           item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
           item.scoreCell = `${csQuestions.scoreColumn}${row}`;
           item.row = row;
-          item.score = Number(worksheet.getCell(item.scoreCell).value) ?? undefined;
+          const score = Number(worksheet.getCell(item.scoreCell).value);
+          item.score = score ? score : undefined;
           return item;
         });
         sectionData.juniorItems = section.junior.rows?.map(row => {
@@ -232,7 +237,8 @@ export class FileService {
           item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
           item.scoreCell = `${csQuestions.scoreColumn}${row}`;
           item.row = row;
-          item.score = Number(worksheet.getCell(item.scoreCell).value) ?? undefined;
+          const score = Number(worksheet.getCell(item.scoreCell).value);
+          item.score = score ? score : undefined;
           return item;
         });
         sectionData.regularItems = section.regular.rows?.map(row => {
@@ -241,7 +247,8 @@ export class FileService {
           item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
           item.scoreCell = `${csQuestions.scoreColumn}${row}`;
           item.row = row;
-          item.score = Number(worksheet.getCell(item.scoreCell).value) ?? undefined;
+          const score = Number(worksheet.getCell(item.scoreCell).value);
+          item.score = score ? score : undefined;
           return item;
         });
         sectionData.seniorItems = section.senior.rows?.map(row => {
@@ -250,12 +257,16 @@ export class FileService {
           item.answer = String(worksheet.getCell(`${csQuestions.answerColumn}${row}`).value);
           item.scoreCell = `${csQuestions.scoreColumn}${row}`;
           item.row = row;
-          item.score = Number(worksheet.getCell(item.scoreCell).value) ?? undefined;
+          const score = Number(worksheet.getCell(item.scoreCell).value);
+          item.score = score ? score : undefined;
           return item;
         });
-        sectionData.juniorScore = Number(worksheet.getCell(`${csQuestions.scoreColumn}${section.junior.scoreRow}`).value) ?? undefined;
-        sectionData.regularScore = Number(worksheet.getCell(`${csQuestions.scoreColumn}${section.regular.scoreRow}`).value) ?? undefined;
-        sectionData.seniorScore = Number(worksheet.getCell(`${csQuestions.scoreColumn}${section.senior.scoreRow}`).value) ?? undefined;
+        const juniorScore = Number(worksheet.getCell(`${csQuestions.scoreColumn}${section.junior.scoreRow}`).value);
+        sectionData.juniorScore = juniorScore ? juniorScore : undefined;
+        const regularScore = Number(worksheet.getCell(`${csQuestions.scoreColumn}${section.regular.scoreRow}`).value);
+        sectionData.regularScore = regularScore ? regularScore : undefined;
+        const seniorScore = Number(worksheet.getCell(`${csQuestions.scoreColumn}${section.senior.scoreRow}`).value);
+        sectionData.seniorScore = seniorScore ? seniorScore : undefined;
         return sectionData;
       });
 
@@ -288,7 +299,7 @@ export class FileService {
 
     worksheet.getCell(this.mappingsService.mappings.overview.interviewerNameCell).value = overview.interviewerName;
     worksheet.getCell(this.mappingsService.mappings.overview.dateCell).value = overview.date?.toDateString();
-    worksheet.getCell(this.mappingsService.mappings.overview.relevantExperienceCell).value = overview.relevantExperience;
+    worksheet.getCell(this.mappingsService.mappings.overview.relevantExperienceCell).value = overview.relevantExperience ? overview.relevantExperience : undefined;
 
     this.writeToFile(handle, await workbook.xlsx.writeBuffer());
   }
@@ -308,11 +319,11 @@ export class FileService {
     if (scoring) {
       const finalResultLevel = result.finalResultLevel.toLowerCase();
       if (finalResultLevel === 'junior') {
-        worksheet.getCell(this.mappingsService.mappings.overview.finalResultScoreCell).value = scoring.junior?.score;
+        worksheet.getCell(this.mappingsService.mappings.overview.finalResultScoreCell).value = scoring.junior?.score ? scoring.junior?.score : undefined;
       } else if (finalResultLevel === 'regular') {
-        worksheet.getCell(this.mappingsService.mappings.overview.finalResultScoreCell).value = scoring.regular?.score;
+        worksheet.getCell(this.mappingsService.mappings.overview.finalResultScoreCell).value = scoring.regular?.score ? scoring.regular?.score : undefined;
       } else if (finalResultLevel === 'senior') {
-        worksheet.getCell(this.mappingsService.mappings.overview.finalResultScoreCell).value = scoring.senior?.score;
+        worksheet.getCell(this.mappingsService.mappings.overview.finalResultScoreCell).value = scoring.senior?.score ? scoring.senior?.score : undefined;
       }
     }
 
@@ -332,7 +343,7 @@ export class FileService {
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.tasks.worksheetName);
 
     taskItems.forEach(item => {
-      worksheet.getCell(item.scoreCell).value = item.score;
+      worksheet.getCell(item.scoreCell).value = item.score ? item.score : undefined;
     });
 
     this.writeToFile(handle, await workbook.xlsx.writeBuffer());
@@ -364,11 +375,11 @@ export class FileService {
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
 
     sections.forEach(section => {
-      section.suddenDeathItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score);
-      section.mandatoryItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score);
-      section.juniorItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score);
-      section.regularItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score);
-      section.seniorItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score);
+      section.suddenDeathItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score ? item.score : undefined);
+      section.mandatoryItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score ? item.score : undefined);
+      section.juniorItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score ? item.score : undefined);
+      section.regularItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score ? item.score : undefined);
+      section.seniorItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score ? item.score : undefined);
     });
 
     this.writeToFile(handle, await workbook.xlsx.writeBuffer());
