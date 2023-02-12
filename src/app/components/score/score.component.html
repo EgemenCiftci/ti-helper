@@ -1,4 +1,9 @@
-<mat-radio-group [(ngModel)]="selectedValue" (change)="onChange($event)">
-    <mat-radio-button *ngFor="let value of values" [value]="value" title="{{value}}"
-        [class]="getClass(value)" color="primary"></mat-radio-button>
-</mat-radio-group>
+<div class="d-flex flex-row">
+    <mat-radio-group class="flex-fill" [(ngModel)]="selectedValue" (change)="onChange($event)">
+        <mat-radio-button *ngFor="let value of values" [value]="value" title="{{value}}" [class]="getClass(value)"
+            color="primary"></mat-radio-button>
+    </mat-radio-group>
+    <button *ngIf="selectedValue" matSuffix mat-icon-button title="Clear" (click)="clear()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
