@@ -10,4 +10,7 @@ export class Section {
     juniorScore?: number;
     regularScore?: number;
     seniorScore?: number;
+    juniorScoreCell?: string;
+    regularScoreCell?: string;
+    seniorScoreCell?: string;
 }

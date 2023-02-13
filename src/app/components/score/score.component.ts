@@ -7,8 +7,8 @@ import { MatRadioChange } from '@angular/material/radio';
   styleUrls: ['./score.component.css']
 })
 export class ScoreComponent {
-  values = [-1, 1, 2, 3, 4];
-  classes = ["red", "red", "orange", "yellow", "green"];
+  @Input() values = [-1, 1, 2, 3, 4];
+  classes = ["red", "orange", "yellow", "green", "blue"];
 
   private _selectedValue?: number;
   @Output() selectedValueChange = new EventEmitter<number | undefined>(); // emits on every change
@@ -26,7 +26,20 @@ export class ScoreComponent {
   }
 
   getClass(value: number): string {
-    return this.classes[this.values.indexOf(value)];
+    if (value < 2) {
+      return this.classes[0];
+    } else {
+      switch (value) {
+        case 2:
+          return this.classes[1];
+        case 3:
+          return this.classes[2];
+        case 4:
+          return this.classes[3];
+        default:
+          return this.classes[4];
+      }
+    }
   }
 
   onChange($event: MatRadioChange) {

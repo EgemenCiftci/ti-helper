@@ -134,6 +134,7 @@ export class WizardComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       this.sections = await this._fileService.getSections(this.candidateName);
+      this.scoring = await this._fileService.getScoring(this.candidateName);
     } catch (error) {
       console.error(error);
       this._snackBarService.showSnackBar('Error while submitting candidate name.');
@@ -179,6 +180,7 @@ export class WizardComponent implements OnInit, AfterViewInit, OnDestroy {
       await this._fileService.setSections(this.candidateName, this.sections);
       this._snackBarService.showSnackBar('Submitted successfully.');
 
+      await this._fileService.updateSectionScores(this.candidateName, this.sections);
       this.scoring = await this._fileService.getScoring(this.candidateName);
     } catch (error) {
       console.error(error);
@@ -244,6 +246,7 @@ export class WizardComponent implements OnInit, AfterViewInit, OnDestroy {
     this._snackBarService.showSnackBar('Copied to clipboard');
     this.openWebsiteInNewTab();
     this.taskItems = await this._fileService.getTaskItems(this.candidateName, this.selectedTask);
+    this.taskScores = await this._fileService.getTaskScores(this.candidateName);
     stepper.selectedIndex = 5;
   }
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SettingsService } from './settings.service';
 import * as Excel from 'exceljs';
-import { HyperFormula } from 'hyperformula';
+import { CellValue, HyperFormula } from 'hyperformula';
 import { ExcelData } from '../models/excel-data';
 import { QuestionMaterial } from '../models/question-material';
 import { MappingsService } from './mappings.service';
@@ -210,6 +210,7 @@ export class FileService {
       await workbook.xlsx.load(fileData as any);
       const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
 
+      const sheets = this.getSheets(workbook);
       const csQuestions = this.mappingsService.mappings.csQuestions;
       const sections = this.mappingsService.mappings.csQuestions.sections.map(section => {
         const sectionData = new Section();
@@ -264,12 +265,13 @@ export class FileService {
           item.score = score ? score : undefined;
           return item;
         });
-        const juniorScore = Number(worksheet.getCell(`${csQuestions.scoreColumn}${section.junior.scoreRow}`).value);
-        sectionData.juniorScore = juniorScore ? juniorScore : undefined;
-        const regularScore = Number(worksheet.getCell(`${csQuestions.scoreColumn}${section.regular.scoreRow}`).value);
-        sectionData.regularScore = regularScore ? regularScore : undefined;
-        const seniorScore = Number(worksheet.getCell(`${csQuestions.scoreColumn}${section.senior.scoreRow}`).value);
-        sectionData.seniorScore = seniorScore ? seniorScore : undefined;
+
+        sectionData.juniorScoreCell = `${csQuestions.scoreColumn}${section.junior.scoreRow}`;
+        sectionData.regularScoreCell = `${csQuestions.scoreColumn}${section.regular.scoreRow}`;
+        sectionData.seniorScoreCell = `${csQuestions.scoreColumn}${section.senior.scoreRow}`;
+
+        this.updateScores(sectionData, worksheet, sheets);
+
         return sectionData;
       });
 
@@ -277,6 +279,28 @@ export class FileService {
     }
 
     return [];
+  }
+
+  async updateSectionScores(candidateName: string, sections?: Section[]) {
+    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
+    const fileData = await this.readFromFile(handle);
+
+    const workbook = new Excel.Workbook();
+    await workbook.xlsx.load(fileData as any);
+    const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
+
+    const sheets = this.getSheets(workbook);
+
+    sections?.forEach(section => {
+      this.updateScores(section, worksheet, sheets);
+    });
+  }
+
+  private updateScores(sectionData: Section, worksheet: Excel.Worksheet, sheets: Sheets) {
+    const sectionScores = this.getSectionScores(sectionData, worksheet, sheets);
+    sectionData.juniorScore = sectionScores.juniorScore;
+    sectionData.regularScore = sectionScores.regularScore;
+    sectionData.seniorScore = sectionScores.seniorScore;
   }
 
   async setCandidateName(candidateName: string) {
@@ -362,11 +386,27 @@ export class FileService {
 
     const sheets = this.getSheets(workbook);
     const aspNetCoreScoreCellFormula = worksheet.getCell(`${this.mappingsService.mappings.tasks.scoreColumn}${this.mappingsService.mappings.tasks.aspNetScoreRow}`).formula;
-    const aspNetCoreScore = this.evaluateFormula(this.mappingsService.mappings.tasks.worksheetName, aspNetCoreScoreCellFormula, sheets);
+    const aspNetCoreScore = Number(this.evaluateFormula(this.mappingsService.mappings.tasks.worksheetName, aspNetCoreScoreCellFormula, sheets));
     const wpfScoreCellFormula = worksheet.getCell(`${this.mappingsService.mappings.tasks.scoreColumn}${this.mappingsService.mappings.tasks.wpfScoreRow}`).formula;
-    const wpfScore = this.evaluateFormula(this.mappingsService.mappings.tasks.worksheetName, wpfScoreCellFormula, sheets);
+    const wpfScore = Number(this.evaluateFormula(this.mappingsService.mappings.tasks.worksheetName, wpfScoreCellFormula, sheets));
 
     return { aspNetCoreScore, wpfScore };
+  }
+
+  private getSectionScores(sectionData: Section, worksheet: Excel.Worksheet, sheets: Sheets): { juniorScore?: number, regularScore?: number, seniorScore?: number } {
+    const juniorScoreFormula = worksheet.getCell(sectionData.juniorScoreCell!).formula;
+    let juniorScore: number | undefined = Number(this.evaluateFormula(this.mappingsService.mappings.csQuestions.worksheetName, juniorScoreFormula, sheets));
+    juniorScore = juniorScore ? juniorScore : undefined;
+
+    const regularScoreFormula = worksheet.getCell(sectionData.regularScoreCell!).formula;
+    let regularScore: number | undefined = Number(this.evaluateFormula(this.mappingsService.mappings.csQuestions.worksheetName, regularScoreFormula, sheets));
+    regularScore = regularScore ? regularScore : undefined;
+
+    const seniorScoreFormula = worksheet.getCell(sectionData.seniorScoreCell!).formula;
+    let seniorScore: number | undefined = Number(this.evaluateFormula(this.mappingsService.mappings.csQuestions.worksheetName, seniorScoreFormula, sheets));
+    seniorScore = seniorScore ? seniorScore : undefined;
+
+    return { juniorScore, regularScore, seniorScore };
   }
 
   async setSections(candidateName: string, sections?: Section[]) {
@@ -400,45 +440,71 @@ export class FileService {
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
 
+    const sheets = this.getSheets(workbook);
     const scoring = new Scoring();
+
     scoring.junior = new ScoreResult();
-    scoring.junior.score = Number(worksheet.getCell(this.mappingsService.mappings.csQuestions.juniorScoreCell).result);
-    scoring.junior.result = String(worksheet.getCell(this.mappingsService.mappings.csQuestions.juniorResultCell).result);
+    const juniorScoreCellFormula = worksheet.getCell(this.mappingsService.mappings.csQuestions.juniorScoreCell).formula;
+    scoring.junior.score = Number(this.evaluateFormula(this.mappingsService.mappings.csQuestions.worksheetName, juniorScoreCellFormula, sheets));
+    const juniorResultCellFormula = worksheet.getCell(this.mappingsService.mappings.csQuestions.juniorResultCell).formula;
+    scoring.junior.result = String(this.evaluateFormula(this.mappingsService.mappings.csQuestions.worksheetName, juniorResultCellFormula, sheets));
+
     scoring.regular = new ScoreResult();
-    scoring.regular.score = Number(worksheet.getCell(this.mappingsService.mappings.csQuestions.regularScoreCell).result);
-    scoring.regular.result = String(worksheet.getCell(this.mappingsService.mappings.csQuestions.regularResultCell).result);
+    const regularScoreCellFormula = worksheet.getCell(this.mappingsService.mappings.csQuestions.regularScoreCell).formula;
+    scoring.regular.score = Number(this.evaluateFormula(this.mappingsService.mappings.csQuestions.worksheetName, regularScoreCellFormula, sheets));
+    const regularResultCellFormula = worksheet.getCell(this.mappingsService.mappings.csQuestions.regularResultCell).formula;
+    scoring.regular.result = String(this.evaluateFormula(this.mappingsService.mappings.csQuestions.worksheetName, regularResultCellFormula, sheets));
+
     scoring.senior = new ScoreResult();
-    scoring.senior.score = Number(worksheet.getCell(this.mappingsService.mappings.csQuestions.seniorScoreCell).result);
-    scoring.senior.result = String(worksheet.getCell(this.mappingsService.mappings.csQuestions.seniorResultCell).result);
+    const seniorScoreCellFormula = worksheet.getCell(this.mappingsService.mappings.csQuestions.seniorScoreCell).formula;
+    scoring.senior.score = Number(this.evaluateFormula(this.mappingsService.mappings.csQuestions.worksheetName, seniorScoreCellFormula, sheets));
+    const seniorResultCellFormula = worksheet.getCell(this.mappingsService.mappings.csQuestions.seniorResultCell).formula;
+    scoring.senior.result = String(this.evaluateFormula(this.mappingsService.mappings.csQuestions.worksheetName, seniorResultCellFormula, sheets));
 
     return scoring;
   }
 
-  evaluateFormula(sheetName: string, formula: string, sheets: Sheets): number {
+  private evaluateFormula(sheetName: string, formula: string, sheets: Sheets): CellValue | CellValue[][] {
     const hf = HyperFormula.buildFromSheets(sheets, { licenseKey: 'gpl-v3' });
     const sheetId = hf.getSheetId(sheetName);
     if (sheetId === undefined) {
       throw new Error(`Sheet ${sheetName} is not found`);
     }
-    return Number(hf.calculateFormula(`=${formula}`, sheetId));
+    return hf.calculateFormula(`=${formula}`, sheetId);
   }
 
-  getSheets(workbook: Excel.Workbook): Sheets {
+  private getSheets(workbook: Excel.Workbook): Sheets {
     const sheets: Sheets = {};
 
     workbook.eachSheet(worksheet => {
-      if(worksheet.state === 'hidden') {
+      if (worksheet.state === 'hidden') {
         return;
       }
 
       const sheetData: Sheet = new Array<Array<RawCellContent>>();
 
-      worksheet.eachRow({includeEmpty: true}, row => {
+      worksheet.eachRow({ includeEmpty: true }, row => {
         const rowData: RawCellContent[] = [];
 
-        row.eachCell({includeEmpty: true}, cell => {
-            const cellData = cell.formula ? `=${cell.formula}` : ((cell.value as any)?.formula || (cell.value as any)?.richText ? undefined : cell.value);
-            rowData.push(cellData as RawCellContent);
+        row.eachCell({ includeEmpty: true }, cell => {
+          let cellData: RawCellContent;
+          switch (cell.type) {
+            case Excel.ValueType.Formula:
+              cellData = `=${cell.formula}`;
+              break;
+            case Excel.ValueType.Number:
+            case Excel.ValueType.String:
+            case Excel.ValueType.Date:
+            case Excel.ValueType.Hyperlink:
+            case Excel.ValueType.SharedString:
+              cellData = cell.value as RawCellContent;
+              break;
+            default:
+              cellData = undefined;
+              break;
+          }
+
+          rowData.push(cellData);
         });
 
         sheetData.push(rowData);

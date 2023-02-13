@@ -101,7 +101,7 @@
             </tr>
             <tr *ngFor="let item of section.suddenDeathItems">
               <td class="score-column">
-                <app-score [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
+                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
               </td>
               <td>
                 {{item.question}}
@@ -128,7 +128,7 @@
             </tr>
             <tr *ngFor="let item of section.mandatoryItems">
               <td class="score-column">
-                <app-score [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
+                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
               </td>
               <td>
                 {{item.question}}
@@ -155,7 +155,7 @@
             </tr>
             <tr *ngFor="let item of section.juniorItems">
               <td class="score-column">
-                <app-score [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
+                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
               </td>
               <td>
                 {{item.question}}
@@ -182,7 +182,7 @@
             </tr>
             <tr *ngFor="let item of section.regularItems">
               <td class="score-column">
-                <app-score [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
+                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
               </td>
               <td>
                 {{item.question}}
@@ -209,7 +209,7 @@
             </tr>
             <tr *ngFor="let item of section.seniorItems">
               <td class="score-column">
-                <app-score [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
+                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
               </td>
               <td>
                 {{item.question}}
@@ -298,8 +298,6 @@
           </mat-chip>
         </mat-chip-listbox>
       </mat-form-field>
-      <!--       <button *ngFor="let sentence of settingsService.preformedSentences" mat-flat-button class="w-100 my-2"
-        color="primary" (click)="addSentence(sentence)">{{sentence}}</button> -->
       <div>
         <button type="button" mat-button matStepperNext>Next</button>
       </div>

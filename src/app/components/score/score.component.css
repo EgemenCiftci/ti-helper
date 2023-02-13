@@ -57,3 +57,18 @@
     --mat-mdc-radio-ripple-color: #fff;
     --mat-mdc-radio-checked-ripple-color: green;
 }
+
+.mat-mdc-radio-button.mat-primary.blue {
+    --mdc-radio-disabled-selected-icon-color: #fff;
+    --mdc-radio-disabled-unselected-icon-color: #fff;
+    --mdc-radio-unselected-focus-icon-color: blue;
+    --mdc-radio-unselected-hover-icon-color: blue;
+    --mdc-radio-unselected-icon-color: rgba(255, 255, 255, 0.54);
+    --mdc-radio-unselected-pressed-icon-color: rgba(255, 255, 255, 0.54);
+    --mdc-radio-selected-focus-icon-color: blue;
+    --mdc-radio-selected-hover-icon-color: blue;
+    --mdc-radio-selected-icon-color: blue;
+    --mdc-radio-selected-pressed-icon-color: blue;
+    --mat-mdc-radio-ripple-color: #fff;
+    --mat-mdc-radio-checked-ripple-color: blue;
+}
