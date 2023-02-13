@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { SettingsService } from './settings.service';
 import * as Excel from 'exceljs';
 import { CellValue, HyperFormula } from 'hyperformula';
-import { ExcelData } from '../models/excel-data';
 import { QuestionMaterial } from '../models/question-material';
 import { MappingsService } from './mappings.service';
 import { Item } from '../models/item';
@@ -11,6 +10,8 @@ import { Scoring } from '../models/scoring';
 import { ScoreResult } from '../models/score-result';
 import { Sheet, Sheets } from 'hyperformula/typings/Sheet';
 import { RawCellContent } from 'hyperformula/typings/CellContentParser';
+import { OverviewData } from '../models/overview-data';
+import { ResultData } from '../models/result-data';
 
 @Injectable({
   providedIn: 'root'
@@ -93,31 +94,45 @@ export class FileService {
     await writableStream.close();
   }
 
-  async getExcelData(candidateName: string): Promise<ExcelData | undefined> {
+  async getOverviewData(candidateName: string): Promise<OverviewData> {
     const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
     const fileData = await this.readFromFile(handle);
 
     if (!fileData) {
-      return undefined;
+      throw new Error('File data is undefined');
     }
 
     const workbook = new Excel.Workbook();
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
 
+    const overviewData = new OverviewData();
     const relevantExperience = Number(worksheet.getCell(this.mappingsService.mappings.overview.relevantExperienceCell).value);
+    overviewData.relevantExperience = relevantExperience ? relevantExperience : undefined;
+    overviewData.interviewerName = String(worksheet.getCell(this.mappingsService.mappings.overview.interviewerNameCell).value);
+    overviewData.date = new Date(String(worksheet.getCell(this.mappingsService.mappings.overview.dateCell).value));
 
-    const excelData: ExcelData = {
-      candidateName: String(worksheet.getCell(this.mappingsService.mappings.overview.candidateNameCell).value),
-      interviewerName: String(worksheet.getCell(this.mappingsService.mappings.overview.interviewerNameCell).value),
-      date: new Date(String(worksheet.getCell(this.mappingsService.mappings.overview.dateCell).value)),
-      relevantExperience: relevantExperience ? relevantExperience : undefined,
-      communication: String(worksheet.getCell(this.mappingsService.mappings.overview.communicationCell).value),
-      finalResultLevel: String(worksheet.getCell(this.mappingsService.mappings.overview.finalResultLevelCell).value),
-      overallImpression: String(worksheet.getCell(this.mappingsService.mappings.overview.overallImpressionCell).value)
-    };
+    return overviewData;
+  }
 
-    return excelData;
+  async getResultData(candidateName: string): Promise<ResultData> {
+    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
+    const fileData = await this.readFromFile(handle);
+
+    if (!fileData) {
+      throw new Error('File data is undefined');
+    }
+
+    const workbook = new Excel.Workbook();
+    await workbook.xlsx.load(fileData as any);
+    const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
+
+    const resultData = new ResultData();
+    resultData.communication = String(worksheet.getCell(this.mappingsService.mappings.overview.communicationCell).value);
+    resultData.finalResultLevel = String(worksheet.getCell(this.mappingsService.mappings.overview.finalResultLevelCell).value);
+    resultData.overallImpression = String(worksheet.getCell(this.mappingsService.mappings.overview.overallImpressionCell).value);
+
+    return resultData;
   }
 
   private async readAsText(fileHandle: FileSystemFileHandle | undefined): Promise<string> {

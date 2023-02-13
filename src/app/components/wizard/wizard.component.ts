@@ -3,9 +3,10 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { debounceTime, Subject, Subscription } from 'rxjs';
-import { ExcelData } from 'src/app/models/excel-data';
 import { Item } from 'src/app/models/item';
+import { OverviewData } from 'src/app/models/overview-data';
 import { QuestionMaterial } from 'src/app/models/question-material';
+import { ResultData } from 'src/app/models/result-data';
 import { Scoring } from 'src/app/models/scoring';
 import { Section } from 'src/app/models/section';
 import { FileService } from 'src/app/services/file.service';
@@ -123,8 +124,10 @@ export class WizardComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       if (this.isInUpdateMode) {
-        const excelData = await this._fileService.getExcelData(this.candidateName);
-        this.updateForms(excelData);
+        const overviewData = await this._fileService.getOverviewData(this.candidateName);
+        this.updateOverviewForm(overviewData);
+        const resultData = await this._fileService.getResultData(this.candidateName);
+        this.updateResultForm(resultData);
       } else {
         await this._fileService.createCandidateFolderAndCopyInterviewFormFile(this.candidateName);
         this.candidateNames = await this._fileService.getCandidateNames();
@@ -202,19 +205,20 @@ export class WizardComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private updateForms(excelData?: ExcelData) {
-    if (excelData) {
-      this.overviewFormGroup.patchValue({
-        interviewerName: excelData.interviewerName,
-        date: excelData.date,
-        relevantExperience: excelData.relevantExperience
-      });
-      this.resultFormGroup.patchValue({
-        communication: excelData.communication,
-        finalResultLevel: excelData.finalResultLevel,
-        overallImpression: excelData.overallImpression
-      });
-    };
+  private updateOverviewForm(overviewData: OverviewData) {
+    this.overviewFormGroup.patchValue({
+      interviewerName: overviewData.interviewerName,
+      date: overviewData.date,
+      relevantExperience: overviewData.relevantExperience
+    });
+  }
+
+  private updateResultForm(resultData: ResultData) {
+    this.resultFormGroup.patchValue({
+      communication: resultData.communication,
+      finalResultLevel: resultData.finalResultLevel,
+      overallImpression: resultData.overallImpression
+    });
   }
 
   async selectAspNetCoreCodeReview(stepper: MatStepper) {
