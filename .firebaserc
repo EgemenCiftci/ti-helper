@@ -1,14 +1,14 @@
 {
   "targets": {
-    "ti-helper-v1": {
+    "ti-wizard": {
       "hosting": {
         "ti-helper": [
-          "ti-helper-v1"
+          "ti-wizard"
         ]
       }
     }
   },
   "projects": {
-    "default": "ti-helper-v1"
+    "default": "ti-wizard"
   }
 }

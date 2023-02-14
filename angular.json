@@ -100,8 +100,8 @@
             "prerender": false,
             "ssr": false,
             "browserTarget": "ti-helper:build:production",
-            "firebaseProject": "ti-helper-v1",
-            "firebaseHostingSite": "ti-helper-v1"
+            "firebaseProject": "ti-wizard",
+            "firebaseHostingSite": "ti-wizard"
           }
         }
       }
