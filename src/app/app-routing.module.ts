@@ -5,11 +5,10 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { WizardComponent } from './components/wizard/wizard.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'wizard', pathMatch: 'full' },
+  { path: '', component: WizardComponent },
   { path: 'settings', component: SettingsComponent },
   { path: 'about', component: AboutComponent },
-  { path: 'wizard', component: WizardComponent },
-  { path: '**', redirectTo: 'wizard' }
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
