@@ -12,6 +12,7 @@ import { Sheet, Sheets } from 'hyperformula/typings/Sheet';
 import { RawCellContent } from 'hyperformula/typings/CellContentParser';
 import { OverviewData } from '../models/overview-data';
 import { ResultData } from '../models/result-data';
+import { TaskScores } from '../models/task-scores';
 
 @Injectable({
   providedIn: 'root'
@@ -391,7 +392,7 @@ export class FileService {
     this.writeToFile(handle, await workbook.xlsx.writeBuffer());
   }
 
-  async getTaskScores(candidateName: string): Promise<{ aspNetCoreScore: number, wpfScore: number }> {
+  async getTaskScores(candidateName: string): Promise<TaskScores> {
     const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
     const fileData = await this.readFromFile(handle);
 
@@ -405,7 +406,28 @@ export class FileService {
     const wpfScoreCellFormula = worksheet.getCell(`${this.mappingsService.mappings.tasks.scoreColumn}${this.mappingsService.mappings.tasks.wpfScoreRow}`).formula;
     const wpfScore = Number(this.evaluateFormula(this.mappingsService.mappings.tasks.worksheetName, wpfScoreCellFormula, sheets));
 
-    return { aspNetCoreScore, wpfScore };
+    const taskScores = new TaskScores();
+    taskScores.aspNetCoreScore = aspNetCoreScore;
+    taskScores.wpfScore = wpfScore;
+
+    return taskScores;
+  }
+
+  async setTaskScore(candidateName: string, selectedTask: string | undefined, taskScores: TaskScores){
+    const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
+    const fileData = await this.readFromFile(handle);
+
+    const workbook = new Excel.Workbook();
+    await workbook.xlsx.load(fileData as any);
+    const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
+
+    if (selectedTask === 'ASP.NET Core Code Review') {
+      worksheet.getCell(this.mappingsService.mappings.csQuestions.codeReviewScoreCell).value = taskScores.aspNetCoreScore;
+    } else if (selectedTask === 'WPF Code Review') {
+      worksheet.getCell(this.mappingsService.mappings.csQuestions.codeReviewScoreCell).value = taskScores.wpfScore;
+    }
+
+    this.writeToFile(handle, await workbook.xlsx.writeBuffer());
   }
 
   private getSectionScores(sectionData: Section, worksheet: Excel.Worksheet, sheets: Sheets): { juniorScore?: number, regularScore?: number, seniorScore?: number } {

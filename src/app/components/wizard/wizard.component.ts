@@ -9,6 +9,7 @@ import { QuestionMaterial } from 'src/app/models/question-material';
 import { ResultData } from 'src/app/models/result-data';
 import { Scoring } from 'src/app/models/scoring';
 import { Section } from 'src/app/models/section';
+import { TaskScores } from 'src/app/models/task-scores';
 import { FileService } from 'src/app/services/file.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { SnackBarService } from 'src/app/services/snack-bar.service';
@@ -28,7 +29,7 @@ export class WizardComponent implements OnInit, AfterViewInit, OnDestroy {
   taskItems?: Item[];
   sections?: Section[];
   scoring?: Scoring;
-  taskScores?: { aspNetCoreScore: number, wpfScore: number };
+  taskScores?: TaskScores;
   candidateNameFormGroup = this._formBuilder.group({
     candidateName: ['', Validators.required]
   });
@@ -168,6 +169,7 @@ export class WizardComponent implements OnInit, AfterViewInit, OnDestroy {
       this._snackBarService.showSnackBar('Submitted successfully.');
 
       this.taskScores = await this._fileService.getTaskScores(this.candidateName);
+      await this._fileService.setTaskScore(this.candidateName, this.selectedTask, this.taskScores);
     } catch (error) {
       console.error(error);
       this._snackBarService.showSnackBar('Error while submitting task items.');
