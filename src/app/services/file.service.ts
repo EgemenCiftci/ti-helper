@@ -421,10 +421,17 @@ export class FileService {
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
 
+    let score: number | undefined = undefined;
     if (selectedTask === 'ASP.NET Core Code Review') {
-      worksheet.getCell(this.mappingsService.mappings.csQuestions.codeReviewScoreCell).value = taskScores.aspNetCoreScore;
+      score = taskScores.aspNetCoreScore;
     } else if (selectedTask === 'WPF Code Review') {
-      worksheet.getCell(this.mappingsService.mappings.csQuestions.codeReviewScoreCell).value = taskScores.wpfScore;
+      score = taskScores.wpfScore;
+    }
+
+    if(score && score >= 1 && score <= 4) {
+      worksheet.getCell(this.mappingsService.mappings.csQuestions.codeReviewScoreCell).value = score;
+    } else {
+      worksheet.getCell(this.mappingsService.mappings.csQuestions.codeReviewScoreCell).value = undefined;
     }
 
     this.writeToFile(handle, await workbook.xlsx.writeBuffer());
