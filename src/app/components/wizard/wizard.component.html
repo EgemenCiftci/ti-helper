@@ -1,11 +1,19 @@
 <mat-stepper #stepper linear="true" (selectionChange)="stepperSelectionChange($event)">
-  <mat-step label="TI Directory" [completed]="tiDirectoryName">
+  <mat-step [completed]="tiDirectoryName">
+    <ng-template matStepLabel>
+      <p class="mb-0 label">TI Directory</p>
+      <p class="mb-0 sub-label">{{tiDirectoryName}}</p>
+    </ng-template>
     <button mat-flat-button class="w-100 my-2" color="primary" (click)="selectTiDirectory(stepper)">
-      <span>Select TI Directory (Current: {{tiDirectoryName ?? "None"}})</span>
+      <span>Select TI Directory</span>
       <mat-icon>folder_open</mat-icon>
     </button>
   </mat-step>
-  <mat-step [stepControl]="candidateNameFormGroup" label="Candidate Name">
+  <mat-step [stepControl]="candidateNameFormGroup">
+    <ng-template matStepLabel>
+      <p class="mb-0 label">Candidate Name</p>
+      <p class="mb-0 sub-label">{{candidateName}}</p>
+    </ng-template>
     <form [formGroup]="candidateNameFormGroup">
       <mat-form-field class="d-block mx-1" appearance="fill">
         <mat-label>Candidate Name</mat-label>
@@ -60,7 +68,11 @@
       </div>
     </form>
   </mat-step>
-  <mat-step label="Select Task" [completed]="selectedTask">
+  <mat-step [completed]="selectedTask">
+    <ng-template matStepLabel>
+      <p class="mb-0 label">Select Task</p>
+      <p class="mb-0 sub-label">{{selectedTask}}</p>
+    </ng-template>
     <button mat-flat-button class="w-100 my-2" color="primary" (click)="selectAspNetCoreCodeReview(stepper)">
       <span>ASP.Net Core Code Review</span>
       <mat-icon>open_in_new</mat-icon>
@@ -70,9 +82,12 @@
       <mat-icon>open_in_new</mat-icon>
     </button>
   </mat-step>
-  <mat-step [stepControl]="taskFormGroup" [label]="selectedTask ?? 'Task'">
+  <mat-step [stepControl]="taskFormGroup">
+    <ng-template matStepLabel>
+      <p class="mb-0 label">Task</p>
+      <p class="mb-0 sub-label">{{(getTaskScore(selectedTask) | number:'1.2-2') ?? 0}}/4</p>
+    </ng-template>
     <form [formGroup]="taskFormGroup">
-      <p>Score: {{getTaskScore(selectedTask)}}</p>
       <table>
         <tr *ngFor="let item of taskItems">
           <td class="score-column">
@@ -101,7 +116,8 @@
             </tr>
             <tr *ngFor="let item of section.suddenDeathItems">
               <td class="score-column">
-                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
+                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score"
+                  (change)="handleQuestionsScoreChange()"></app-score>
               </td>
               <td>
                 {{item.question}}
@@ -128,7 +144,8 @@
             </tr>
             <tr *ngFor="let item of section.mandatoryItems">
               <td class="score-column">
-                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
+                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score"
+                  (change)="handleQuestionsScoreChange()"></app-score>
               </td>
               <td>
                 {{item.question}}
@@ -155,7 +172,8 @@
             </tr>
             <tr *ngFor="let item of section.juniorItems">
               <td class="score-column">
-                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
+                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score"
+                  (change)="handleQuestionsScoreChange()"></app-score>
               </td>
               <td>
                 {{item.question}}
@@ -182,7 +200,8 @@
             </tr>
             <tr *ngFor="let item of section.regularItems">
               <td class="score-column">
-                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
+                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score"
+                  (change)="handleQuestionsScoreChange()"></app-score>
               </td>
               <td>
                 {{item.question}}
@@ -209,7 +228,8 @@
             </tr>
             <tr *ngFor="let item of section.seniorItems">
               <td class="score-column">
-                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score" (change)="handleQuestionsScoreChange()"></app-score>
+                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score"
+                  (change)="handleQuestionsScoreChange()"></app-score>
               </td>
               <td>
                 {{item.question}}

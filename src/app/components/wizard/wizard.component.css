@@ -9,3 +9,12 @@
 textarea {
     height: 230px !important;
 }
+
+.label {
+    font-size: 14px;
+}
+
+.sub-label {
+    font-size: 12px;
+    color: #FFFFFFB3;
+}
