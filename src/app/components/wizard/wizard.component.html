@@ -167,7 +167,7 @@
             </tr>
             <tr>
               <th colspan="4">
-                <h3>Junior (Score: {{section.juniorScore}})</h3>
+                <h3>Junior (Score: {{section.juniorScore | number:'1.2-2'}})</h3>
               </th>
             </tr>
             <tr *ngFor="let item of section.juniorItems">
@@ -195,7 +195,7 @@
             </tr>
             <tr>
               <th colspan="4">
-                <h3>Regular (Score: {{section.regularScore}})</h3>
+                <h3>Regular (Score: {{section.regularScore | number:'1.2-2'}})</h3>
               </th>
             </tr>
             <tr *ngFor="let item of section.regularItems">
@@ -223,7 +223,7 @@
             </tr>
             <tr>
               <th colspan="4">
-                <h3>Senior (Score: {{section.seniorScore}})</h3>
+                <h3>Senior (Score: {{section.seniorScore | number:'1.2-2'}})</h3>
               </th>
             </tr>
             <tr *ngFor="let item of section.seniorItems">
@@ -258,25 +258,25 @@
   </mat-step>
   <mat-step [stepControl]="resultFormGroup" label="Result">
     <form [formGroup]="resultFormGroup">
-      <table class="my-2">
+      <table class="m-2">
         <tr>
-          <th>Scoring </th>
-          <th>Score </th>
-          <th>Result </th>
+          <th class="scoring-header">Scoring</th>
+          <th class="scoring-header">Score</th>
+          <th class="scoring-header">Result</th>
         </tr>
         <tr>
           <td>Junior</td>
-          <td>{{scoring?.junior?.score}}</td>
+          <td>{{scoring?.junior?.score | number:'1.2-2'}}</td>
           <td>{{scoring?.junior?.result}}</td>
         </tr>
         <tr>
           <td>Regular</td>
-          <td>{{scoring?.regular?.score}}</td>
+          <td>{{scoring?.regular?.score | number:'1.2-2'}}</td>
           <td>{{scoring?.regular?.result}}</td>
         </tr>
         <tr>
           <td>Senior</td>
-          <td>{{scoring?.senior?.score}}</td>
+          <td>{{scoring?.senior?.score | number:'1.2-2'}}</td>
           <td>{{scoring?.senior?.result}}</td>
         </tr>
       </table>
@@ -307,8 +307,8 @@
       <mat-form-field class="d-block mx-1" appearance="fill">
         <mat-label>Overall Impression</mat-label>
         <textarea matInput formControlName="overallImpression"></textarea>
-        <button *ngIf="resultFormGroup.get('overallImpression')?.value" matSuffix mat-icon-button aria-label="Clear"
-          (click)="resultFormGroup.get('overallImpression')?.setValue('')">
+        <button *ngIf="resultFormGroup.get('overallImpression')?.value" matSuffix mat-icon-button
+          aria-label="Clear" (click)="resultFormGroup.get('overallImpression')?.setValue('')">
           <mat-icon>close</mat-icon>
         </button>
         <mat-chip-listbox class="mat-mdc-chip-set-stacked">

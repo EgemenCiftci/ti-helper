@@ -98,63 +98,63 @@ export class MappingsService {
           },
           junior: {
             rows: [39, 40, 41, 42, 43],
-            scoreRow: 0
+            scoreRow: 56
           },
           regular: {
-            rows: [44,45,46,47,48,49],
-            scoreRow: 0
+            rows: [44, 45, 46, 47, 48, 49],
+            scoreRow: 57
           },
           senior: {
-            rows: [50,51,52,53,54],
-            scoreRow: 0
+            rows: [50, 51, 52, 53, 54],
+            scoreRow: 58
           }
         },
         {
           titleRow: 60,
           junior: {
-            rows: [64,65,66,67],
-            scoreRow: 0
+            rows: [64, 65, 66, 67],
+            scoreRow: 77
           },
           regular: {
-            rows: [68,69,70,71],
-            scoreRow: 0
+            rows: [68, 69, 70, 71],
+            scoreRow: 78
           },
           senior: {
-            rows: [72,73,74,75],
-            scoreRow: 0
+            rows: [72, 73, 74, 75],
+            scoreRow: 79
           }
         },
         {
           titleRow: 81,
           junior: {
             rows: [85],
-            scoreRow: 0
+            scoreRow: 98
           },
           regular: {
-            rows: [89,90,91],
-            scoreRow: 0
+            rows: [89, 90, 91],
+            scoreRow: 99
           },
           senior: {
-            rows: [93,94,95,96],
-            scoreRow: 0
+            rows: [93, 94, 95, 96],
+            scoreRow: 100
           }
         },
         {
           titleRow: 102,
           suddenDeath: {
-            rows: [103,104]
+            rows: [103, 104]
           },
           junior: {
-            rows: [106,107,108],
-            scoreRow: 0
+            rows: [106, 107, 108],
+            scoreRow: 120
           },
           regular: {
-            rows: [109,110,111,112],
-            scoreRow: 0
+            rows: [109, 110, 111, 112],
+            scoreRow: 121
           },
           senior: {
-            rows: [114,115,116,117,118],
-            scoreRow: 0
+            rows: [114, 115, 116, 117, 118],
+            scoreRow: 122
           }
         },
         {
@@ -165,7 +165,7 @@ export class MappingsService {
               129,
               130
             ],
-            scoreRow: 0
+            scoreRow: 139
           },
           regular: {
             rows: [
@@ -174,7 +174,7 @@ export class MappingsService {
               133,
               134
             ],
-            scoreRow: 0
+            scoreRow: 140
           },
           senior: {
             rows: [
@@ -182,7 +182,7 @@ export class MappingsService {
               136,
               137
             ],
-            scoreRow: 0
+            scoreRow: 141
           }
         },
         {
@@ -194,7 +194,7 @@ export class MappingsService {
               149,
               150
             ],
-            scoreRow: 0
+            scoreRow: 160
           },
           regular: {
             rows: [
@@ -204,7 +204,7 @@ export class MappingsService {
               154,
               155
             ],
-            scoreRow: 0
+            scoreRow: 161
           },
           senior: {
             rows: [
@@ -212,7 +212,7 @@ export class MappingsService {
               157,
               158
             ],
-            scoreRow: 0
+            scoreRow: 162
           }
         },
         {
@@ -228,7 +228,7 @@ export class MappingsService {
               169,
               170
             ],
-            scoreRow: 0
+            scoreRow: 179
           },
           regular: {
             rows: [
@@ -237,7 +237,7 @@ export class MappingsService {
               173,
               174
             ],
-            scoreRow: 0
+            scoreRow: 180
           },
           senior: {
             rows: [
@@ -245,7 +245,7 @@ export class MappingsService {
               176,
               177
             ],
-            scoreRow: 0
+            scoreRow: 181
           }
         },
         {
@@ -261,7 +261,7 @@ export class MappingsService {
               188,
               189
             ],
-            scoreRow: 0
+            scoreRow: 198
           },
           regular: {
             rows: [
@@ -269,7 +269,7 @@ export class MappingsService {
               191,
               192
             ],
-            scoreRow: 0
+            scoreRow: 199
           },
           senior: {
             rows: [
@@ -278,7 +278,7 @@ export class MappingsService {
               195,
               196
             ],
-            scoreRow: 0
+            scoreRow: 200
           }
         },
         {
@@ -289,7 +289,7 @@ export class MappingsService {
               207,
               208
             ],
-            scoreRow: 0
+            scoreRow: 218
           },
           regular: {
             rows: [
@@ -299,7 +299,7 @@ export class MappingsService {
               212,
               213
             ],
-            scoreRow: 0
+            scoreRow: 219
           },
           senior: {
             rows: [
@@ -307,7 +307,7 @@ export class MappingsService {
               215,
               216
             ],
-            scoreRow: 0
+            scoreRow: 220
           }
         },
         {
@@ -324,7 +324,7 @@ export class MappingsService {
               227,
               228
             ],
-            scoreRow: 0
+            scoreRow: 236
           },
           regular: {
             rows: [
@@ -332,7 +332,7 @@ export class MappingsService {
               230,
               231
             ],
-            scoreRow: 0
+            scoreRow: 237
           },
           senior: {
             rows: [
@@ -340,7 +340,7 @@ export class MappingsService {
               233,
               234
             ],
-            scoreRow: 0
+            scoreRow: 238
           }
         },
         {
@@ -351,7 +351,7 @@ export class MappingsService {
               245,
               246
             ],
-            scoreRow: 0
+            scoreRow: 256
           },
           regular: {
             rows: [
@@ -360,7 +360,7 @@ export class MappingsService {
               249,
               250
             ],
-            scoreRow: 0
+            scoreRow: 257
           },
           senior: {
             rows: [
@@ -369,7 +369,7 @@ export class MappingsService {
               253,
               254
             ],
-            scoreRow: 0
+            scoreRow: 258
           }
         },
         {
@@ -380,7 +380,7 @@ export class MappingsService {
               265,
               266
             ],
-            scoreRow: 0
+            scoreRow: 277
           },
           regular: {
             rows: [
@@ -389,7 +389,7 @@ export class MappingsService {
               269,
               270
             ],
-            scoreRow: 0
+            scoreRow: 278
           },
           senior: {
             rows: [
@@ -398,7 +398,7 @@ export class MappingsService {
               274,
               275
             ],
-            scoreRow: 0
+            scoreRow: 279
           }
         },
         {
@@ -408,7 +408,7 @@ export class MappingsService {
               285,
               286
             ],
-            scoreRow: 0
+            scoreRow: 295
           },
           regular: {
             rows: [
@@ -416,7 +416,7 @@ export class MappingsService {
               289,
               290
             ],
-            scoreRow: 0
+            scoreRow: 296
           },
           senior: {
             rows: [
@@ -424,7 +424,7 @@ export class MappingsService {
               292,
               293
             ],
-            scoreRow: 0
+            scoreRow: 297
           }
         },
         {
@@ -440,7 +440,7 @@ export class MappingsService {
               304,
               305
             ],
-            scoreRow: 0
+            scoreRow: 314
           },
           regular: {
             rows: [
@@ -448,7 +448,7 @@ export class MappingsService {
               307,
               308
             ],
-            scoreRow: 0
+            scoreRow: 315
           },
           senior: {
             rows: [
@@ -457,7 +457,7 @@ export class MappingsService {
               311,
               312
             ],
-            scoreRow: 0
+            scoreRow: 316
           }
         }
       ]
