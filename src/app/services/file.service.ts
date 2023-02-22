@@ -205,6 +205,7 @@ export class FileService {
       const items = rows.map(row => {
         const item = new Item();
         item.question = String(worksheet.getCell(`${this.mappingsService.mappings.tasks.questionColumn}${row}`).value);
+        item.totalScoreCell = `${this.mappingsService.mappings.tasks.totalScoreColumn}${row}`;
         item.scoreCell = `${this.mappingsService.mappings.tasks.scoreColumn}${row}`;
         const score = Number(worksheet.getCell(item.scoreCell).value);
         item.score = score ? score : undefined;
@@ -384,10 +385,18 @@ export class FileService {
     const workbook = new Excel.Workbook();
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.tasks.worksheetName);
+    const sheets = this.getSheets(workbook);
 
     taskItems.forEach(item => {
       worksheet.getCell(item.scoreCell).value = item.score ? item.score : undefined;
+      this.recalculateCell(worksheet.getCell(item.totalScoreCell), this.mappingsService.mappings.tasks.worksheetName, sheets);
     });
+
+    const aspNetCoreScoreCell = worksheet.getCell(`${this.mappingsService.mappings.tasks.scoreColumn}${this.mappingsService.mappings.tasks.aspNetScoreRow}`);
+    this.recalculateCell(aspNetCoreScoreCell, this.mappingsService.mappings.tasks.worksheetName, sheets);
+
+    const wpfScoreCell = worksheet.getCell(`${this.mappingsService.mappings.tasks.scoreColumn}${this.mappingsService.mappings.tasks.wpfScoreRow}`);
+    this.recalculateCell(wpfScoreCell, this.mappingsService.mappings.tasks.worksheetName, sheets);
 
     this.writeToFile(handle, await workbook.xlsx.writeBuffer());
   }
@@ -413,7 +422,7 @@ export class FileService {
     return taskScores;
   }
 
-  async setTaskScore(candidateName: string, selectedTask: string | undefined, taskScores: TaskScores){
+  async setTaskScore(candidateName: string, selectedTask: string | undefined, taskScores: TaskScores) {
     const handle = await this.getCandidateInterviewFormFileHandle(candidateName, false);
     const fileData = await this.readFromFile(handle);
 
@@ -428,7 +437,7 @@ export class FileService {
       score = taskScores.wpfScore;
     }
 
-    if(score && score >= 1 && score <= 4) {
+    if (score && score >= 1 && score <= 4) {
       worksheet.getCell(this.mappingsService.mappings.csQuestions.codeReviewScoreCell).value = score;
     } else {
       worksheet.getCell(this.mappingsService.mappings.csQuestions.codeReviewScoreCell).value = undefined;
@@ -558,5 +567,9 @@ export class FileService {
     });
 
     return sheets;
+  }
+
+  recalculateCell(cell: Excel.Cell, worksheetName: string, sheets: Sheets) {
+    cell.value = Number(this.evaluateFormula(worksheetName, cell.formula, sheets));
   }
 }

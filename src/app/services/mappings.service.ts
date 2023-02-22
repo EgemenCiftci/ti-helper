@@ -19,6 +19,7 @@ export class MappingsService {
     },
     tasks: {
       worksheetName: "Tasks",
+      totalScoreColumn: "A",
       scoreColumn: "C",
       questionColumn: "D",
       aspNetScoreRow: 30,
