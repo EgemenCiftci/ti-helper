@@ -389,14 +389,14 @@ export class FileService {
 
     taskItems.forEach(item => {
       worksheet.getCell(item.scoreCell).value = item.score ? item.score : undefined;
-      this.recalculateCell(worksheet.getCell(item.totalScoreCell), this.mappingsService.mappings.tasks.worksheetName, sheets);
+      this.recalculateCellResult(worksheet.getCell(item.totalScoreCell), this.mappingsService.mappings.tasks.worksheetName, sheets);
     });
 
     const aspNetCoreScoreCell = worksheet.getCell(`${this.mappingsService.mappings.tasks.scoreColumn}${this.mappingsService.mappings.tasks.aspNetScoreRow}`);
-    this.recalculateCell(aspNetCoreScoreCell, this.mappingsService.mappings.tasks.worksheetName, sheets);
+    this.recalculateCellResult(aspNetCoreScoreCell, this.mappingsService.mappings.tasks.worksheetName, sheets);
 
     const wpfScoreCell = worksheet.getCell(`${this.mappingsService.mappings.tasks.scoreColumn}${this.mappingsService.mappings.tasks.wpfScoreRow}`);
-    this.recalculateCell(wpfScoreCell, this.mappingsService.mappings.tasks.worksheetName, sheets);
+    this.recalculateCellResult(wpfScoreCell, this.mappingsService.mappings.tasks.worksheetName, sheets);
 
     this.writeToFile(handle, await workbook.xlsx.writeBuffer());
   }
@@ -569,7 +569,9 @@ export class FileService {
     return sheets;
   }
 
-  recalculateCell(cell: Excel.Cell, worksheetName: string, sheets: Sheets) {
-    cell.value = Number(this.evaluateFormula(worksheetName, cell.formula, sheets));
+  recalculateCellResult(cell: Excel.Cell, worksheetName: string, sheets: Sheets) {
+    if (cell.type === Excel.ValueType.Formula) {
+      (cell.value as any).result = Number(this.evaluateFormula(worksheetName, cell.formula, sheets));
+    }
   }
 }
