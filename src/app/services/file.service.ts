@@ -205,7 +205,6 @@ export class FileService {
       const items = rows.map(row => {
         const item = new Item();
         item.question = String(worksheet.getCell(`${this.mappingsService.mappings.tasks.questionColumn}${row}`).value);
-        item.totalScoreCell = `${this.mappingsService.mappings.tasks.totalScoreColumn}${row}`;
         item.scoreCell = `${this.mappingsService.mappings.tasks.scoreColumn}${row}`;
         const score = Number(worksheet.getCell(item.scoreCell).value);
         item.score = score ? score : undefined;
@@ -330,7 +329,7 @@ export class FileService {
 
     worksheet.getCell(this.mappingsService.mappings.overview.candidateNameCell).value = candidateName;
 
-    this.writeToFile(handle, await workbook.xlsx.writeBuffer());
+    await this.writeToFile(handle, await workbook.xlsx.writeBuffer());
   }
 
   async setOverview(candidateName: string, overview: any) {
@@ -345,7 +344,7 @@ export class FileService {
     worksheet.getCell(this.mappingsService.mappings.overview.dateCell).value = overview.date?.toDateString();
     worksheet.getCell(this.mappingsService.mappings.overview.relevantExperienceCell).value = overview.relevantExperience ? overview.relevantExperience : undefined;
 
-    this.writeToFile(handle, await workbook.xlsx.writeBuffer());
+    await this.writeToFile(handle, await workbook.xlsx.writeBuffer());
   }
 
   async setResult(candidateName: string, result: any, scoring?: Scoring) {
@@ -371,7 +370,7 @@ export class FileService {
       }
     }
 
-    this.writeToFile(handle, await workbook.xlsx.writeBuffer());
+    await this.writeToFile(handle, await workbook.xlsx.writeBuffer());
   }
 
   async setTaskItems(candidateName: string, taskItems?: Item[]) {
@@ -385,20 +384,16 @@ export class FileService {
     const workbook = new Excel.Workbook();
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.tasks.worksheetName);
-    const sheets = this.getSheets(workbook);
+    //const sheets = this.getSheets(workbook);
+    //const hf = HyperFormula.buildFromSheets(sheets, { licenseKey: 'gpl-v3' });
 
     taskItems.forEach(item => {
       worksheet.getCell(item.scoreCell).value = item.score ? item.score : undefined;
-      this.recalculateCellResult(worksheet.getCell(item.totalScoreCell), this.mappingsService.mappings.tasks.worksheetName, sheets);
     });
 
-    const aspNetCoreScoreCell = worksheet.getCell(`${this.mappingsService.mappings.tasks.scoreColumn}${this.mappingsService.mappings.tasks.aspNetScoreRow}`);
-    this.recalculateCellResult(aspNetCoreScoreCell, this.mappingsService.mappings.tasks.worksheetName, sheets);
+    await this.writeToFile(handle, await workbook.xlsx.writeBuffer());
 
-    const wpfScoreCell = worksheet.getCell(`${this.mappingsService.mappings.tasks.scoreColumn}${this.mappingsService.mappings.tasks.wpfScoreRow}`);
-    this.recalculateCellResult(wpfScoreCell, this.mappingsService.mappings.tasks.worksheetName, sheets);
-
-    this.writeToFile(handle, await workbook.xlsx.writeBuffer());
+    //hf.rebuildAndRecalculate();
   }
 
   async getTaskScores(candidateName: string): Promise<TaskScores> {
@@ -443,7 +438,7 @@ export class FileService {
       worksheet.getCell(this.mappingsService.mappings.csQuestions.codeReviewScoreCell).value = undefined;
     }
 
-    this.writeToFile(handle, await workbook.xlsx.writeBuffer());
+    await this.writeToFile(handle, await workbook.xlsx.writeBuffer());
   }
 
   private getSectionScores(sectionData: Section, worksheet: Excel.Worksheet, sheets: Sheets): { juniorScore?: number, regularScore?: number, seniorScore?: number } {
@@ -482,7 +477,7 @@ export class FileService {
       section.seniorItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score ? item.score : undefined);
     });
 
-    this.writeToFile(handle, await workbook.xlsx.writeBuffer());
+    await this.writeToFile(handle, await workbook.xlsx.writeBuffer());
   }
 
   async getScoring(candidateName: string): Promise<Scoring> {
@@ -567,11 +562,5 @@ export class FileService {
     });
 
     return sheets;
-  }
-
-  recalculateCellResult(cell: Excel.Cell, worksheetName: string, sheets: Sheets) {
-    if (cell.type === Excel.ValueType.Formula) {
-      (cell.value as any).result = Number(this.evaluateFormula(worksheetName, cell.formula, sheets));
-    }
   }
 }
