@@ -103,7 +103,16 @@
       </div>
     </form>
   </mat-step>
-  <mat-step [stepControl]="questionsFormGroup" label="CS Questions">
+  <mat-step [stepControl]="questionsFormGroup">
+    <ng-template matStepLabel>
+      <p class="mb-0 label">CS Questions</p>
+      <div class="mb-0 sub-label">
+        <span [class]="scoring?.junior?.result ?? 'Failed'">J:{{(scoring?.junior?.score | number:'1.2-2') ?? 0}} </span>
+        <span [class]="scoring?.regular?.result ?? 'Failed'">R:{{(scoring?.regular?.score | number:'1.2-2') ?? 0}}
+        </span>
+        <span [class]="scoring?.senior?.result ?? 'Failed'">S:{{(scoring?.senior?.score | number:'1.2-2') ?? 0}}</span>
+      </div>
+    </ng-template>
     <form [formGroup]="questionsFormGroup">
       <mat-stepper orientation="vertical">
         <mat-step *ngFor="let section of sections; first as isFirst; last as isLast" [label]="(section.title ?? '')"
@@ -307,8 +316,8 @@
       <mat-form-field class="d-block mx-1" appearance="fill">
         <mat-label>Overall Impression</mat-label>
         <textarea matInput formControlName="overallImpression"></textarea>
-        <button *ngIf="resultFormGroup.get('overallImpression')?.value" matSuffix mat-icon-button
-          aria-label="Clear" (click)="resultFormGroup.get('overallImpression')?.setValue('')">
+        <button *ngIf="resultFormGroup.get('overallImpression')?.value" matSuffix mat-icon-button aria-label="Clear"
+          (click)="resultFormGroup.get('overallImpression')?.setValue('')">
           <mat-icon>close</mat-icon>
         </button>
         <mat-chip-listbox class="mat-mdc-chip-set-stacked">

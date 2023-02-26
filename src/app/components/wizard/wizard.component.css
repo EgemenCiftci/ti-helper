@@ -24,3 +24,11 @@ textarea {
     font-weight: bold;
     width: 100px;
 }
+
+.Passed {
+    color: green;
+}
+
+.Failed {
+    color: red;
+}
