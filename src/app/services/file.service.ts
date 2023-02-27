@@ -390,12 +390,12 @@ export class FileService {
       worksheet.getCell(item.scoreCell).value = item.score ? item.score : undefined;
     });
 
-    // update total scores
-    const sheets = this.getSheets(workbook);
+    // update total scores // DOES NOT WORK
+/*     const sheets = this.getSheets(workbook);
     taskItems.forEach(item => {
       const totalScoreCell = worksheet.getCell(item.totalScoreCell);
       (totalScoreCell.value as any).result = Number(this.evaluateFormula(this.mappingsService.mappings.tasks.worksheetName, totalScoreCell.formula, sheets));
-    });
+    }); */
 
     await this.writeToFile(handle, await workbook.xlsx.writeBuffer());
   }
