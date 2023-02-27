@@ -4,4 +4,5 @@ export class Item {
     score?: number;
     scoreCell: string = '';
     row: number = 0;
+    totalScoreCell: string = '';
 }

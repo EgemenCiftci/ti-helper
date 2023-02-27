@@ -104,7 +104,6 @@ export class FileService {
     }
 
     const workbook = new Excel.Workbook();
-    workbook.calcProperties.fullCalcOnLoad = true;
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
 
@@ -126,7 +125,6 @@ export class FileService {
     }
 
     const workbook = new Excel.Workbook();
-    workbook.calcProperties.fullCalcOnLoad = true;
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
 
@@ -189,7 +187,6 @@ export class FileService {
 
     if (fileData) {
       const workbook = new Excel.Workbook();
-      workbook.calcProperties.fullCalcOnLoad = true;
       await workbook.xlsx.load(fileData as any);
       const worksheet = workbook.getWorksheet(this.mappingsService.mappings.tasks.worksheetName);
 
@@ -209,6 +206,7 @@ export class FileService {
         const item = new Item();
         item.question = String(worksheet.getCell(`${this.mappingsService.mappings.tasks.questionColumn}${row}`).value);
         item.scoreCell = `${this.mappingsService.mappings.tasks.scoreColumn}${row}`;
+        item.totalScoreCell = `${this.mappingsService.mappings.tasks.totalScoreColumn}${row}`;
         const score = Number(worksheet.getCell(item.scoreCell).value);
         item.score = score ? score : undefined;
         return item;
@@ -226,7 +224,6 @@ export class FileService {
 
     if (fileData) {
       const workbook = new Excel.Workbook();
-      workbook.calcProperties.fullCalcOnLoad = true;
       await workbook.xlsx.load(fileData as any);
       const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
 
@@ -306,7 +303,6 @@ export class FileService {
     const fileData = await this.readFromFile(handle);
 
     const workbook = new Excel.Workbook();
-    workbook.calcProperties.fullCalcOnLoad = true;
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
 
@@ -329,7 +325,6 @@ export class FileService {
     const fileData = await this.readFromFile(handle);
 
     const workbook = new Excel.Workbook();
-    workbook.calcProperties.fullCalcOnLoad = true;
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
 
@@ -343,7 +338,6 @@ export class FileService {
     const fileData = await this.readFromFile(handle);
 
     const workbook = new Excel.Workbook();
-    workbook.calcProperties.fullCalcOnLoad = true;
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
 
@@ -359,7 +353,6 @@ export class FileService {
     const fileData = await this.readFromFile(handle);
 
     const workbook = new Excel.Workbook();
-    workbook.calcProperties.fullCalcOnLoad = true;
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
 
@@ -390,12 +383,18 @@ export class FileService {
     const fileData = await this.readFromFile(handle);
 
     const workbook = new Excel.Workbook();
-    workbook.calcProperties.fullCalcOnLoad = true;
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.tasks.worksheetName);
 
     taskItems.forEach(item => {
       worksheet.getCell(item.scoreCell).value = item.score ? item.score : undefined;
+    });
+
+    // update total scores
+    const sheets = this.getSheets(workbook);
+    taskItems.forEach(item => {
+      const totalScoreCell = worksheet.getCell(item.totalScoreCell);
+      (totalScoreCell.value as any).result = Number(this.evaluateFormula(this.mappingsService.mappings.tasks.worksheetName, totalScoreCell.formula, sheets));
     });
 
     await this.writeToFile(handle, await workbook.xlsx.writeBuffer());
@@ -406,7 +405,6 @@ export class FileService {
     const fileData = await this.readFromFile(handle);
 
     const workbook = new Excel.Workbook();
-    workbook.calcProperties.fullCalcOnLoad = true;
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.tasks.worksheetName);
 
@@ -428,7 +426,6 @@ export class FileService {
     const fileData = await this.readFromFile(handle);
 
     const workbook = new Excel.Workbook();
-    workbook.calcProperties.fullCalcOnLoad = true;
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
 
@@ -473,7 +470,6 @@ export class FileService {
     const fileData = await this.readFromFile(handle);
 
     const workbook = new Excel.Workbook();
-    workbook.calcProperties.fullCalcOnLoad = true;
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
 
@@ -493,7 +489,6 @@ export class FileService {
     const fileData = await this.readFromFile(handle);
 
     const workbook = new Excel.Workbook();
-    workbook.calcProperties.fullCalcOnLoad = true;
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
 
