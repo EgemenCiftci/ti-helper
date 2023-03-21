@@ -164,17 +164,21 @@ export class FileService {
 
   private async getCandidateInterviewFormFileHandle(candidateName: string, createIfNotExists: boolean): Promise<FileSystemFileHandle | undefined> {
     const candidateDirectoryHandle = await this.getDirectoryHandle(this.outputDirectoryHandle, candidateName, createIfNotExists);
-    const fileName = `${candidateName} - ${this.settingsService.interviewFormFileName}`;
-
     let handle: FileSystemFileHandle | undefined;
 
     try {
+      const fileName = `${candidateName} - Interview Form.xlsx`;
       handle = await candidateDirectoryHandle?.getFileHandle(fileName, { create: createIfNotExists });
     } catch {
       try {
         handle = await candidateDirectoryHandle?.getFileHandle(this.settingsService.interviewFormFileName, { create: createIfNotExists });
       } catch {
-        handle = undefined;
+        try {
+          const oldFileName = `${candidateName} - Interview Form CS template 0.8.xlsx`;
+          handle = await candidateDirectoryHandle?.getFileHandle(oldFileName, { create: createIfNotExists });
+        } catch {
+          handle = undefined;
+        }
       }
     } finally {
       return handle;
