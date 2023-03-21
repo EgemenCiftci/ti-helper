@@ -49,7 +49,7 @@ export class SettingsService {
     this.aspNetCoreCodeFileName = localStorage.getItem('aspNetCoreCodeFileName') ?? 'web code review task.cs';
     this.wpfCodeFileName = localStorage.getItem('wpfCodeFileName') ?? 'desktop code review task.cs';
     this.questionMaterialsFileName = localStorage.getItem('questionMaterialsFileName') ?? 'question materials.cs';
-    this.interviewFormFileName = localStorage.getItem('interviewFormFileName') ?? 'Interview Form CS template 0.8.xlsx';
+    this.interviewFormFileName = localStorage.getItem('interviewFormFileName') ?? 'Interview Form CS template 0.9.xlsx';
     this.websiteUrl = localStorage.getItem('websiteUrl') ?? 'https://www.snipp.live/new';
     const ps = localStorage.getItem('preformedSentences');
     this.preformedSentences = ps === null ? this.defaultPreformedSentences : JSON.parse(ps);
