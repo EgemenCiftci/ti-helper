@@ -1,7 +1,7 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MatStepper } from '@angular/material/stepper';
+import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatStepper, MatStep, MatStepLabel, MatStepperNext, MatStepperPrevious } from '@angular/material/stepper';
 import { debounceTime, Subject, Subscription } from 'rxjs';
 import { Item } from 'src/app/models/item';
 import { OverviewData } from 'src/app/models/overview-data';
@@ -13,11 +13,25 @@ import { TaskScores } from 'src/app/models/task-scores';
 import { FileService } from 'src/app/services/file.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { SnackBarService } from 'src/app/services/snack-bar.service';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { NgFor, NgIf, DecimalPipe } from '@angular/common';
+import { MatOption } from '@angular/material/core';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { ScoreComponent } from '../score/score.component';
+import { MatDivider } from '@angular/material/divider';
+import { MatSelect } from '@angular/material/select';
+import { MatChipListbox, MatChip } from '@angular/material/chips';
 
 @Component({
-  selector: 'app-wizard',
-  templateUrl: './wizard.component.html',
-  styleUrls: ['./wizard.component.css']
+    selector: 'app-wizard',
+    templateUrl: './wizard.component.html',
+    styleUrls: ['./wizard.component.css'],
+    standalone: true,
+    imports: [MatStepper, MatStep, MatStepLabel, MatButton, MatIcon, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatAutocompleteTrigger, MatAutocomplete, NgFor, MatOption, MatStepperNext, MatDatepickerInput, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, ScoreComponent, NgIf, MatDivider, MatStepperPrevious, MatSelect, MatIconButton, MatChipListbox, MatChip, DecimalPipe]
 })
 export class WizardComponent implements OnInit, AfterViewInit, OnDestroy {
   candidateNames: string[] = [];

@@ -1,10 +1,17 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatRadioChange } from '@angular/material/radio';
+import { MatRadioChange, MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
+import { NgFor, NgIf } from '@angular/common';
+import { MatIconButton } from '@angular/material/button';
+import { MatSuffix } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-score',
-  templateUrl: './score.component.html',
-  styleUrls: ['./score.component.css']
+    selector: 'app-score',
+    templateUrl: './score.component.html',
+    styleUrls: ['./score.component.css'],
+    standalone: true,
+    imports: [MatRadioGroup, FormsModule, NgFor, MatRadioButton, NgIf, MatIconButton, MatSuffix, MatIcon]
 })
 export class ScoreComponent {
   @Input() values = [-1, 1, 2, 3, 4];

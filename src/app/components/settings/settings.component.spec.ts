@@ -11,9 +11,8 @@ describe('SettingsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SettingsComponent],
-      imports: [FormsModule, ReactiveFormsModule, MatSnackBarModule, MatFormFieldModule],
-    })
+    imports: [FormsModule, ReactiveFormsModule, MatSnackBarModule, MatFormFieldModule, SettingsComponent],
+})
       .compileComponents();
 
     fixture = TestBed.createComponent(SettingsComponent);
