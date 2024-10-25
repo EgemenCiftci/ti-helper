@@ -45,3 +45,6 @@ Thumbs.db
 .firebase
 *-debug.log
 .runtimeconfig.json
+.vs/VSWorkspaceState.json
+.vs/ti-helper/v17/.wsuo
+.vs/ti-helper/v17/DocumentLayout.json
