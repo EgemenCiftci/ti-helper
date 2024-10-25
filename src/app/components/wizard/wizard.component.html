@@ -20,9 +20,9 @@
         <input type="text" matInput formControlName="candidateName" [matAutocomplete]="auto" required>
         <mat-autocomplete #auto="matAutocomplete">
           @for (name of candidateNames; track name) {
-            <mat-option [value]="name">
-              {{name}}
-            </mat-option>
+          <mat-option [value]="name">
+            {{name}}
+          </mat-option>
           }
         </mat-autocomplete>
       </mat-form-field>
@@ -92,14 +92,14 @@
     <form [formGroup]="taskFormGroup">
       <table>
         @for (item of taskItems; track item) {
-          <tr>
-            <td class="score-column">
-              <app-score [(selectedValue)]="item.score" (change)="handleTaskScoreChange()"></app-score>
-            </td>
-            <td>
-              {{item.question}}
-            </td>
-          </tr>
+        <tr>
+          <td class="score-column">
+            <app-score [(selectedValue)]="item.score" (change)="handleTaskScoreChange()"></app-score>
+          </td>
+          <td>
+            {{item.question}}
+          </td>
+        </tr>
         }
       </table>
       <div>
@@ -120,174 +120,168 @@
     <form [formGroup]="questionsFormGroup">
       <mat-stepper orientation="vertical">
         @for (section of sections; track section; let isFirst = $first; let isLast = $last) {
-          <mat-step [label]="(section.title ?? '')"
-            optional="true">
-            <table>
-              <tr>
-                <th colspan="4">
-                  <h3>Sudden Death</h3>
-                </th>
-              </tr>
-              @for (item of section.suddenDeathItems; track item) {
-                <tr>
-                  <td class="score-column">
-                    <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score"
-                    (change)="handleQuestionsScoreChange()"></app-score>
-                  </td>
-                  <td>
-                    {{item.question}}
-                  </td>
-                  <td class="button-column">
-                    @if (getQuestionMaterial(item.row)) {
-                      <button mat-flat-button color="primary" type="button"
-                        (click)="selectQuestionMaterial(item.row)">Line
-                        {{item.row}} - Copy
-                      Code</button>
-                    }
-                  </td>
-                  <td class="px-3">
-                    {{item.answer}}
-                  </td>
-                </tr>
-              }
-              <tr>
-                <td colspan="4">
-                  <mat-divider></mat-divider>
-                </td>
-              </tr>
-              <tr>
-                <th colspan="4">
-                  <h3>Mandatory</h3>
-                </th>
-              </tr>
-              @for (item of section.mandatoryItems; track item) {
-                <tr>
-                  <td class="score-column">
-                    <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score"
-                    (change)="handleQuestionsScoreChange()"></app-score>
-                  </td>
-                  <td>
-                    {{item.question}}
-                  </td>
-                  <td class="button-column">
-                    @if (getQuestionMaterial(item.row)) {
-                      <button mat-flat-button color="primary" type="button"
-                        (click)="selectQuestionMaterial(item.row)">Line
-                        {{item.row}} - Copy
-                      Code</button>
-                    }
-                  </td>
-                  <td class="px-3">
-                    {{item.answer}}
-                  </td>
-                </tr>
-              }
-              <tr>
-                <td colspan="4">
-                  <mat-divider></mat-divider>
-                </td>
-              </tr>
-              <tr>
-                <th colspan="4">
-                  <h3>Junior (Score: {{section.juniorScore | number:'1.2-2'}})</h3>
-                </th>
-              </tr>
-              @for (item of section.juniorItems; track item) {
-                <tr>
-                  <td class="score-column">
-                    <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score"
-                    (change)="handleQuestionsScoreChange()"></app-score>
-                  </td>
-                  <td>
-                    {{item.question}}
-                  </td>
-                  <td class="button-column">
-                    @if (getQuestionMaterial(item.row)) {
-                      <button mat-flat-button color="primary" type="button"
-                        (click)="selectQuestionMaterial(item.row)">Line
-                        {{item.row}} - Copy
-                      Code</button>
-                    }
-                  </td>
-                  <td class="px-3">
-                    {{item.answer}}
-                  </td>
-                </tr>
-              }
-              <tr>
-                <td colspan="4">
-                  <mat-divider></mat-divider>
-                </td>
-              </tr>
-              <tr>
-                <th colspan="4">
-                  <h3>Regular (Score: {{section.regularScore | number:'1.2-2'}})</h3>
-                </th>
-              </tr>
-              @for (item of section.regularItems; track item) {
-                <tr>
-                  <td class="score-column">
-                    <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score"
-                    (change)="handleQuestionsScoreChange()"></app-score>
-                  </td>
-                  <td>
-                    {{item.question}}
-                  </td>
-                  <td class="button-column">
-                    @if (getQuestionMaterial(item.row)) {
-                      <button mat-flat-button color="primary" type="button"
-                        (click)="selectQuestionMaterial(item.row)">Line
-                        {{item.row}} - Copy
-                      Code</button>
-                    }
-                  </td>
-                  <td class="px-3">
-                    {{item.answer}}
-                  </td>
-                </tr>
-              }
-              <tr>
-                <td colspan="4">
-                  <mat-divider></mat-divider>
-                </td>
-              </tr>
-              <tr>
-                <th colspan="4">
-                  <h3>Senior (Score: {{section.seniorScore | number:'1.2-2'}})</h3>
-                </th>
-              </tr>
-              @for (item of section.seniorItems; track item) {
-                <tr>
-                  <td class="score-column">
-                    <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score"
-                    (change)="handleQuestionsScoreChange()"></app-score>
-                  </td>
-                  <td>
-                    {{item.question}}
-                  </td>
-                  <td class="button-column">
-                    @if (getQuestionMaterial(item.row)) {
-                      <button mat-flat-button color="primary" type="button"
-                        (click)="selectQuestionMaterial(item.row)">Line
-                        {{item.row}} - Copy
-                      Code</button>
-                    }
-                  </td>
-                  <td class="px-3">
-                    {{item.answer}}
-                  </td>
-                </tr>
-              }
-            </table>
-            <div>
-              @if (!isFirst) {
-                <button mat-button matStepperPrevious type="button">Back</button>
-              }
-              @if (!isLast) {
-                <button mat-button matStepperNext type="button">Next</button>
-              }
-            </div>
-          </mat-step>
+        <mat-step [label]="(section.title ?? '')" optional="true">
+          <table>
+            <tr>
+              <th colspan="4">
+                <h3>Sudden Death</h3>
+              </th>
+            </tr>
+            @for (item of section.suddenDeathItems; track item) {
+            <tr>
+              <td class="score-column">
+                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score"
+                  (change)="handleQuestionsScoreChange()"></app-score>
+              </td>
+              <td>
+                {{item.question}}
+              </td>
+              <td class="button-column">
+                @if (getQuestionMaterial(item.row)) {
+                <button mat-flat-button color="primary" type="button" (click)="selectQuestionMaterial(item.row)">Line
+                  {{item.row}} - Copy
+                  Code</button>
+                }
+              </td>
+              <td class="px-3">
+                {{item.answer}}
+              </td>
+            </tr>
+            }
+            <tr>
+              <td colspan="4">
+                <mat-divider></mat-divider>
+              </td>
+            </tr>
+            <tr>
+              <th colspan="4">
+                <h3>Mandatory</h3>
+              </th>
+            </tr>
+            @for (item of section.mandatoryItems; track item) {
+            <tr>
+              <td class="score-column">
+                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score"
+                  (change)="handleQuestionsScoreChange()"></app-score>
+              </td>
+              <td>
+                {{item.question}}
+              </td>
+              <td class="button-column">
+                @if (getQuestionMaterial(item.row)) {
+                <button mat-flat-button color="primary" type="button" (click)="selectQuestionMaterial(item.row)">Line
+                  {{item.row}} - Copy
+                  Code</button>
+                }
+              </td>
+              <td class="px-3">
+                {{item.answer}}
+              </td>
+            </tr>
+            }
+            <tr>
+              <td colspan="4">
+                <mat-divider></mat-divider>
+              </td>
+            </tr>
+            <tr>
+              <th colspan="4">
+                <h3>Junior (Score: {{section.juniorScore | number:'1.2-2'}})</h3>
+              </th>
+            </tr>
+            @for (item of section.juniorItems; track item) {
+            <tr>
+              <td class="score-column">
+                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score"
+                  (change)="handleQuestionsScoreChange()"></app-score>
+              </td>
+              <td>
+                {{item.question}}
+              </td>
+              <td class="button-column">
+                @if (getQuestionMaterial(item.row)) {
+                <button mat-flat-button color="primary" type="button" (click)="selectQuestionMaterial(item.row)">Line
+                  {{item.row}} - Copy
+                  Code</button>
+                }
+              </td>
+              <td class="px-3">
+                {{item.answer}}
+              </td>
+            </tr>
+            }
+            <tr>
+              <td colspan="4">
+                <mat-divider></mat-divider>
+              </td>
+            </tr>
+            <tr>
+              <th colspan="4">
+                <h3>Regular (Score: {{section.regularScore | number:'1.2-2'}})</h3>
+              </th>
+            </tr>
+            @for (item of section.regularItems; track item) {
+            <tr>
+              <td class="score-column">
+                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score"
+                  (change)="handleQuestionsScoreChange()"></app-score>
+              </td>
+              <td>
+                {{item.question}}
+              </td>
+              <td class="button-column">
+                @if (getQuestionMaterial(item.row)) {
+                <button mat-flat-button color="primary" type="button" (click)="selectQuestionMaterial(item.row)">Line
+                  {{item.row}} - Copy
+                  Code</button>
+                }
+              </td>
+              <td class="px-3">
+                {{item.answer}}
+              </td>
+            </tr>
+            }
+            <tr>
+              <td colspan="4">
+                <mat-divider></mat-divider>
+              </td>
+            </tr>
+            <tr>
+              <th colspan="4">
+                <h3>Senior (Score: {{section.seniorScore | number:'1.2-2'}})</h3>
+              </th>
+            </tr>
+            @for (item of section.seniorItems; track item) {
+            <tr>
+              <td class="score-column">
+                <app-score [values]="[1, 2, 3, 4]" [(selectedValue)]="item.score"
+                  (change)="handleQuestionsScoreChange()"></app-score>
+              </td>
+              <td>
+                {{item.question}}
+              </td>
+              <td class="button-column">
+                @if (getQuestionMaterial(item.row)) {
+                <button mat-flat-button color="primary" type="button" (click)="selectQuestionMaterial(item.row)">Line
+                  {{item.row}} - Copy
+                  Code</button>
+                }
+              </td>
+              <td class="px-3">
+                {{item.answer}}
+              </td>
+            </tr>
+            }
+          </table>
+          <div>
+            @if (!isFirst) {
+            <button mat-button matStepperPrevious type="button">Back</button>
+            }
+            @if (!isLast) {
+            <button mat-button matStepperNext type="button">Next</button>
+            }
+          </div>
+        </mat-step>
         }
       </mat-stepper>
       <div>
@@ -326,9 +320,9 @@
           <mat-option value="Not assessed">Not assessed</mat-option>
           <mat-option value="Not communicative at all">Not communicative at all</mat-option>
           <mat-option value="Poor English / strong accent">Poor English / strong
-          accent</mat-option>
+            accent</mat-option>
           <mat-option value="Good English / strong accent">Good English / strong
-          accent</mat-option>
+            accent</mat-option>
           <mat-option value="Easy to talk to">Easy to talk to</mat-option>
           <mat-option value="Good English / no accent">Good English / no accent</mat-option>
         </mat-select>
@@ -347,17 +341,16 @@
         <mat-label>Overall Impression</mat-label>
         <textarea matInput formControlName="overallImpression"></textarea>
         @if (resultFormGroup.get('overallImpression')?.value) {
-          <button matSuffix mat-icon-button aria-label="Clear"
-            (click)="resultFormGroup.get('overallImpression')?.setValue('')">
-            <mat-icon>close</mat-icon>
-          </button>
+        <button matSuffix mat-icon-button aria-label="Clear"
+          (click)="resultFormGroup.get('overallImpression')?.setValue('')">
+          <mat-icon>close</mat-icon>
+        </button>
         }
         <mat-chip-listbox class="mat-mdc-chip-set-stacked">
           @for (sentence of settingsService.preformedSentences; track sentence) {
-            <mat-chip color="primary"
-              (click)="addSentence(sentence)">
-              {{sentence}}
-            </mat-chip>
+          <mat-chip color="primary" (click)="addSentence(sentence)">
+            {{sentence}}
+          </mat-chip>
           }
         </mat-chip-listbox>
       </mat-form-field>

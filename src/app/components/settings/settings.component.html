@@ -15,48 +15,47 @@
       </mat-form-field>
       <mat-form-field class="d-block mx-1" appearance="fill">
         <mat-label>Preformed Sentences</mat-label>
-        <mat-chip-grid #chipGrid cdkDropList cdkDropListOrientation="vertical" (cdkDropListDropped)="dropSentence($event)" formControlName="preformedSentences">
+        <mat-chip-grid #chipGrid cdkDropList cdkDropListOrientation="vertical"
+          (cdkDropListDropped)="dropSentence($event)" formControlName="preformedSentences">
           @for (sentence of form.get('preformedSentences')?.value; track sentence) {
-            <mat-chip-row
-              cdkDrag
-              (removed)="removeSentence(sentence)">
-              {{sentence}}
-              <button matChipRemove>
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </mat-chip-row>
+          <mat-chip-row cdkDrag (removed)="removeSentence(sentence)">
+            {{sentence}}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
           }
         </mat-chip-grid>
         <input placeholder="New sentence..." [matChipInputFor]="chipGrid"
           (matChipInputTokenEnd)="addSentence($event)" />
-        </mat-form-field>
-      </div>
-      <div class="flex-fill p-2">
-        <mat-form-field class="d-block mx-1" appearance="fill">
-          <mat-label>Input Directory</mat-label>
-          <input matInput formControlName="inputDirectory" type="text">
-        </mat-form-field>
-        <mat-form-field class="d-block mx-1" appearance="fill">
-          <mat-label>Asp.Net Core Code File Name</mat-label>
-          <input matInput formControlName="aspNetCoreCodeFileName" type="text">
-        </mat-form-field>
-        <mat-form-field class="d-block mx-1" appearance="fill">
-          <mat-label>Wpf Code File Name</mat-label>
-          <input matInput formControlName="wpfCodeFileName" type="text">
-        </mat-form-field>
-        <mat-form-field class="d-block mx-1" appearance="fill">
-          <mat-label>Question Materials File Name</mat-label>
-          <input matInput formControlName="questionMaterialsFileName" type="text">
-        </mat-form-field>
-        <mat-form-field class="d-block mx-1" appearance="fill">
-          <mat-label>Interview Form File Name</mat-label>
-          <input matInput formControlName="interviewFormFileName" type="text">
-        </mat-form-field>
-      </div>
+      </mat-form-field>
     </div>
-    <div class="d-flex flex-row px-2">
-      <button mat-flat-button class="flex-fill mx-1" color="primary" (click)="reset()">Reset</button>
-      <button mat-flat-button class="flex-fill mx-1" color="primary" (click)="save()"
+    <div class="flex-fill p-2">
+      <mat-form-field class="d-block mx-1" appearance="fill">
+        <mat-label>Input Directory</mat-label>
+        <input matInput formControlName="inputDirectory" type="text">
+      </mat-form-field>
+      <mat-form-field class="d-block mx-1" appearance="fill">
+        <mat-label>Asp.Net Core Code File Name</mat-label>
+        <input matInput formControlName="aspNetCoreCodeFileName" type="text">
+      </mat-form-field>
+      <mat-form-field class="d-block mx-1" appearance="fill">
+        <mat-label>Wpf Code File Name</mat-label>
+        <input matInput formControlName="wpfCodeFileName" type="text">
+      </mat-form-field>
+      <mat-form-field class="d-block mx-1" appearance="fill">
+        <mat-label>Question Materials File Name</mat-label>
+        <input matInput formControlName="questionMaterialsFileName" type="text">
+      </mat-form-field>
+      <mat-form-field class="d-block mx-1" appearance="fill">
+        <mat-label>Interview Form File Name</mat-label>
+        <input matInput formControlName="interviewFormFileName" type="text">
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="d-flex flex-row px-2">
+    <button mat-flat-button class="flex-fill mx-1" color="primary" (click)="reset()">Reset</button>
+    <button mat-flat-button class="flex-fill mx-1" color="primary" (click)="save()"
       [disabled]="!form.valid">Save</button>
-    </div>
-  </form>
+  </div>
+</form>

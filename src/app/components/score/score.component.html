@@ -1,13 +1,12 @@
 <div class="d-flex flex-row">
   <mat-radio-group class="flex-fill" [(ngModel)]="selectedValue" (change)="onChange($event)">
     @for (value of values; track value) {
-      <mat-radio-button [value]="value" title="{{value}}" [class]="getClass(value)"
-      color="primary"></mat-radio-button>
+    <mat-radio-button [value]="value" title="{{value}}" [class]="getClass(value)" color="primary"></mat-radio-button>
     }
   </mat-radio-group>
   @if (selectedValue) {
-    <button matSuffix mat-icon-button title="Clear" (click)="clear()">
-      <mat-icon>close</mat-icon>
-    </button>
+  <button matSuffix mat-icon-button title="Clear" (click)="clear()">
+    <mat-icon>close</mat-icon>
+  </button>
   }
 </div>
