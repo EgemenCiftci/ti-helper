@@ -1,5 +1,5 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatStepper, MatStep, MatStepLabel, MatStepperNext, MatStepperPrevious } from '@angular/material/stepper';
 import { debounceTime, Subject, Subscription } from 'rxjs';
@@ -34,6 +34,11 @@ import { MatChipListbox, MatChip } from '@angular/material/chips';
     imports: [MatStepper, MatStep, MatStepLabel, MatButton, MatIcon, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatAutocompleteTrigger, MatAutocomplete, MatOption, MatStepperNext, MatDatepickerInput, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, ScoreComponent, MatDivider, MatStepperPrevious, MatSelect, MatIconButton, MatChipListbox, MatChip, DecimalPipe]
 })
 export class WizardComponent implements OnInit, AfterViewInit, OnDestroy {
+  private _formBuilder = inject(FormBuilder);
+  settingsService = inject(SettingsService);
+  private _fileService = inject(FileService);
+  private _snackBarService = inject(SnackBarService);
+
   candidateNames: string[] = [];
   candidateName: string = '';
   tiDirectoryName?: string;
@@ -64,11 +69,10 @@ export class WizardComponent implements OnInit, AfterViewInit, OnDestroy {
   handleQuestionsScoreSubject = new Subject<void>();
   handleQuestionsScoreSubscription?: Subscription;
 
-  constructor(
-    private _formBuilder: FormBuilder,
-    public settingsService: SettingsService,
-    private _fileService: FileService,
-    private _snackBarService: SnackBarService) { }
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() { }
 
   ngOnInit() {
     this.candidateNameFormGroup.get('candidateName')?.valueChanges.subscribe(async val => {

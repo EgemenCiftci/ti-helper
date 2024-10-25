@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipInputEvent, MatChipGrid, MatChipRow, MatChipRemove, MatChipInput } from '@angular/material/chips';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -18,11 +18,16 @@ import { MatButton } from '@angular/material/button';
     imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatChipGrid, CdkDropList, MatChipRow, CdkDrag, MatChipRemove, MatIcon, MatChipInput, MatButton]
 })
 export class SettingsComponent implements OnInit {
+  private formBuilder = inject(FormBuilder);
+  private settingsService = inject(SettingsService);
+  private snackBarService = inject(SnackBarService);
+
   form!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder,
-    private settingsService: SettingsService,
-    private snackBarService: SnackBarService) { }
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() { }
 
   ngOnInit() {
     this.form = this.formBuilder.group({

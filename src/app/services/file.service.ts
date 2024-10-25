@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { SettingsService } from './settings.service';
 import * as Excel from 'exceljs';
 import { CellValue, HyperFormula } from 'hyperformula';
@@ -18,6 +18,9 @@ import { TaskScores } from '../models/task-scores';
   providedIn: 'root'
 })
 export class FileService {
+  private settingsService = inject(SettingsService);
+  private mappingsService = inject(MappingsService);
+
   tiDirectoryHandle?: FileSystemDirectoryHandle;
   outputDirectoryHandle?: FileSystemDirectoryHandle;
   inputDirectoryHandle?: FileSystemDirectoryHandle;
@@ -26,9 +29,10 @@ export class FileService {
   questionMaterialsFileHandle?: FileSystemFileHandle;
   interviewFormFileHandle?: FileSystemFileHandle;
 
-  constructor(
-    private settingsService: SettingsService,
-    private mappingsService: MappingsService) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
   }
 
   async initialize() {
