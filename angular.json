@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ti-helper": {
+    "ti-wizard": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -14,7 +14,7 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": {
-              "base": "dist/ti-helper"
+              "base": "dist/ti-wizard"
             },
             "index": "src/index.html",
             "polyfills": [
@@ -61,10 +61,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "ti-helper:build:production"
+              "buildTarget": "ti-wizard:build:production"
             },
             "development": {
-              "buildTarget": "ti-helper:build:development"
+              "buildTarget": "ti-wizard:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -72,7 +72,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "ti-helper:build"
+            "buildTarget": "ti-wizard:build"
           }
         },
         "test": {
@@ -99,7 +99,7 @@
           "options": {
             "prerender": false,
             "ssr": false,
-            "browserTarget": "ti-helper:build:production",
+            "browserTarget": "ti-wizard:build:production",
             "firebaseProject": "ti-wizard",
             "firebaseHostingSite": "ti-wizard"
           }
@@ -107,11 +107,11 @@
         "cypress-run": {
           "builder": "@cypress/schematic:cypress",
           "options": {
-            "devServerTarget": "ti-helper:serve"
+            "devServerTarget": "ti-wizard:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "ti-helper:serve:production"
+              "devServerTarget": "ti-wizard:serve:production"
             }
           }
         },
@@ -125,27 +125,27 @@
         "ct": {
           "builder": "@cypress/schematic:cypress",
           "options": {
-            "devServerTarget": "ti-helper:serve",
+            "devServerTarget": "ti-wizard:serve",
             "watch": true,
             "headless": false,
             "testingType": "component"
           },
           "configurations": {
             "development": {
-              "devServerTarget": "ti-helper:serve:development"
+              "devServerTarget": "ti-wizard:serve:development"
             }
           }
         },
         "e2e": {
           "builder": "@cypress/schematic:cypress",
           "options": {
-            "devServerTarget": "ti-helper:serve",
+            "devServerTarget": "ti-wizard:serve",
             "watch": true,
             "headless": false
           },
           "configurations": {
             "production": {
-              "devServerTarget": "ti-helper:serve:production"
+              "devServerTarget": "ti-wizard:serve:production"
             }
           }
         }

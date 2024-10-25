@@ -2,7 +2,7 @@
   "targets": {
     "ti-wizard": {
       "hosting": {
-        "ti-helper": [
+        "ti-wizard": [
           "ti-wizard"
         ]
       }
