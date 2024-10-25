@@ -6,7 +6,7 @@ import { SnackBarService } from 'src/app/services/snack-bar.service';
 import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { NgFor } from '@angular/common';
+
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 
@@ -15,7 +15,7 @@ import { MatButton } from '@angular/material/button';
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.css'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatChipGrid, CdkDropList, NgFor, MatChipRow, CdkDrag, MatChipRemove, MatIcon, MatChipInput, MatButton]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatChipGrid, CdkDropList, MatChipRow, CdkDrag, MatChipRemove, MatIcon, MatChipInput, MatButton]
 })
 export class SettingsComponent implements OnInit {
   form!: FormGroup;

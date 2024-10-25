@@ -18,7 +18,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
-import { NgFor, NgIf, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { MatOption } from '@angular/material/core';
 import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
 import { ScoreComponent } from '../score/score.component';
@@ -31,7 +31,7 @@ import { MatChipListbox, MatChip } from '@angular/material/chips';
     templateUrl: './wizard.component.html',
     styleUrls: ['./wizard.component.css'],
     standalone: true,
-    imports: [MatStepper, MatStep, MatStepLabel, MatButton, MatIcon, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatAutocompleteTrigger, MatAutocomplete, NgFor, MatOption, MatStepperNext, MatDatepickerInput, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, ScoreComponent, NgIf, MatDivider, MatStepperPrevious, MatSelect, MatIconButton, MatChipListbox, MatChip, DecimalPipe]
+    imports: [MatStepper, MatStep, MatStepLabel, MatButton, MatIcon, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatAutocompleteTrigger, MatAutocomplete, MatOption, MatStepperNext, MatDatepickerInput, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, ScoreComponent, MatDivider, MatStepperPrevious, MatSelect, MatIconButton, MatChipListbox, MatChip, DecimalPipe]
 })
 export class WizardComponent implements OnInit, AfterViewInit, OnDestroy {
   candidateNames: string[] = [];
