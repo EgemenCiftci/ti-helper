@@ -107,6 +107,10 @@ export class FileService {
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
 
+    if (!worksheet) {
+      throw new Error('Worksheet is null!');
+    }
+
     const overviewData = new OverviewData();
     const relevantExperience = Number(worksheet.getCell(this.mappingsService.mappings.overview.relevantExperienceCell).value);
     overviewData.relevantExperience = relevantExperience ? relevantExperience : undefined;
@@ -127,6 +131,10 @@ export class FileService {
     const workbook = new Excel.Workbook();
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
+
+    if (!worksheet) {
+      throw new Error('Worksheet is null!');
+    }
 
     const resultData = new ResultData();
     resultData.communication = String(worksheet.getCell(this.mappingsService.mappings.overview.communicationCell).value);
@@ -194,6 +202,10 @@ export class FileService {
       await workbook.xlsx.load(fileData as any);
       const worksheet = workbook.getWorksheet(this.mappingsService.mappings.tasks.worksheetName);
 
+      if (!worksheet) {
+        throw new Error('Worksheet is null!');
+      }
+
       let rows: number[];
       switch (selectedTask) {
         case 'ASP.NET Core Code Review':
@@ -230,6 +242,10 @@ export class FileService {
       const workbook = new Excel.Workbook();
       await workbook.xlsx.load(fileData as any);
       const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
+
+      if (!worksheet) {
+        throw new Error('Worksheet is null!');
+      }
 
       const sheets = this.getSheets(workbook);
       const csQuestions = this.mappingsService.mappings.csQuestions;
@@ -310,6 +326,10 @@ export class FileService {
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
 
+    if (!worksheet) {
+      throw new Error('Worksheet is null!');
+    }
+
     const sheets = this.getSheets(workbook);
 
     sections?.forEach(section => {
@@ -332,6 +352,10 @@ export class FileService {
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
 
+    if (!worksheet) {
+      throw new Error('Worksheet is null!');
+    }
+
     worksheet.getCell(this.mappingsService.mappings.overview.candidateNameCell).value = candidateName;
 
     await this.writeToFile(handle, await workbook.xlsx.writeBuffer());
@@ -344,6 +368,10 @@ export class FileService {
     const workbook = new Excel.Workbook();
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
+
+    if (!worksheet) {
+      throw new Error('Worksheet is null!');
+    }
 
     worksheet.getCell(this.mappingsService.mappings.overview.interviewerNameCell).value = overview.interviewerName;
     worksheet.getCell(this.mappingsService.mappings.overview.dateCell).value = overview.date?.toDateString();
@@ -359,6 +387,10 @@ export class FileService {
     const workbook = new Excel.Workbook();
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.overview.worksheetName);
+
+    if (!worksheet) {
+      throw new Error('Worksheet is null!');
+    }
 
     worksheet.getCell(this.mappingsService.mappings.overview.communicationCell).value = result.communication;
     worksheet.getCell(this.mappingsService.mappings.overview.finalResultLevelCell).value = result.finalResultLevel;
@@ -390,16 +422,20 @@ export class FileService {
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.tasks.worksheetName);
 
+    if (!worksheet) {
+      throw new Error('Worksheet is null!');
+    }
+
     taskItems.forEach(item => {
       worksheet.getCell(item.scoreCell).value = item.score ? item.score : undefined;
     });
 
     // update total scores // DOES NOT WORK
-/*     const sheets = this.getSheets(workbook);
-    taskItems.forEach(item => {
-      const totalScoreCell = worksheet.getCell(item.totalScoreCell);
-      (totalScoreCell.value as any).result = Number(this.evaluateFormula(this.mappingsService.mappings.tasks.worksheetName, totalScoreCell.formula, sheets));
-    }); */
+    /*     const sheets = this.getSheets(workbook);
+        taskItems.forEach(item => {
+          const totalScoreCell = worksheet.getCell(item.totalScoreCell);
+          (totalScoreCell.value as any).result = Number(this.evaluateFormula(this.mappingsService.mappings.tasks.worksheetName, totalScoreCell.formula, sheets));
+        }); */
 
     await this.writeToFile(handle, await workbook.xlsx.writeBuffer());
   }
@@ -411,6 +447,10 @@ export class FileService {
     const workbook = new Excel.Workbook();
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.tasks.worksheetName);
+
+    if (!worksheet) {
+      throw new Error('Worksheet is null!');
+    }
 
     const sheets = this.getSheets(workbook);
     const aspNetCoreScoreCellFormula = worksheet.getCell(`${this.mappingsService.mappings.tasks.scoreColumn}${this.mappingsService.mappings.tasks.aspNetScoreRow}`).formula;
@@ -432,6 +472,10 @@ export class FileService {
     const workbook = new Excel.Workbook();
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
+
+    if (!worksheet) {
+      throw new Error('Worksheet is null!');
+    }
 
     let score: number | undefined = undefined;
     if (selectedTask === 'ASP.NET Core Code Review') {
@@ -477,6 +521,10 @@ export class FileService {
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
 
+    if (!worksheet) {
+      throw new Error('Worksheet is null!');
+    }
+
     sections.forEach(section => {
       section.suddenDeathItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score ? item.score : undefined);
       section.mandatoryItems?.forEach(item => worksheet.getCell(item.scoreCell).value = item.score ? item.score : undefined);
@@ -495,6 +543,10 @@ export class FileService {
     const workbook = new Excel.Workbook();
     await workbook.xlsx.load(fileData as any);
     const worksheet = workbook.getWorksheet(this.mappingsService.mappings.csQuestions.worksheetName);
+
+    if (!worksheet) {
+      throw new Error('Worksheet is null!');
+    }
 
     const sheets = this.getSheets(workbook);
     const scoring = new Scoring();
