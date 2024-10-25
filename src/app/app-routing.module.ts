@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AboutComponent } from './components/about/about.component';
-import { SettingsComponent } from './components/settings/settings.component';
-import { WizardComponent } from './components/wizard/wizard.component';
+
+
+
 
 const routes: Routes = [
-  { path: '', component: WizardComponent },
-  { path: 'settings', component: SettingsComponent },
-  { path: 'about', component: AboutComponent },
+  { path: '', loadComponent: () => import('./components/wizard/wizard.component').then(m => m.WizardComponent) },
+  { path: 'settings', loadComponent: () => import('./components/settings/settings.component').then(m => m.SettingsComponent) },
+  { path: 'about', loadComponent: () => import('./components/about/about.component').then(m => m.AboutComponent) },
   { path: '**', redirectTo: '' }
 ];
 
