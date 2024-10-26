@@ -1,13 +1,4 @@
 {
-  "targets": {
-    "ti-wizard": {
-      "hosting": {
-        "ti-wizard": [
-          "ti-wizard"
-        ]
-      }
-    }
-  },
   "projects": {
     "default": "ti-wizard"
   }
